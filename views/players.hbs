@@ -1,0 +1,51 @@
+<div class="top-pad"></div>
+
+<div class="content container-fluid">
+  
+  {{#if expired }}
+    <p>The deadline for predictions has expired</p>
+    <ul>
+    {{#each data }}
+      <li><a href="/category/{{ id }}">{{ category }}</a> - {{ pred.name }}</li>
+    {{/each }}
+    </ul>
+  {{ else }}
+    <h4 data-id="{{ user.id }}">{{ user.username }}, you've made <span id="predcnt"></span> of 24 predictions.</h4>
+    <div id="accordion" role="tablist">
+      {{#each data }}
+      <div class="card">
+        <div class="card-header" role="tab" id="heading{{ id }}">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#cat{{ id }}" aria-expanded="false" aria-controls="cat{{ id }}"><span class="ctrl">▶︎</span> {{ category }}
+              <span class="text{{ id }}">: {{#if pred.name }}{{ pred.name }}{{ else }}<span class="nopred" title="No prediction yet">(No prediction made)</span>{{/if }}</span> 
+            </button><span class="updated badge badge-pill badge-success">saved</span>
+          </h5>
+        </div>
+
+        <div id="cat{{ id }}" data-pred="{{ ../pred.id }}" data-parent="#accordion" class="collapse show" role="tabpanel" aria-labelledby="heading{{ id }}">
+          <div class="card-body">
+            <span class="nopred">{{ weight }} points. Last Year's Winner: {{{ lastyear }}}</span>
+            <div class="row">
+              {{#each noms }}
+              <div class="col">
+                <div title="{{ name }}" class="{{#if this.pred }}picked{{/if}} nom" data-cid="{{ ../id }}" data-name="{{ name }}" data-nid="{{ id }}" data-film="{{ film }}">
+                  <img src="/img/{{ image }}.jpg" alt="{{ name }}" />
+                  <span class="label">
+                    <p>{{ name }}</p>
+                    {{#if film }}<p>({{ film }})</p>{{/if }}
+                    <a title="View at themoviedb.org (new window)" target="_blank" href="https://themoviedb.org/{{#if film }}person{{ else }}movie{{/if }}/{{ tmdb }}" class="btn btn-sm btn-outline-primary">Link &#x29c9;</a>
+                  </span>                  
+                </div>
+              </div>
+              {{/each }}                
+            </div>
+          </div>
+        </div>
+
+      </div>
+      {{/each }}
+
+    </div>
+  {{/if }}
+
+</div>

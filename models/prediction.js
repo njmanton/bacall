@@ -1,0 +1,185 @@
+// jshint node: true, esversion: 6
+'use strict';
+
+const db = require('../models/'),
+      logger = require('winston'),
+      config = require('../config/');
+
+
+const pred = {
+
+  preds: (uid, done) => {
+
+    // horrible convoluted query and subquery to get predictions :-(
+    var sql = 'SELECT N.image, N.film, N.id AS nid, N.name AS nominee, N.tmdb_id AS tmdb, C.lastyear AS ly, C.class AS class, C.weight, C.id AS cid, C.name AS category, (I.nominee_id > 0) AS pred FROM nominees N JOIN categories C ON N.category_id = C.id LEFT JOIN (SELECT category_id, nominee_id FROM predictions P WHERE user_id = ?) I ON (I.category_id = C.id AND I.nominee_id = N.id) ORDER BY cid, nid';
+    db.use().query(sql, uid, (err, rows) => {
+
+      if (err) {
+        console.log(err);
+        done(err);
+      } else {
+        let data = [],
+              pcid = 0;
+
+        // iterate through results to build up nested object category 1-M nominees
+        for (let i = 0; i < rows.length; i++) {
+          let row = rows[i];
+          if (row.cid != pcid) {
+            data[row.cid - 1] = {
+              id: row.cid,
+              category: row.category,
+              lastyear: row.ly,
+              class: row.class,
+              weight: row.weight,
+              pred: {},
+              noms: []
+            }
+          }
+          data[row.cid - 1].noms.push({
+            id: row.nid,
+            name: row.nominee,
+            film: row.film,
+            image: row.image,
+            pred: row.pred,
+            tmdb: row.tmdb
+          })
+          if (row.pred == 1) {
+            data[row.cid - 1].pred = {
+              id: row.nid,
+              name: row.nominee,
+              film: row.film,
+              image: row.image
+            }
+          }
+          pcid = row.cid;
+        }
+        done(data);
+      }
+    })
+
+  },
+
+  save: (body, done) => {
+
+    if (body.cid && body.uid && body.nid && !config.expired) {
+      // first see if there's an existing row
+      var sql = 'SELECT id FROM predictions WHERE user_id = ? AND category_id = ?';
+      db.use().query(sql, [body.uid, body.cid], (err, rows) => {
+        if (rows && rows.length) { // row exists so update
+          db.use().query('UPDATE predictions SET ? WHERE id = ?', [{ user_id: body.uid, category_id: body.cid, nominee_id: body.nid }, rows[0].id], (err, rows) => {
+            logger.info(`Prediction updated: uid:${ body.uid } | category:${ body.cid } | nominee:${ body.nid }`);
+            done((rows) ? rows.affectedRows.toString() : false);
+          })
+        } else { // row doesn't exist so insert
+          db.use().query('INSERT INTO predictions SET ?', { user_id: body.uid, category_id: body.cid, nominee_id: body.nid }, (err, rows) => {
+            logger.info(`Prediction created: uid:${ body.uid } | category:${ body.cid } | nominee:${ body.nid }`);
+            done((rows) ? rows.affectedRows.toString() : false);
+          })
+        }
+      })
+    } else {
+      // parameters not properly sent
+      done(false);
+    }
+
+  },
+
+  category: (cat, done) => {
+
+    // get all predictions by nominee for a given category
+    const sql = 'SELECT N.id, N.name, COUNT(P.id) AS cnt, (C.winner_id = N.id) AS winner FROM predictions P JOIN nominees N ON N.id = P.nominee_id JOIN categories C ON C.id = P.category_id WHERE P.category_id = ? GROUP BY N.id ORDER BY cnt DESC';
+    db.use().query(sql, cat, (err, rows) => {
+      if (err) {
+        done(err);
+      } else {
+        done(rows);
+      }
+    })
+
+  },
+
+  categoryDetails: (cat, done) => {
+    // return object to render category view
+    let data = { winner: null, noms: null },
+        preds  = 'SELECT N.name, count(P.nominee_id = N.id) AS preds, (C.winner_id = N.id) AS winner FROM nominees N LEFT JOIN predictions P on nominee_id = N.id LEFT JOIN categories C on N.category_id = C.id WHERE N.category_id = ? GROUP BY N.id ORDER BY winner DESC, preds DESC',
+        winner = 'SELECT C.id AS cid, C.class, C.name AS category, C.lastyear, N.id, N.tmdb_id AS tmdb, N.name AS name, N.film, N.image FROM categories C LEFT JOIN nominees N ON C.winner_id = N.id WHERE C.id = ?';
+
+    db.use().query(winner, cat, (err, rows) => {
+      if (err) {
+        console.log(err);
+        done(err);
+      } else {
+        data.winner = rows[0];
+        db.use().query(preds, cat, (err, rows) => {
+          if (err) {
+            done(err);
+          } else {
+            data.noms = rows;
+            done(data);
+          }
+        })
+      }
+    })
+  },
+
+  categories: done => {
+    // return list of unannounced categories for CLI
+    let sql = 'SELECT id AS value, name FROM categories WHERE winner_id IS NULL';
+    db.use().query(sql, (err, rows) => {
+      if (err) {
+        done(err);
+      } else {
+        done(rows);
+      }
+    })
+  },
+
+  nominees: (cat, done) => {
+    // return list of nominees for a given category for CLI
+    let sql = 'SELECT N.id AS value, N.name, C.name AS cat FROM nominees N JOIN categories C ON C.id = N.category_id WHERE category_id = ?';
+    db.use().query(sql, cat, (err, rows) => {
+      if (err) {
+        done(err);
+      } else {
+        done(rows);
+      }
+    })
+  },
+
+  setWinner: (data, done) => {
+    // sets the winner of a category and saves to database
+    if (!process.env.BACALL_ADMIN) {
+      done({ err: true, msg: `permission denied` });
+    } else {
+      // data object should contain cid & nid
+      db.use().query('UPDATE categories SET winner_id = ? WHERE id = ?', [data.nid, data.cid], (err, rows) => {
+        if (err) {
+          done({ err: true, msg: err })
+        } else {
+          //logger.info(`Set winner of Best ${ data.cat } to ${ data.nom }`);
+          done({ err: false, msg: `category updated` })
+        }
+      })
+    }
+    
+  },
+
+  getWinner: (cat, done) => {
+
+    db.use().query('SELECT C.id AS cid, C.name AS category, C.lastyear, N.id, N.name AS winner, N.film, N.image FROM categories C LEFT JOIN nominees N ON C.winner_id = N.id WHERE C.id = ?', cat, (err, rows) => {
+      if (err) {
+        done(err);
+      } else {
+        done(rows);
+      }
+    })
+
+  },
+
+  results: done => {
+    done(null);
+  }
+
+}
+
+module.exports = pred;

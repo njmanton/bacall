@@ -1,0 +1,43 @@
+{{#if images.backdrop }}
+<div class="backdrop" style="background-image: url({{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ images.backdrop }}"></div>
+{{ else }}
+<div class="top-pad"></div>
+{{/if }}
+
+<div class="container-fluid">
+  <h3>{{ data.winner.category }} : {{ data.winner.name }}</h3>
+  <div class="col">
+    {{#if data.winner.id }}
+      {{#if images.poster }}
+      <img src="{{ tmdb_base_url }}{{ tmdb_poster_size }}{{ images.poster }}" alt="{{ data.winner.name }}">
+      {{ else }}
+      <img src="/img/{{ data.winner.image }}.jpg" alt="{{ data.winner.name }}" />
+      {{/if }}
+    {{ else }}
+    <img src="/img/{{#if data.class }}camera{{ else }}person{{/if }}.svg" alt="No winner yet" />
+    {{/if }}
+  </div>
+  <div class="col">
+    <p>table to go here</p>
+    {{#each data.noms }}
+      <p>{{ name }}</p>
+    {{/each }}
+  </div>
+</div>
+<style>
+  .backdrop {
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 40vh;
+    background-position: center;
+  }
+  h3 {
+    text-align: center;
+    border: 10px solid gold;
+    margin: -4em auto 1em auto;
+    max-width: 50%;
+    padding: 1.2em;
+    display: block;
+    background-color: rgba(0,0,0,0.8);
+  }
+</style>

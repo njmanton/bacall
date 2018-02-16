@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+
+/*********************************************************
+winner.js
+
+command line tool to set winners of categories
+
+*********************************************************/
+
+var db      =  require('./models/'),
+    inq     =  require('inquirer'),
+    chalk   =  require('chalk'),
+    pred    =  require('./models/prediction'),
+    config  =  require('./config/');
+
+if (!config.expired) {
+  console.log(chalk.bold.red('Results cannot be entered before the deadline has been reached!'));
+  process.exit(1);
+}
+
+db.conn( err => {
+
+  pred.categories( response => {
+    inq.prompt({
+      type: 'list',
+      name: 'category',
+      message: 'select a category',
+      choices: response
+    }).then( answers => {
+      var cat = answers.category;
+      pred.nominees(cat, response => {
+        inq.prompt({
+          type: 'list',
+          name: 'id',
+          message: 'choose winner',
+          choices: response
+        }).then( winner => {
+          let arr = {
+            nid: winner.id,
+            cid: cat,
+          }
+          pred.setWinner(arr, outcome => {
+            if (outcome.err) {
+              console.log(chalk.bold.red(outcome.msg));
+            } else {
+              console.log(chalk.bold.green(outcome.msg));
+            }
+            process.exit(0);
+          })
+          //process.exit(0); 
+        })
+      })
+    })
+  })
+
+})

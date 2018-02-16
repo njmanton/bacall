@@ -1,0 +1,25 @@
+<section id="signup">
+  <h4>Sign up</h4>
+  {{#if expired }}
+  <p class="callout alert" style="border-radius: 4px">The deadline for predictions has now expired. See the <a href="/results">results</a> page to see how you did.</p>
+  {{else}}
+  <p>Enter your name and email to get started. The deadline for entering or changing predictions is <strong>Midday GMT {{ deadline }} </strong>.</p>
+  <form method="post" action="/signup">
+    <div class="signup-container">
+      <label for="username">What's your name? <span class="sub-label"> This is how you'll appear on the leaderboard (3-25 chars)</span></label>
+      <input autocomplete="off" placeholder="e.g. {{ signups.uid }}" id="username" name="username" type="text" maxlength="25">
+      <span id="username-not-valid" class="intrainput"></span>
+    </div>
+    <div class="signup-container">
+      <label for="email">What's your email? <span class="sub-label">You'll get a single email with your signup code</span></label>
+      <input autocomplete="off" placeholder="e.g. {{ signups.email }}" id="email" name="email" type="email">
+      <span id="email-not-valid" class="intrainput"></span>
+    </div>
+    <div class="signup-container">
+      <label for="franchise">What's your team name? <span class="sub-label">(Optional)</span></label>
+      <input autocomplete="off" placeholder="e.g. My 20 Year Quiz Hell" id="franchise" name="franchise" type="text">
+    </div>
+    <input id="signup-submit" type="submit" class="btn btn-success" value="Sign up" />
+  </form>
+  {{/if }}
+</section>

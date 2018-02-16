@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {{>head }}    
+  </head>
+  <body class="overlay">
+    {{{ body }}}
+    {{#if env }}{{#if debug }}
+    <div class="debug">
+      <h5>Debug:</h5>
+      <pre>{{ debug }}</pre>
+    </div>
+    {{/if }}{{/if }}  
+    <footer class="container-fluid">
+      {{>footer }}
+    </footer>
+  
+  </body>
+</html>

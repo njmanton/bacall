@@ -1,0 +1,7 @@
+node_modules
+assets/img
+assets/js/vendor
+assets/css/vendor
+config/
+*.sublime*
+TODO.md

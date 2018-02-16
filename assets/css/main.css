@@ -1,0 +1,164 @@
+@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
+.overlay {
+  background-image: url(../img/billboards-1.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #999; }
+
+.debug {
+  background-color: #222;
+  border-left: 5px #daa520 solid;
+  padding: 5px 0 5em 5px;
+  font-family: monospace; }
+  .debug pre {
+    color: #ccc; }
+
+#err404 {
+  background-image: url(../img/dunaway_404.jpg) !important; }
+  #err404 .statuscode {
+    text-align: center;
+    line-height: 1em;
+    font-weight: bold;
+    font-size: 10em; }
+  #err404 .statusdesc {
+    text-align: center;
+    font-size: 2em; }
+  #err404 p {
+    text-align: center; }
+
+.updated {
+  display: none; }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  background-color: black; }
+
+button.btn:hover, button.btn:focus {
+  text-decoration: none; }
+
+h4 {
+  text-align: center;
+  margin-bottom: 0.7em; }
+
+.top-pad {
+  height: 40vh; }
+
+.top-pad-60 {
+  height: 60vh; }
+
+del {
+  font-style: italic; }
+
+.content {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 3em 1em;
+  min-height: 60vh;
+  width: 100%;
+  color: #ccc;
+  font-size: 1.3em; }
+
+.card {
+  background-color: inherit; }
+
+.card-header {
+  background-color: inherit;
+  border-bottom: 2px solid #777; }
+  .card-header button {
+    font-size: 1.2em;
+    text-decoration: none;
+    color: #ccc; }
+
+button.btn-link.opened {
+  color: #daa520; }
+
+.nom {
+  float: left;
+  margin: 0.5em auto 1em auto;
+  position: relative; }
+  .nom img {
+    max-height: 22vw; }
+
+.nopred {
+  font-style: italic;
+  color: #999; }
+
+.picked {
+  border-bottom: 0.7em solid green; }
+
+span.label {
+  position: absolute;
+  display: none;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  text-align: center;
+  color: #ccc;
+  font-size: 0.8em;
+  padding-top: 3em;
+  background-color: rgba(51, 51, 51, 0.7);
+  cursor: pointer; }
+  span.label p {
+    margin: 0;
+    padding: 0; }
+  span.label a {
+    padding-top: 0.5em; }
+
+@media (min-width: 992px) {
+  span.label {
+    font-size: 1em; } }
+#signup-submit {
+  display: block;
+  margin: 0.5em auto;
+  color: #ccc; }
+
+.signup-container {
+  margin: 0.5em; }
+
+.sub-label {
+  font-size: 80%;
+  font-style: italic; }
+
+input#username, input#email, input#franchise {
+  display: inline-block;
+  border: none;
+  border-bottom: 2px #ccc solid;
+  box-shadow: none;
+  height: 3rem;
+  width: 75%;
+  background-color: inherit;
+  color: inherit; }
+  input#username:focus, input#email:focus, input#franchise:focus {
+    outline: none;
+    border-bottom: 2px solid #fff !important; }
+
+.intrainput {
+  display: inline-block;
+  margin-left: -4.2rem;
+  font-weight: bold;
+  min-width: 2.6rem;
+  text-align: right; }
+  .intrainput.success {
+    color: #43AC6A; }
+  .intrainput.err {
+    color: #f04124; }
+
+select {
+  display: inline;
+  width: 20em;
+  height: 2em; }
+
+.easy-autocomplete-container ul {
+  width: 15em;
+  list-style-type: none;
+  padding-left: 0.5em;
+  background-color: #a6a6a6; }
+
+/*# sourceMappingURL=main.css.map */
