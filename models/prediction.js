@@ -101,7 +101,7 @@ const pred = {
   categoryDetails: (cat, done) => {
     // return object to render category view
     let data = { winner: null, noms: null },
-        preds  = 'SELECT N.name, count(P.nominee_id = N.id) AS preds, (C.winner_id = N.id) AS winner FROM nominees N LEFT JOIN predictions P on nominee_id = N.id LEFT JOIN categories C on N.category_id = C.id WHERE N.category_id = ? GROUP BY N.id ORDER BY winner DESC, preds DESC',
+        preds  = 'SELECT U.username, N.name, (C.winner_id = N.id) AS winner FROM nominees N LEFT JOIN predictions P on P.nominee_id = N.id LEFT JOIN categories C on N.category_id = C.id LEFT JOIN users U on U.id = P.user_id WHERE N.category_id = ? ORDER BY winner DESC, name ASC',
         winner = 'SELECT C.id AS cid, C.class, C.name AS category, C.lastyear, N.id, N.tmdb_id AS tmdb, N.name AS name, N.film, N.image FROM categories C LEFT JOIN nominees N ON C.winner_id = N.id WHERE C.id = ?';
 
     db.use().query(winner, cat, (err, rows) => {
@@ -114,7 +114,23 @@ const pred = {
           if (err) {
             done(err);
           } else {
-            data.noms = rows;
+            let prev = null,
+                arr = {};
+            for (let i = 0; i < rows.length; i++) {
+              let name = rows[i].name;
+              if (!(name in arr)) {
+                arr[name] = {
+                  winner: rows[i].winner,
+                  cnt: 0,
+                  noms: []
+                }
+              }
+              if (rows[i].username) {
+                arr[name].noms.push(rows[i].username);
+                arr[name].cnt++;
+              }
+            }
+            data.noms = arr;
             done(data);
           }
         })
@@ -177,7 +193,31 @@ const pred = {
   },
 
   results: done => {
-    done(null);
+
+    const sql = 'SELECT username AS player, code, SUM((winner_id = nominee_id) * weight) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id GROUP BY username ORDER BY 3 DESC';
+    db.use().query(sql, (err, rows) => {
+      let result = { error: null, data: null };
+      if (err) {
+        result.error = err;
+      } else {
+        result.data = rows;
+        // loop through rows, assigning a rank
+        let prev_score = 0, 
+            rank = 1, 
+            row = 0;
+        for (let i = 0; i < rows.length; i++) {
+          if (rows[i].score == prev_score) {
+            row++;
+          } else {
+            rank = ++row;
+          }
+          prev_score = rows[i].score;
+          rows[i].rank = rank;
+        }
+      }
+      done(result);
+    })
+
   }
 
 }

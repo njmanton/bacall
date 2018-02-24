@@ -1,4 +1,10 @@
 @import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
+@import url("https://fonts.googleapis.com/css?family=Limelight");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans");
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: #ccc; }
+
 .overlay {
   background-image: url(../img/billboards-1.jpg);
   background-position: center center;
@@ -26,6 +32,7 @@
     text-align: center;
     font-size: 2em; }
   #err404 p {
+    margin-top: 1.5em;
     text-align: center; }
 
 .updated {
@@ -35,13 +42,20 @@ footer {
   position: fixed;
   bottom: 0;
   background-color: black; }
+  footer p {
+    margin: 0.7em 1em; }
 
 button.btn:hover, button.btn:focus {
   text-decoration: none; }
 
 h4 {
   text-align: center;
-  margin-bottom: 0.7em; }
+  margin-bottom: 1.3em;
+  font-size: 1.7em; }
+
+h3 {
+  text-align: center;
+  font-size: 2em; }
 
 .top-pad {
   height: 40vh; }
@@ -57,11 +71,20 @@ del {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.8);
-  padding: 3em 1em;
+  padding: 2em 1em;
   min-height: 60vh;
   width: 100%;
   color: #ccc;
   font-size: 1.3em; }
+
+.content-cat {
+  background-color: #111;
+  padding: 0 1em;
+  min-height: 60vh;
+  width: 100%;
+  color: #ccc;
+  font-size: 1.3em;
+  border-top: 10px solid gold; }
 
 .card {
   background-color: inherit; }
@@ -109,7 +132,7 @@ span.label {
     margin: 0;
     padding: 0; }
   span.label a {
-    padding-top: 0.5em; }
+    margin-top: 1em; }
 
 @media (min-width: 992px) {
   span.label {

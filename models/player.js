@@ -61,7 +61,7 @@ const player = {
 
   },
 
-  create: (username, email, done) => {
+  create: (username, email, franchise, done) => {
 
     let code = '';
     const len = 8,
@@ -76,6 +76,7 @@ const player = {
     const user = {
       username: username, 
       email: email, 
+      franchise: franchise,
       code: code,
       registered: new Date()
     };

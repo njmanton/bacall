@@ -1,0 +1,31 @@
+<div class="top-pad"></div>
+
+<div class="content container-fluid">
+<h3>Leaderboard</h3>
+
+{{#unless expired }}
+
+{{ else }}
+<table id="results">
+  <thead>
+    <tr>
+      <th>Position</th>
+      <th>Player</th>
+      <th colspan="2">Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each table.data }}
+    <tr>
+      <td class="{{#if @first }}winner{{/if }}">{{#if @first }}<span class="lead">&#127942;</span>{{ else }}{{ rank }}{{/if}}</td>
+      <td class="{{#if @first }}winner{{/if }}"><a href="/player/{{ code }}">{{ player }}</a></td>
+      <td width="500px">
+        <div class="bar" data-len="{{ score }}"></div>
+      </td>
+      <td>{{ score }}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{/unless }}
+</div>

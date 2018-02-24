@@ -26,11 +26,12 @@ app.use(express.static('assets'));
 app.use(bp.urlencoded({ extended: false }));
 app.use(bp.json());
 
-app.locals.env = (process.env.BACALL_ENV == 'test');
-app.locals.ver = pkg.version;
-app.locals.app = pkg.name;
-app.locals.expired = config.expired;
-app.locals.deadline = moment(config.deadline).format('MMM D');
+app.use((req, res, next) => {
+  res.locals.ver = pkg.version;
+  res.locals.app = pkg.name;
+  res.locals.env = process.env.BACALL_ENV;
+  next();
+})
 app.locals.tmdb_base_url = 'https://image.tmdb.org/t/p/';
 app.locals.tmdb_poster_size = 'w300/';
 app.locals.tmdb_backdrop_size = 'w1280/';

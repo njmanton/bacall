@@ -4,27 +4,59 @@
 <div class="top-pad"></div>
 {{/if }}
 
-<div class="container-fluid">
-  <h3>{{ data.winner.category }} : {{ data.winner.name }}</h3>
-  <div class="col">
-    {{#if data.winner.id }}
-      {{#if images.poster }}
-      <img src="{{ tmdb_base_url }}{{ tmdb_poster_size }}{{ images.poster }}" alt="{{ data.winner.name }}">
+<div class="content-cat container-fluid">
+  <h3>Best {{ data.winner.category }} : {{#if data.winner.name }}{{ data.winner.name }}{{ else }}<span style="color: #ccc;">tbc</span>{{/if }}</h3>
+  <div class="row">
+    <div class="col">
+      {{#if data.winner.id }}
+        {{#if images.poster }}
+        <img src="{{ tmdb_base_url }}{{ tmdb_poster_size }}{{ images.poster }}" alt="{{ data.winner.name }}">
+        {{ else }}
+        <img src="/img/{{ data.winner.image }}.jpg" alt="{{ data.winner.name }}" />
+        {{/if }}
       {{ else }}
-      <img src="/img/{{ data.winner.image }}.jpg" alt="{{ data.winner.name }}" />
+      <img class="placeholder" src="/img/{{#if data.winner.class }}person{{ else }}camera{{/if }}.svg" alt="No winner yet" />
       {{/if }}
-    {{ else }}
-    <img src="/img/{{#if data.class }}camera{{ else }}person{{/if }}.svg" alt="No winner yet" />
-    {{/if }}
-  </div>
-  <div class="col">
-    <p>table to go here</p>
-    {{#each data.noms }}
-      <p>{{ name }}</p>
-    {{/each }}
+    </div>
+    <div class="col-8">    
+        <table class="table">
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              <th>Votes</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each data.noms }}
+            <tr class="{{#if winner }}winner{{/if }}">
+              <td>{{ @key }}</td>
+              <td>
+                {{#each noms }}
+                {{#unless null }}<span title="{{ this }}" class="block"></span>{{/unless }}
+                {{/each }}
+              </td>
+              <td>{{ cnt }}</td>
+            </tr>
+            {{/each }}
+          </tbody>
+        </table>
+    </div>
   </div>
 </div>
 <style>
+  .block {
+    display: inline-block;
+    background-color: blue;
+    margin: 0.3em 1px;
+    height: 2em;
+    width: 4em;
+  }
+
+  tr.winner .block {
+    background-color: gold;
+  }
+
   .backdrop {
     background-size: cover;
     background-repeat: no-repeat;
@@ -33,11 +65,21 @@
   }
   h3 {
     text-align: center;
+    font-family: 'Limelight', cursive;
+    font-size: 2em;
     border: 10px solid gold;
-    margin: -4em auto 1em auto;
+    margin: 0 auto 1em auto;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
     max-width: 50%;
-    padding: 1.2em;
+    padding: 0.8em 1.2em;
     display: block;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgb(21,21,21);
+    color: white;
+  }
+
+  img.placeholder {
+    height: 450px;
+    width: 300px;
   }
 </style>

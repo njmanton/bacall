@@ -15,7 +15,7 @@ $(document).ready(function() {
   // predictions page
   $('div.nom').on('click', function() {
     var _this  = $(this),
-        uid    = $('h4').data('id'),
+        uid    = $('h3').data('id'),
         cid    = _this.data('cid'),
         nid    = _this.data('nid'),
         name   = _this.data('name'),

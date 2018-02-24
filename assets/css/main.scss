@@ -1,4 +1,6 @@
 @import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
+@import url('https://fonts.googleapis.com/css?family=Limelight');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 $val-ok: #43AC6A;
 $val-err: #f04124;
@@ -6,6 +8,11 @@ $text: #ccc;
 $outline: #fff;
 $bg-color: #999;
 $gold: #daa520;
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: $text;
+}
 
 .overlay {
   background-image: url(../img/billboards-1.jpg);
@@ -39,6 +46,7 @@ $gold: #daa520;
     font-size: 2em;
   }
   p {
+    margin-top: 1.5em;
     text-align: center;
   }
 }
@@ -51,6 +59,9 @@ footer {
   position: fixed;
   bottom: 0;
   background-color: black;
+  p {
+    margin: 0.7em 1em;
+  }
 }
 
 button.btn:hover, button.btn:focus {
@@ -59,7 +70,15 @@ button.btn:hover, button.btn:focus {
 
 h4 {
   text-align: center;
-  margin-bottom: 0.7em;
+  margin-bottom: 1.3em;
+  font-size: 1.7em;
+  //font-family: 'Limelight', cursive;
+}
+
+h3 {
+  //font-family: 'Limelight', cursive;
+  text-align: center;
+  font-size: 2em;
 }
 
 // buffer at top to show bg image
@@ -80,11 +99,21 @@ del {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.8);
-  padding: 3em 1em;
+  padding: 2em 1em;
   min-height: 60vh;
   width: 100%;
   color: $text;
   font-size: 1.3em;
+}
+
+.content-cat {
+  background-color: #111;
+  padding: 0 1em;
+  min-height: 60vh;
+  width: 100%;
+  color: $text;
+  font-size: 1.3em;
+  border-top: 10px solid gold;
 }
 
 .card {
@@ -144,7 +173,7 @@ span.label {
     padding: 0;
   }
   a {
-    padding-top: 0.5em;
+    margin-top: 1em;
   }
 }
 
@@ -169,10 +198,6 @@ span.label {
 .signup-container {
   margin: 0.5em;
 }
-
-
-
-
 
 .sub-label {
   font-size: 80%;

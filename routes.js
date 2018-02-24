@@ -20,45 +20,42 @@ const routes = app => {
     res.render('about');
   });
 
-  app.get('/tmdb', (req, res) => {
-    tmdb.images({
-      id: 17,
-      type: 1
-    }, urls => {
-      res.send(urls);
-    })
+  // app.get('/tmdb', (req, res) => {
+  //   tmdb.images({
+  //     id: 17,
+  //     type: 1
+  //   }, urls => {
+  //     res.send(urls);
+  //   })
 
-  });
+  // });
 
   // handle user signup form
   app.post('/signup', (req, res) => {
-    player.create(req.body.username, req.body.email, check => {
-      if (check.code) {
-
-      }
+    player.create(req.body.username, req.body.email, req.body.franchise, check => {
       res.render('main', { signup: check, signups: config.placeholders() });
     })
   })
 
   // get the results
-  app.get('/results', (req, res) => {
-    pred.results( data => {
-      res.render('results', { table: data });
-    })
-  })
+  // app.get('/results', (req, res) => {
+  //   pred.results( data => {
+  //     res.render('results', { table: data, debug: JSON.stringify(data, null, 2) });
+  //   })
+  // })
 
   // routing for users
   app.get('/player/:code', (req, res) => {
     player.exists(req.params.code, check => {
       if (check.id) {
         pred.preds(check.id, data => {
-          if (data.code) { // if preds returned an error, go back to main m=page and display error
+          if (data.code) { // if preds returned an error, go back to main page and display error
             res.render('main', { error: data.code, signups: config.placeholders() })
           } else {
-            res.render('players', { 
+            res.render('players', {
               user: check, 
               data: data, 
-              //debug: JSON.stringify(data, null, 2) 
+              //debug: JSON.stringify(data, null, 2)
             });
           }
         })
@@ -76,33 +73,33 @@ const routes = app => {
   });
 
   // handle setting a category winner
-  app.post('/setwinner', (req, res) => {
-    pred.setwinner(req.body, check => {
-      res.send(check);
-    })
-  });
+  // app.post('/setwinner', (req, res) => {
+  //   pred.setwinner(req.body, check => {
+  //     res.send(check);
+  //   })
+  // });
 
   // render a view of a category, with predictions
-  app.get('/category/:cat', (req, res) => {
+  // app.get('/category/:cat', (req, res) => {
 
-    if (req.params.cat > 0 && req.params.cat < 25) {
-      pred.categoryDetails(req.params.cat, data => {
-        tmdb.images({
-          id: data.winner.tmdb,
-          type: data.winner.class
-        }, urls => {
-          res.render('category', {
-            layout: 'layout_cat',
-            data: data,
-            images: urls,
-            debug: JSON.stringify(data, null, 2) //JSON.stringify(data, null, 2)
-          })          
-        })
-      })
-    } else {
-      res.status(404).render('404', { err: 'invalid category' });
-    }
-  })
+  //   if (req.params.cat > 0 && req.params.cat < 25) {
+  //     pred.categoryDetails(req.params.cat, data => {
+  //       tmdb.images({
+  //         id: data.winner.tmdb,
+  //         type: data.winner.class
+  //       }, urls => {
+  //         res.render('category', {
+  //           layout: 'layout_cat',
+  //           data: data,
+  //           images: urls,
+  //           debug: JSON.stringify(data, null, 2) //JSON.stringify(data, null, 2)
+  //         })          
+  //       })
+  //     })
+  //   } else {
+  //     res.status(404).render('404', { err: 'invalid category' });
+  //   }
+  // })
 
   // check the uniqueness of a signups name and email
   app.post('/player/check', (req, res) => {
@@ -112,11 +109,11 @@ const routes = app => {
   });
 
   // get list of users predicting nom in cat
-  app.get('/prediction/userbycat/:cat/:nom', (req, res) => {
-    pred.getUsersByBet(req.params.cat, req.params.nom, list => {
-      res.send(list);
-    })
-  });
+  // app.get('/prediction/userbycat/:cat/:nom', (req, res) => {
+  //   pred.getUsersByBet(req.params.cat, req.params.nom, list => {
+  //     res.send(list);
+  //   })
+  // });
 
   // get list of existing franchises
   app.get('/player/franchise/:fragment', (req, res) => {

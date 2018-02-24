@@ -1,7 +1,7 @@
 <div class="top-pad"></div>
 
 <div class="content container-fluid">
-  
+  <h3 data-id="{{ user.id }}">Predictions for {{ user.username }} <small>(<span id="predcnt"></span>/24)</small></h3>
   {{#if expired }}
     <p>The deadline for predictions has expired</p>
     <ul>
@@ -10,7 +10,6 @@
     {{/each }}
     </ul>
   {{ else }}
-    <h4 data-id="{{ user.id }}">{{ user.username }}, you've made <span id="predcnt"></span> of 24 predictions.</h4>
     <div id="accordion" role="tablist">
       {{#each data }}
       <div class="card">
@@ -34,7 +33,7 @@
                     <p>{{ name }}</p>
                     {{#if film }}<p>({{ film }})</p>{{/if }}
                     <a title="View at themoviedb.org (new window)" target="_blank" href="https://themoviedb.org/{{#if film }}person{{ else }}movie{{/if }}/{{ tmdb }}" class="btn btn-sm btn-outline-primary">Link &#x29c9;</a>
-                  </span>                  
+                  </span>
                 </div>
               </div>
               {{/each }}                
