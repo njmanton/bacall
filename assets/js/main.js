@@ -1,4 +1,9 @@
 $(document).ready(function() {
+
+  // auto clear message boxes after 6s
+  window.setTimeout(function() {
+    $('.alert .close').click();
+  }, 6000);
   
   $('a').on('click', function(e) {
     e.stopPropagation();

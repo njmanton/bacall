@@ -93,7 +93,6 @@ const player = {
       } else {
         result.code = code;
         mail.send(email, user, result => {
-          console.log(result);
           logger.info(`signup email sent to ${ user.email }`);
         })
       }

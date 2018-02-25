@@ -14,8 +14,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: cover;
-  background-color: #999; }
+  background-size: cover; }
 
 @media (min-width: 992px) {
   .overlay {
@@ -112,7 +111,7 @@ button.btn-link.opened {
   margin: 0.5em auto 1em auto;
   position: relative; }
   .nom img {
-    max-height: 22vw; }
+    max-height: 45vw; }
 
 .nopred {
   font-style: italic;
@@ -131,7 +130,7 @@ span.label {
   max-width: 100%;
   text-align: center;
   color: #ccc;
-  font-size: 0.8em;
+  font-size: 0.6em;
   padding-top: 3em;
   background-color: rgba(51, 51, 51, 0.7);
   cursor: pointer; }
@@ -141,9 +140,20 @@ span.label {
   span.label a {
     margin-top: 1em; }
 
+.card-body .col {
+  padding-left: 2px;
+  padding-right: 2px; }
+
 @media (min-width: 992px) {
+  .nom img {
+    max-height: 22vw; }
+
   span.label {
-    font-size: 1em; } }
+    font-size: 0.8em; }
+
+  .col {
+    padding-left: 15px;
+    padding-right: 15px; } }
 #signup-submit {
   display: block;
   margin: 0.5em auto;
@@ -189,6 +199,9 @@ select {
   width: 15em;
   list-style-type: none;
   padding-left: 0.5em;
-  background-color: #a6a6a6; }
+  font-weight: bold;
+  color: orange;
+  cursor: pointer;
+  background-color: #222; }
 
 /*# sourceMappingURL=main.css.map */
