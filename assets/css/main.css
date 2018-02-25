@@ -1,18 +1,25 @@
 @import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
 @import url("https://fonts.googleapis.com/css?family=Limelight");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
+html {
+  height: 100%;
+  width: 100%; }
+
 body {
   font-family: 'Open Sans', sans-serif;
   color: #ccc; }
 
 .overlay {
-  background-image: url(../img/billboards-1.jpg);
-  background-position: center center;
+  background-image: url(../img/billboards-small.jpg);
+  background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
   background-color: #999; }
 
+@media (min-width: 992px) {
+  .overlay {
+    background-image: url(../img/billboards-1.jpg); } }
 .debug {
   background-color: #222;
   border-left: 5px #daa520 solid;
