@@ -3,6 +3,7 @@
 
 const db = require('../models/'),
       logger = require('winston'),
+      moment = require('moment'),
       config = require('../config/');
 
 
@@ -65,13 +66,14 @@ const pred = {
       // first see if there's an existing row
       var sql = 'SELECT id FROM predictions WHERE user_id = ? AND category_id = ?';
       db.use().query(sql, [body.uid, body.cid], (err, rows) => {
+        let now = moment().format('YYYY-MM-DD HH:mm:ss');
         if (rows && rows.length) { // row exists so update
-          db.use().query('UPDATE predictions SET ? WHERE id = ?', [{ user_id: body.uid, category_id: body.cid, nominee_id: body.nid }, rows[0].id], (err, rows) => {
+          db.use().query('UPDATE predictions SET ? WHERE id = ?', [{ user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }, rows[0].id], (err, rows) => {
             logger.info(`Prediction updated: uid:${ body.uid } | category:${ body.cid } | nominee:${ body.nid }`);
             done((rows) ? rows.affectedRows.toString() : false);
           })
         } else { // row doesn't exist so insert
-          db.use().query('INSERT INTO predictions SET ?', { user_id: body.uid, category_id: body.cid, nominee_id: body.nid }, (err, rows) => {
+          db.use().query('INSERT INTO predictions SET ?', { user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }, (err, rows) => {
             logger.info(`Prediction created: uid:${ body.uid } | category:${ body.cid } | nominee:${ body.nid }`);
             done((rows) ? rows.affectedRows.toString() : false);
           })
