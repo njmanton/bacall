@@ -5,7 +5,6 @@ const exp_test = 0;
 
 const deadline = new Date('2018-03-04T12:00');
 exports.deadline = deadline;
-exports.expired = (new Date() > deadline || exp_test);
 
 var signups = [
   { uid: 'rubeus', email: 'rhagrid@hogwarts.ac.uk' },

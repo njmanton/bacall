@@ -61,8 +61,7 @@ const pred = {
   },
 
   save: (body, done) => {
-
-    if (body.cid && body.uid && body.nid && !config.expired) {
+    if (body.cid && body.uid && body.nid && (new Date() < config.deadline)) {
       // first see if there's an existing row
       var sql = 'SELECT id FROM predictions WHERE user_id = ? AND category_id = ?';
       db.use().query(sql, [body.uid, body.cid], (err, rows) => {

@@ -38,16 +38,21 @@ $(document).ready(function() {
         }
         
       }).done(function(d) {
-        divs.removeClass('picked');
-        _this.addClass('picked');
-        _this.parent().parent().parent().parent().parent().find('.updated').fadeIn();
-        window.setTimeout(function() {
-          $('.updated').fadeOut();
-        }, 3000);
-        $('.text' + cid).text(": " + name); // change the accordion header to prediction
-        cntpred();
+        if (d) {
+          console.log('success', d);
+          divs.removeClass('picked');
+          _this.addClass('picked');
+          _this.parent().parent().parent().parent().parent().find('.updated').fadeIn();
+          window.setTimeout(function() {
+            $('.updated').fadeOut();
+          }, 3000);
+          $('.text' + cid).text(": " + name); // change the accordion header to prediction
+          cntpred();
+        } else {
+          console.log('could not save prediction');
+        }
       }).fail(function(e) {
-        console.log('Error saving prediction', e);
+        console.log('error saving prediction', e);
       })
     }
 

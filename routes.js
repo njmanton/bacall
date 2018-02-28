@@ -12,7 +12,8 @@ const routes = app => {
 
   // main page
   app.get('/', (req, res) => {
-    res.render('main', { signups: config.placeholders() });
+    const expired = (new Date() > config.deadline);
+    res.render('main', { expired: expired, signups: config.placeholders() });
   });
 
   // other static routes
@@ -46,21 +47,22 @@ const routes = app => {
 
   // routing for users
   app.get('/player/:code', (req, res) => {
+    const expired = (new Date() > config.deadline);
     player.exists(req.params.code, check => {
       if (check.id) {
         pred.preds(check.id, data => {
           if (data.code) { // if preds returned an error, go back to main page and display error
-            res.render('main', { error: data.code, signups: config.placeholders() })
+            res.render('main', { expired: expired, error: data.code, signups: config.placeholders() })
           } else {
             res.render('players', {
+              expired: expired,
               user: check, 
               data: data, 
-              //debug: JSON.stringify(data, null, 2)
             });
           }
         })
       } else {
-        res.render('main', { error: check.err, signups: config.placeholders() })
+        res.render('main', { expired: expired, error: check.err, signups: config.placeholders() })
       } 
     })
   })
