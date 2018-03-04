@@ -125,6 +125,9 @@ del {
   color: $text;
   font-size: 1.3em;
   border-top: 10px solid gold;
+  td {
+    vertical-align: middle;
+  }
 }
 
 .card {
@@ -272,4 +275,19 @@ select {
   color: orange;
   cursor: pointer;
   background-color: #222;
+}
+
+#results td {
+  border: none;
+}
+
+.bar {
+  width: 0; 
+  padding: 3px; 
+  height: 2em;
+  border-radius: 2px;
+  background-color: $val-err;
+  &.win {
+    background-color: $val-ok;
+  }
 }

@@ -41,7 +41,7 @@ const routes = app => {
   // get the results
   app.get('/results', (req, res) => {
     pred.results( data => {
-      res.render('results', { table: data, debug: JSON.stringify(data, null, 2) });
+      res.render('results', { table: data, expired: true });
     })
   })
 

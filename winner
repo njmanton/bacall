@@ -10,10 +10,11 @@ command line tool to set winners of categories
 var db      =  require('./models/'),
     inq     =  require('inquirer'),
     chalk   =  require('chalk'),
+    moment  =  require('moment'),
     pred    =  require('./models/prediction'),
     config  =  require('./config/');
 
-if (!config.expired) {
+if (moment().isBefore(config.deadline)) {
   console.log(chalk.bold.red('Results cannot be entered before the deadline has been reached!'));
   process.exit(1);
 }

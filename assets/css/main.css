@@ -91,6 +91,8 @@ del {
   color: #ccc;
   font-size: 1.3em;
   border-top: 10px solid gold; }
+  .content-cat td {
+    vertical-align: middle; }
 
 .card {
   background-color: inherit; }
@@ -203,5 +205,17 @@ select {
   color: orange;
   cursor: pointer;
   background-color: #222; }
+
+#results td {
+  border: none; }
+
+.bar {
+  width: 0;
+  padding: 3px;
+  height: 2em;
+  border-radius: 2px;
+  background-color: #f04124; }
+  .bar.win {
+    background-color: #43AC6A; }
 
 /*# sourceMappingURL=main.css.map */

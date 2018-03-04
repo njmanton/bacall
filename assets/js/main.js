@@ -171,4 +171,21 @@ $(document).ready(function() {
     }
   }
 
+  // results.hbs
+  $('#results .bar').each(function(i) {
+    var _this = $(this),
+        len = _this.data('len'),
+        col = '';
+    if (!i) {
+      width = (len) ? 100 : 0;
+      max_count = len;
+      _this.addClass('win');
+    } else {
+      width = len / max_count * 100;
+    }
+    _this.animate({
+        width: width + '%'
+      }, 900);
+  })
+
 })
