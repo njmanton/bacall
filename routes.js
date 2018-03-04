@@ -39,11 +39,11 @@ const routes = app => {
   })
 
   // get the results
-  // app.get('/results', (req, res) => {
-  //   pred.results( data => {
-  //     res.render('results', { table: data, debug: JSON.stringify(data, null, 2) });
-  //   })
-  // })
+  app.get('/results', (req, res) => {
+    pred.results( data => {
+      res.render('results', { table: data, debug: JSON.stringify(data, null, 2) });
+    })
+  })
 
   // routing for users
   app.get('/player/:code', (req, res) => {
@@ -82,26 +82,25 @@ const routes = app => {
   // });
 
   // render a view of a category, with predictions
-  // app.get('/category/:cat', (req, res) => {
+  app.get('/category/:cat', (req, res) => {
 
-  //   if (req.params.cat > 0 && req.params.cat < 25) {
-  //     pred.categoryDetails(req.params.cat, data => {
-  //       tmdb.images({
-  //         id: data.winner.tmdb,
-  //         type: data.winner.class
-  //       }, urls => {
-  //         res.render('category', {
-  //           layout: 'layout_cat',
-  //           data: data,
-  //           images: urls,
-  //           debug: JSON.stringify(data, null, 2) //JSON.stringify(data, null, 2)
-  //         })          
-  //       })
-  //     })
-  //   } else {
-  //     res.status(404).render('404', { err: 'invalid category' });
-  //   }
-  // })
+    if (req.params.cat > 0 && req.params.cat < 25) {
+      pred.categoryDetails(req.params.cat, data => {
+        tmdb.images({
+          id: data.winner.tmdb,
+          type: data.winner.class
+        }, urls => {
+          res.render('category', {
+            layout: 'layout_cat',
+            data: data,
+            images: urls
+          })          
+        })
+      })
+    } else {
+      res.status(404).render('404', { err: 'invalid category' });
+    }
+  })
 
   // check the uniqueness of a signups name and email
   app.post('/player/check', (req, res) => {
