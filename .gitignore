@@ -5,3 +5,4 @@ assets/css/vendor
 logs/*.log
 *.sublime*
 TODO.md
+*.code-workspace
