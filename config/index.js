@@ -3,7 +3,7 @@
 
 const exp_test = 0;
 
-const deadline = new Date('2018-03-04T12:00');
+const deadline = new Date('2019-02-24T18:00');
 exports.deadline = deadline;
 
 var signups = [
