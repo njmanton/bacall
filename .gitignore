@@ -6,3 +6,4 @@ logs/*.log
 *.sublime*
 TODO.md
 *.code-workspace
+.vscode
