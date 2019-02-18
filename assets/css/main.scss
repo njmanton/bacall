@@ -16,22 +16,26 @@ html {
 body {
   font-family: 'Open Sans', sans-serif;
   color: $text;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
-.overlay {
-  background-image: url(../img/billboards-small.jpg);
-  background-position: center;
-  background-repeat:  no-repeat;
-  background-attachment: fixed;
-  background-size:  cover;
-  //background-color: $bg-color;
-}
+// .overlay {
+//   //background-image: url(../img/billboards-small.jpg);
+//   background-image: url(../img/oscar_hell_sign.jpg);
+//   background-position: top;
+//   background-repeat:  no-repeat;
+//   background-attachment: fixed;
+//   //background-size:  cover;
+//   //background-color: $bg-color;
+//   width: 100%;
+// }
 
-@media (min-width: 992px) {
-  .overlay {
-    background-image: url(../img/billboards-1.jpg);
-  }
-}
+// @media (min-width: 992px) {
+//   .overlay {
+//     background-image: url(../img/oscar_hell_sign.jpg);
+//   }
+// }
 
 
 .debug {
@@ -94,7 +98,19 @@ h3 {
 
 // buffer at top to show bg image
 .top-pad {
+  background-image: url(../img/oscar_hell_sign_2.jpg);
+  background-size: contain;
+  background-position: center top;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-repeat:  no-repeat;
   height: 40vh;
+  div {
+    text-align: center;
+    padding-top: 1em;
+    color: #222;
+    font-size: 1.7em;
+    font-weight: bold;
+  }
 }
 
 .top-pad-60 {

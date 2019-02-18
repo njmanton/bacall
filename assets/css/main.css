@@ -7,18 +7,10 @@ html {
 
 body {
   font-family: 'Open Sans', sans-serif;
-  color: #ccc; }
+  color: #ccc;
+  margin: 0 auto;
+  max-width: 1200px; }
 
-.overlay {
-  background-image: url(../img/billboards-small.jpg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover; }
-
-@media (min-width: 992px) {
-  .overlay {
-    background-image: url(../img/billboards-1.jpg); } }
 .debug {
   background-color: #222;
   border-left: 5px #daa520 solid;
@@ -64,7 +56,18 @@ h3 {
   font-size: 2em; }
 
 .top-pad {
+  background-image: url(../img/oscar_hell_sign_2.jpg);
+  background-size: contain;
+  background-position: center top;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-repeat: no-repeat;
   height: 40vh; }
+  .top-pad div {
+    text-align: center;
+    padding-top: 1em;
+    color: #222;
+    font-size: 1.7em;
+    font-weight: bold; }
 
 .top-pad-60 {
   height: 60vh; }
@@ -149,13 +152,12 @@ span.label {
 @media (min-width: 992px) {
   .nom img {
     max-height: 22vw; }
-
   span.label {
     font-size: 0.8em; }
-
   .col {
     padding-left: 15px;
     padding-right: 15px; } }
+
 #signup-submit {
   display: block;
   margin: 0.5em auto;
@@ -217,5 +219,3 @@ select {
   background-color: #f04124; }
   .bar.win {
     background-color: #43AC6A; }
-
-/*# sourceMappingURL=main.css.map */
