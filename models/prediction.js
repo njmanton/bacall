@@ -173,8 +173,12 @@ const pred = {
         if (err) {
           done({ err: true, msg: err })
         } else {
-          //logger.info(`Set winner of Best ${ data.cat } to ${ data.nom }`);
-          done({ err: false, msg: `category updated` })
+          db.use().query('SELECT name FROM categories WHERE id = ?', data.cid, (cerr, cat) => {
+            db.use().query('SELECT name FROM nominees WHERE id = ?', data.nid, (nerr, nom) => {
+              logger.info(`Set winner of Best ${ cat[0].name } to ${ nom[0].name }`);
+              done({ err: false, msg: `The Oscar for ${ cat[0].name } goes to - ${ nom[0].name }` });              
+            })
+          })
         }
       })
     }
