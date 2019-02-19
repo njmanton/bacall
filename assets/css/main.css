@@ -66,8 +66,12 @@ h3 {
     text-align: center;
     padding-top: 1em;
     color: #222;
-    font-size: 1.7em;
+    font-size: 1.1em;
     font-weight: bold; }
+
+@media (min-width: 800px) {
+  .top-pad div {
+    font-size: 1.7em; } }
 
 .top-pad-60 {
   height: 60vh; }
