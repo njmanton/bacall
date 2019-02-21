@@ -12,7 +12,7 @@ const routes = app => {
 
   // main page
   app.get('/', (req, res) => {
-    const expired = (new Date() > config.deadline);
+    const expired = (new Date() > config.deadline || config.exp_test);
     res.render('main', { expired: expired, signups: config.placeholders() });
   });
 
@@ -47,7 +47,7 @@ const routes = app => {
 
   // routing for users
   app.get('/player/:code', (req, res) => {
-    const expired = (new Date() > config.deadline);
+    const expired = (new Date() > config.deadline || config.exp_test);
     player.exists(req.params.code, check => {
       if (check.id) {
         pred.preds(check.id, data => {
