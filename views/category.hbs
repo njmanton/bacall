@@ -10,15 +10,15 @@
     <div class="col">
       {{#if data.winner.id }}
         {{#if images.poster }}
-        <img src="{{ tmdb_base_url }}{{ tmdb_poster_size }}{{ images.poster }}" alt="{{ data.winner.name }}">
+        <img style="width: 100%;" src="{{ tmdb_base_url }}{{ tmdb_poster_size }}{{ images.poster }}" alt="{{ data.winner.name }}">
         {{ else }}
-        <img src="/img/{{ data.winner.image }}.jpg" alt="{{ data.winner.name }}" />
+        <img style="width: 100%;" src="/img/{{ data.winner.image }}.jpg" alt="{{ data.winner.name }}" />
         {{/if }}
       {{ else }}
       <img class="placeholder" src="/img/{{#if data.winner.class }}person{{ else }}camera{{/if }}.svg" alt="No winner yet" />
       {{/if }}
     </div>
-    <div class="col-8">    
+    <div class="col-8">
         <table class="table">
           <thead>
             <tr>
@@ -92,7 +92,7 @@
       max-width: 50%;
     }
     .block {
-      height: 2em;
+      height: 1.2em;
       width: 4em;
     }
   }
