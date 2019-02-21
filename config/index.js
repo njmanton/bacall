@@ -1,7 +1,7 @@
 // jshint node: true, esversion: 6
 'use strict';
 
-const exp_test = 1;
+const exp_test = 0;
 exports.exp_test = exp_test;
 
 const deadline = new Date('2019-02-24T18:00');
