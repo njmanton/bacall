@@ -14,7 +14,7 @@ var db      =  require('./models/'),
     pred    =  require('./models/prediction'),
     config  =  require('./config/');
 
-if (moment().isBefore(config.deadline)) {
+if (moment().isBefore(config.deadline) && !config.exp_test) {
   console.log(chalk.bold.red('Results cannot be entered before the deadline has been reached!'));
   process.exit(1);
 }
