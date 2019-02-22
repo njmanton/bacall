@@ -1,7 +1,7 @@
 <section id="signup">
   <h4>Sign up</h4>
   {{#if expired }}
-  <p class="alert alert-danger">The deadline for making predictions has now expired. See the <a href="/results">results</a> page to see how you did.</p>
+  <p class="alert alert-danger">The deadline for making predictions has now expired. See the <a href="/scoreboard">leaderboard</a> page to see how you did.<br />or see the <a href="/results">results</a> for each category.</p>
   {{else}}
   <p>Enter your name and email to get started. The deadline for entering or changing predictions is <strong>6pm 24th February GMT</strong>.</p>
   <form method="post" action="/signup">

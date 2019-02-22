@@ -38,12 +38,19 @@ const routes = app => {
     })
   })
 
-  // get the results
-  app.get('/results', (req, res) => {
+  // get the scoreboard
+  app.get('/scoreboard', (req, res) => {
     pred.results( data => {
-      res.render('results', { table: data, expired: true });
+      res.render('scoreboard', { table: data, expired: true });
     })
-  })
+  });
+
+  // show a list of results
+  app.get('/results', (req, res) => {
+    pred.list(data => {
+      res.render('results', { list: data });
+    })
+  });
 
   // routing for users
   app.get('/player/:code', (req, res) => {

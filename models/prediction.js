@@ -9,6 +9,18 @@ const db = require('../models/'),
 
 const pred = {
 
+  // simple query to get list of categories and their ids
+  list: done => {
+    const sql = 'SELECT id, name FROM categories';
+    db.use().query(sql, (err, rows) => {
+      if (err) {
+        done(err);
+      } else {
+        done(rows);
+      }
+    })
+  },
+
   preds: (uid, done) => {
 
     // horrible convoluted query and subquery to get predictions :-(
