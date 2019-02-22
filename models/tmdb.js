@@ -11,14 +11,13 @@ const tmdb = {
   // if a person (item = 1), just return image
   images: (item, done) => {
     if (!item.id) {
-      done({
-        error: 'no id provided'
-      });
+      done({ error: 'no id provided' });
     } else {
       if (item.type == 0) {
         mdb.movieImages({ id: item.id }, (err, res) => {
 
           try {
+            if (!res) throw new Error (`can't find that resource`);
             const idx = Math.floor(Math.random() * (res.backdrops.length - 1)),
                   idx2 = Math.floor(Math.random() * (res.posters.length - 1));            
             done({
@@ -27,7 +26,7 @@ const tmdb = {
             });            
           } catch(e) {
             console.log(e);
-            done({ error: true });
+            done({ error: e.message });
           }
 
         })

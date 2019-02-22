@@ -12,7 +12,7 @@ const routes = app => {
 
   // main page
   app.get('/', (req, res) => {
-    const expired = (new Date() > config.deadline);
+    const expired = (new Date() > config.deadline || config.exp_test);
     res.render('main', { expired: expired, signups: config.placeholders() });
   });
 
@@ -38,16 +38,23 @@ const routes = app => {
     })
   })
 
-  // get the results
-  app.get('/results', (req, res) => {
+  // get the scoreboard
+  app.get('/scoreboard', (req, res) => {
     pred.results( data => {
-      res.render('results', { table: data, expired: true });
+      res.render('scoreboard', { table: data, expired: true });
     })
-  })
+  });
+
+  // show a list of results
+  app.get('/results', (req, res) => {
+    pred.list(data => {
+      res.render('results', { list: data });
+    })
+  });
 
   // routing for users
   app.get('/player/:code', (req, res) => {
-    const expired = (new Date() > config.deadline);
+    const expired = (new Date() > config.deadline || config.exp_test);
     player.exists(req.params.code, check => {
       if (check.id) {
         pred.preds(check.id, data => {

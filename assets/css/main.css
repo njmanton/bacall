@@ -55,6 +55,10 @@ h3 {
   text-align: center;
   font-size: 2em; }
 
+.winner td {
+  font-weight: bold;
+  color: gold; }
+
 .top-pad {
   background-image: url(../img/oscar_hell_sign_2.jpg);
   background-size: contain;

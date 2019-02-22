@@ -96,6 +96,11 @@ h3 {
   font-size: 2em;
 }
 
+.winner td {
+  font-weight: bold;
+  color: gold;
+}
+
 // buffer at top to show bg image
 .top-pad {
   background-image: url(../img/oscar_hell_sign_2.jpg);
