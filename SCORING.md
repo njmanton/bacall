@@ -1,4 +1,4 @@
-# scoring
+# Scoring
 
 | player | predictions | pts | scaled pts |
 | ------ | --- | ----------- | ---------- |
@@ -14,10 +14,11 @@
 | James	| 11	| 30	| 16.2 |
 | nick	| 10	| 30	| 15.2 |
 
-Looking at scoring a number of different ways for 2019. 
-* number of categories correctly predicted
-* weighted score (current scoring mechanism)
-* scaled points - each category is worth points equal to the number of predictions, shared across all correct predictions
+The table shows the final scoring for 2019 by three different scoring methods:
+* number of categories correctly predicted (original scoring mechanism)
+* weighted score - categories are wroth 2/3/4 points (current scoring mechanism)
+* scaled points - each category is worth points equal to the number of predictions, and those points are shared across all correct predictions
 
-example. For 11 players, if everyone picks the same winning nominee (e.g. _Shallow_), they each score `11/11` points
-For a category where only two players predicted the correct winner, then they both score `11/2 = 5.5`
+## Example:
+For 11 players, if everyone picks the same winning nominee (e.g. _Shallow_), they each score `11/11` points.
+For a category where only two players predicted the correct winner (e.g. _Black Panther_ for costume design), then they both score `11/2 = 5.5`. This incentivises not 'going with the herd', but with higher risk.
