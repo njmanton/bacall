@@ -28,11 +28,11 @@
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
     "inquirer": "^5.0.1",
-    "mailgun-js": "^0.14.2",
+    "mailgun-js": "^0.22.0",
     "moment": "^2.20.1",
     "moviedb": "^0.2.10",
     "mysql": "^2.15.0",
-    "request": "^2.83.0",
+    "request": "^2.88.0",
     "winston": "^2.4.0"
   },
   "devDependencies": {
