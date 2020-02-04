@@ -60,22 +60,27 @@ h3 {
   color: gold; }
 
 .top-pad {
-  background-image: url(../img/oscar_hell_sign_2.jpg);
+  background-image: url(../img/joker_happyface1.jpg);
   background-size: contain;
   background-position: center top;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.95);
   background-repeat: no-repeat;
   height: 40vh; }
   .top-pad div {
     text-align: center;
     padding-top: 1em;
     color: #222;
-    font-size: 1.1em;
+    font-size: 1.2em;
     font-weight: bold; }
 
-@media (min-width: 800px) {
-  .top-pad div {
-    font-size: 1.7em; } }
+@media (min-width: 1125px) {
+  .top-pad {
+    background-position: right top; }
+    .top-pad div {
+      font-size: 2.5em;
+      padding-right: 65%;
+      color: #ccc;
+      padding-top: 3em; } }
 
 .top-pad-60 {
   height: 60vh; }
