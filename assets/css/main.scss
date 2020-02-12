@@ -1,8 +1,9 @@
-@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
+// sass-lint:disable property-sort-order no-color-keywords no-color-literals no-vendor-prefixes no-url-domains no-ids
+@import url('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
 @import url('https://fonts.googleapis.com/css?family=Limelight');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
-$val-ok: #43AC6A;
+$val-ok: #43ac6a;
 $val-err: #f04124;
 $text: #ccc;
 $outline: #fff;
@@ -10,7 +11,8 @@ $bg-color: #999;
 $gold: #daa520;
 
 html {
-  height: 100%; width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 body {
@@ -50,17 +52,20 @@ body {
 }
 
 #err404 {
-  background-image: url(../img/dunaway_404.jpg) !important;
+  background-image: url('../img/dunaway_404.jpg') !important;
+
   .statuscode {
     text-align: center;
     line-height: 1em;
     font-weight: bold;
     font-size: 10em;
   }
+
   .statusdesc {
     text-align: center;
     font-size: 2em;
   }
+
   p {
     margin-top: 1.5em;
     text-align: center;
@@ -75,13 +80,17 @@ footer {
   position: fixed;
   bottom: 0;
   background-color: black;
+
   p {
-    margin: 0.7em 1em;
+    margin: .7em 1em;
   }
 }
 
-button.btn:hover, button.btn:focus {
-  text-decoration: none;
+.btn {
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
 }
 
 h4 {
@@ -97,19 +106,22 @@ h3 {
   font-size: 2em;
 }
 
-.winner td {
-  font-weight: bold;
-  color: gold;
+.winner {
+  td {
+    font-weight: bold;
+    color: gold;
+  }
 }
 
 // buffer at top to show bg image
 .top-pad {
-  background-image: url(../img/joker_happyface1.jpg);
+  background-image: url('../img/joker_happyface1.jpg');
   background-size: contain;
   background-position: center top;
-  background-color: rgba(0, 0, 0, 0.95);
+  background-color: rgba(0, 0, 0, .95);
   background-repeat:  no-repeat;
   height: 40vh;
+
   div {
     text-align: center;
     padding-top: 1em;
@@ -122,6 +134,7 @@ h3 {
 @media (min-width: 1125px) {
   .top-pad {
     background-position: right top;
+
     div {
       font-size: 2.5em;
       padding-right: 65%;
@@ -144,7 +157,7 @@ del {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(146, 80, 80, .8);
   padding: 2em 1em;
   min-height: 60vh;
   width: 100%;
@@ -160,6 +173,7 @@ del {
   color: $text;
   font-size: 1.3em;
   border-top: 10px solid gold;
+
   td {
     vertical-align: middle;
   }
@@ -172,6 +186,7 @@ del {
 .card-header {
   background-color: inherit;
   border-bottom: 2px solid #777;
+
   button {
     font-size: 1.2em;
     text-decoration: none;
@@ -186,12 +201,13 @@ button.btn-link.opened {
 
 .nom {
   float: left;
-  margin: 0.5em auto 1em auto;
+  margin: .5em auto 1em;
+  position: relative;
 
   img {
     max-height: 45vw;
   }
-  position: relative;
+
 }
 
 .nopred {
@@ -200,7 +216,7 @@ button.btn-link.opened {
 }
 
 .picked {
-  border-bottom: 0.7em solid green;
+  border-bottom: .7em solid green;
 }
 
 span.label {
@@ -213,14 +229,16 @@ span.label {
   max-width: 100%;
   text-align: center;
   color: $text;
-  font-size: 0.6em;
+  font-size: .6em;
   padding-top: 3em;
-  background-color: rgba(51, 51, 51, 0.7);
+  background-color: rgba(51, 51, 51, .7);
   cursor: pointer;
+
   p {
     margin: 0;
     padding: 0;
   }
+
   a {
     margin-top: 1em;
   }
@@ -237,9 +255,11 @@ span.label {
       max-height: 22vw;
     }
   }
+
   span.label {
-    font-size: 0.8em;
+    font-size: .8em;
   }
+
   .col {
     padding-left: 15px;
     padding-right: 15px;
@@ -248,18 +268,19 @@ span.label {
 
 #signup-submit {
   display: block;
-  margin: 0.5em auto;
+  margin: .5em auto;
   //border-radius: 2px;
   //border: 2px solid $text;
   color: $text;
-  &[disabled] {
-    //color: transparent;
-    //display: none;
-  }
+
+  // &[disabled] {
+  //   color: transparent;
+  //   display: none;
+  // }
 }
 
 .signup-container {
-  margin: 0.5em;
+  margin: .5em;
 }
 
 .sub-label {
@@ -267,19 +288,22 @@ span.label {
   font-style: italic;
 }
 
-input#username, input#email, input#franchise {
-  &:focus {
-    outline: none;
-    border-bottom: 2px solid $outline !important;
-  };
+input#username,
+input#email,
+input#franchise {
   display: inline-block;
-  border: none;
+  border: 0;
   border-bottom: 2px $text solid;
   box-shadow: none;
   height: 3rem;
   width: 75%;
   background-color: inherit;
   color: inherit;
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid $outline !important;
+  };
 }
 
 .intrainput {
@@ -288,24 +312,20 @@ input#username, input#email, input#franchise {
   font-weight: bold;
   min-width: 2.6rem;
   text-align: right;
+
   &.success {
     color: $val-ok;
   }
+
   &.err {
     color: $val-err;
   }
 }
 
-select {
-  display: inline;
-  width: 20em;
-  height: 2em;
-}
-
 .easy-autocomplete-container ul {
   width: 15em;
   list-style-type: none;
-  padding-left: 0.5em;
+  padding-left: .5em;
   font-weight: bold;
   color: orange;
   cursor: pointer;
@@ -313,15 +333,16 @@ select {
 }
 
 #results td {
-  border: none;
+  border: 0;
 }
 
 .bar {
-  width: 0; 
-  padding: 3px; 
+  width: 0;
+  padding: 3px;
   height: 2em;
   border-radius: 2px;
   background-color: $val-err;
+
   &.win {
     background-color: $val-ok;
   }
