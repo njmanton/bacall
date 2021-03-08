@@ -5,12 +5,13 @@ const fs      = require('fs'),
       hbs     = require('handlebars'),
       pkg     = require('../package.json'),
       logger  = require('winston'),
-      mailgun = require('mailgun-js')({ apiKey: process.env.MAILGUN_KEY, domain: 'lcssl.org' });
+      sg      = require('@sendgrid/mail');
 
 const mail = {
 
   send: (recipient, context, done) => {
 
+    
     // convert template and context into message
     let template = fs.readFileSync(__dirname + '/../views/mail/signup.hbs', 'utf8');
     let message = hbs.compile(template);
@@ -21,11 +22,8 @@ const mail = {
       name: pkg.name
     }
 
-console.log('mailer', template);
-console.log('context', context);
-
-    var data = {
-      from: 'Oscar Preds <oscars2018@lcssl.org>',
+    var msg = {
+      from: 'Oscar Preds <oscars@mxxyqh.com>',
       to: recipient,
       bcc: 'njmanton@gmail.com',
       subject: 'Your signup code for My 20 Year Oscar Hell',
@@ -33,13 +31,17 @@ console.log('context', context);
       html: message(context)
     };
 
-    mailgun.messages().send(data).then(response => {
-      logger.info(`signup by ${ context.name } (${ recipient })`);
-      done(response);
-    }, err => {
-      logger.error(`signup not processed: ${ err }`);
-      done(err);
-    });
+    sg.setApiKey(process.env.SENDGRID_KEY);
+
+    sg.send(msg)
+      .then(() => {
+        logger.info(`new sign-up by ${ context.name } ${ recipient }`);
+        done();
+       })
+      .catch(error => {
+        logger.error(`sign-up not processed: ${ error }`);
+        done(error);
+       });
 
   },
 
