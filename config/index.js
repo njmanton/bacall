@@ -4,8 +4,8 @@
 const exp_test = 0;
 exports.exp_test = exp_test;
 
-const deadline = new Date('2020-02-09T22:00');
-exports.deadline = deadline;
+const deadline_date = '2021-04-25T22:00';
+exports.deadline = new Date(deadline_date);;
 
 var signups = [
   { uid: 'rubeus', email: 'rhagrid@hogwarts.ac.uk' },
