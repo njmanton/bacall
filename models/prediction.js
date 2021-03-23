@@ -177,7 +177,7 @@ const pred = {
 
   setWinner: (data, done) => {
     // sets the winner of a category and saves to database
-    if (!process.env.BACALL_ADMIN) {
+    if (!process.env.OSCAR_ADMIN) {
       done({ err: true, msg: `permission denied` });
     } else {
       // data object should contain cid & nid

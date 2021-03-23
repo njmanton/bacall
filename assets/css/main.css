@@ -1,4 +1,4 @@
-@import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css);
+@import url("https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css");
 @import url("https://fonts.googleapis.com/css?family=Limelight");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
 html {
@@ -20,7 +20,7 @@ body {
     color: #ccc; }
 
 #err404 {
-  background-image: url(../img/dunaway_404.jpg) !important; }
+  background-image: url("../img/dunaway_404.jpg") !important; }
   #err404 .statuscode {
     text-align: center;
     line-height: 1em;
@@ -41,9 +41,9 @@ footer {
   bottom: 0;
   background-color: black; }
   footer p {
-    margin: 0.7em 1em; }
+    margin: .7em 1em; }
 
-button.btn:hover, button.btn:focus {
+.btn:hover, .btn:focus {
   text-decoration: none; }
 
 h4 {
@@ -60,22 +60,27 @@ h3 {
   color: gold; }
 
 .top-pad {
-  background-image: url(../img/oscar_hell_sign_2.jpg);
+  background-image: url("../img/joker_happyface1.jpg");
   background-size: contain;
   background-position: center top;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.95);
   background-repeat: no-repeat;
   height: 40vh; }
   .top-pad div {
     text-align: center;
     padding-top: 1em;
     color: #222;
-    font-size: 1.1em;
+    font-size: 1.2em;
     font-weight: bold; }
 
-@media (min-width: 800px) {
-  .top-pad div {
-    font-size: 1.7em; } }
+@media (min-width: 1125px) {
+  .top-pad {
+    background-position: right top; }
+    .top-pad div {
+      font-size: 2.5em;
+      padding-right: 65%;
+      color: #ccc;
+      padding-top: 3em; } }
 
 .top-pad-60 {
   height: 60vh; }
@@ -87,7 +92,7 @@ del {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(146, 80, 80, 0.8);
   padding: 2em 1em;
   min-height: 60vh;
   width: 100%;
@@ -121,7 +126,7 @@ button.btn-link.opened {
 
 .nom {
   float: left;
-  margin: 0.5em auto 1em auto;
+  margin: .5em auto 1em;
   position: relative; }
   .nom img {
     max-height: 45vw; }
@@ -131,7 +136,7 @@ button.btn-link.opened {
   color: #999; }
 
 .picked {
-  border-bottom: 0.7em solid green; }
+  border-bottom: .7em solid green; }
 
 span.label {
   position: absolute;
@@ -143,7 +148,7 @@ span.label {
   max-width: 100%;
   text-align: center;
   color: #ccc;
-  font-size: 0.6em;
+  font-size: .6em;
   padding-top: 3em;
   background-color: rgba(51, 51, 51, 0.7);
   cursor: pointer; }
@@ -161,33 +166,37 @@ span.label {
   .nom img {
     max-height: 22vw; }
   span.label {
-    font-size: 0.8em; }
+    font-size: .8em; }
   .col {
     padding-left: 15px;
     padding-right: 15px; } }
 
 #signup-submit {
   display: block;
-  margin: 0.5em auto;
+  margin: .5em auto;
   color: #ccc; }
 
 .signup-container {
-  margin: 0.5em; }
+  margin: .5em; }
 
 .sub-label {
   font-size: 80%;
   font-style: italic; }
 
-input#username, input#email, input#franchise {
+input#username,
+input#email,
+input#franchise {
   display: inline-block;
-  border: none;
+  border: 0;
   border-bottom: 2px #ccc solid;
   box-shadow: none;
   height: 3rem;
   width: 75%;
   background-color: inherit;
   color: inherit; }
-  input#username:focus, input#email:focus, input#franchise:focus {
+  input#username:focus,
+  input#email:focus,
+  input#franchise:focus {
     outline: none;
     border-bottom: 2px solid #fff !important; }
 
@@ -198,26 +207,21 @@ input#username, input#email, input#franchise {
   min-width: 2.6rem;
   text-align: right; }
   .intrainput.success {
-    color: #43AC6A; }
+    color: #43ac6a; }
   .intrainput.err {
     color: #f04124; }
-
-select {
-  display: inline;
-  width: 20em;
-  height: 2em; }
 
 .easy-autocomplete-container ul {
   width: 15em;
   list-style-type: none;
-  padding-left: 0.5em;
+  padding-left: .5em;
   font-weight: bold;
   color: orange;
   cursor: pointer;
   background-color: #222; }
 
 #results td {
-  border: none; }
+  border: 0; }
 
 .bar {
   width: 0;
@@ -226,4 +230,4 @@ select {
   border-radius: 2px;
   background-color: #f04124; }
   .bar.win {
-    background-color: #43AC6A; }
+    background-color: #43ac6a; }

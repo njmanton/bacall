@@ -29,7 +29,7 @@ app.use(bp.json());
 app.use((req, res, next) => {
   res.locals.ver = pkg.version;
   res.locals.app = pkg.name;
-  res.locals.env = process.env.BACALL_ENV;
+  res.locals.env = process.env.OSCAR_ENV;
   next();
 })
 app.locals.tmdb_base_url = 'https://image.tmdb.org/t/p/';
