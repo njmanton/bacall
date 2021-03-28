@@ -9,12 +9,6 @@ $(document).ready(function() {
     e.stopPropagation();
   });
 
-  // calculate the number of predicted categories
-  var cntpred = function() {
-    var c = (24 - $('button .nopred').length);
-    $('#predcnt').html(c);
-  }
-
   cntpred();
 
   // predictions page
@@ -52,37 +46,11 @@ $(document).ready(function() {
           console.log('could not save prediction');
         }
       }).fail(function(e) {
-        console.log('error saving prediction', e);
+        console.log('error saving prediction');
       })
     }
 
   });
-
-  // handle events to show name when hovering over image
-  $('div.nom').on('mouseenter tap', function() {
-    $(this).find('.label').fadeIn();
-  })
-
-  $('div.nom').on('mouseleave tap', function() {
-    $(this).find('.label').fadeOut();
-  })
-
-  $('#accordion').on('shown.bs.collapse', function(e) {
-
-    // find the button element and style it when clicked (event target = uncovered div)
-    var btn = $(e.target).parent().find('button');
-    btn.addClass('opened');
-    btn.find('.ctrl').html('▼');
-
-  });
-
-  $('#accordion').on('hide.bs.collapse', function(e) {
-
-    var btn = $(e.target).parent().find('button');
-    btn.removeClass('opened');
-    btn.find('.ctrl').html('▶︎');
-
-  });  
 
   // main page (signups)
   $('#signup-submit').attr('disabled', 'disabled');
