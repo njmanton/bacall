@@ -1,52 +1,134 @@
-<div class="top-pad">
-  <div>WELCOME TO THE 7TH ANNUAL MY</div>
-</div>
-
-<div class="content container-fluid">
-  <h3 data-id="{{ user.id }}">Predictions for {{ user.username }} <small>(<span id="predcnt"></span>/24)</small></h3>
-  {{#if expired }}
-    <p>The deadline for predictions has expired</p>
-    <ul>
-    {{#each data }}
-      <li><a href="/category/{{ id }}">{{ category }}</a> - {{ pred.name }}</li>
-    {{/each }}
-    </ul>
-  {{ else }}
-    <div id="accordion" role="tablist">
-      {{#each data }}
-      <div class="card">
-        <div class="card-header" role="tab" id="heading{{ id }}">
-          <h5 class="mb-0">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#cat{{ id }}" aria-expanded="false" aria-controls="cat{{ id }}"><span class="ctrl">▶︎</span> {{ category }}
-              <span class="text{{ id }}">: {{#if pred.name }}{{ pred.name }}{{ else }}<span class="nopred" title="No prediction yet">(No prediction made)</span>{{/if }}</span> 
-            </button><span class="updated badge badge-pill badge-success">saved</span>
-          </h5>
-        </div>
-
-        <div id="cat{{ id }}" data-pred="{{ ../pred.id }}" data-parent="#accordion" class="collapse show" role="tabpanel" aria-labelledby="heading{{ id }}">
-          <div class="card-body">
-            <span class="nopred">{{ weight }} points. Last Year's Winner: {{{ lastyear }}}</span>
-            <div class="row">
-              {{#each noms }}
-              <div class="col">
-                <div title="{{ name }}" class="{{#if this.pred }}picked{{/if}} nom" data-cid="{{ ../id }}" data-name="{{ name }}" data-nid="{{ id }}" data-film="{{ film }}">
-                  <img src="/img/{{ image }}.jpg" alt="{{ name }}" />
-                  <span class="label">
-                    <p>{{ name }}</p>
-                    {{#if film }}<p>({{ film }})</p>{{/if }}
-                    <a title="View at themoviedb.org (new window)" target="_blank" href="https://themoviedb.org/{{#if film }}person{{ else }}movie{{/if }}/{{ tmdb }}" class="btn btn-sm btn-outline-primary">Link &#x29c9;</a>
-                  </span>
-                </div>
-              </div>
-              {{/each }}                
-            </div>
-          </div>
-        </div>
-
+<div class="content">
+  <div id="popup"></div>
+  <div class="header" id="header" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">{{ user.username }} - <span id="predcnt"></span>/25</div>
+  <div class="banner">Welcome to the 8th Annual...</div>
+  <div class="title"> <a href="" id="prev">◀</a> {{ cat.name }} <span id="predind" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span> <a href="" id="next">▶</a></div>
+  <div class="choices row">
+    
+    <div class="selection col-xs-2">
+      <div>
+        <p>Last Year: {{ cat.lastyear }}</p>
       </div>
-      {{/each }}
-
+      {{#each data }}
+        <div class="nominee {{#if pred }}selected{{/if }}" data-img="{{ image }}" data-nid="{{ nid }}">
+          {{ nominee }} {{#if film }}<p><em>({{ film }})</em></p>{{/if }}
+        </div>
+      {{/each}}
     </div>
-  {{/if }}
+   
+    <div class="image col-xs-2" data-default="
+    {{#if img }}/img/{{ img }}.jpg
+    {{else }}
+      {{#if cat.class }}
+        /img/person.svg
+      {{else }}
+        /img/camera.svg      
+      {{/if }}
+    {{/if }}
+    ">
+      <img src="" alt="Poster or portrait of selected nominee" />
+    </div>
 
+  </div>
 </div>
+
+<style>
+  #popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    color: #222;
+    padding: 0.8em;
+    border-radius: 0.3em;
+  }
+  .success {
+    background-color: yellowgreen;
+  }
+  .failure {
+    background-color: orange;
+  }
+  div.header { background-color: #222;}
+  div.selected { 
+    background-color: #63f;
+  }
+  div.nominee:hover {
+    background-color: #a9f;
+  }  
+  div.nominee { cursor: pointer };
+</style>
+
+<script>
+  function nav() {
+    $('.image img').prop('src', $('.image').data('default'));
+    var prevurl = window.location.pathname.split('/'),
+        cur = prevurl.pop(),
+        nexturl = JSON.parse(JSON.stringify(prevurl));
+
+    var prevcat = (cur == 1) ? 25 : (cur * 1) - 1,
+        nextcat = (cur == 25) ? 1 : (cur * 1) + 1;
+
+    prevurl.push(prevcat);
+    nexturl.push(nextcat);
+    
+    $('#prev').prop('href', prevurl.join('/'));
+    $('#next').prop('href', nexturl.join('/'));
+
+  }
+  nav();
+
+  $('.nominee').on('mouseenter', function() {
+    var img = '/img/' + $(this).data('img') + '.jpg';
+    $('.image img').prop('src', img);
+  });
+
+  $('.nominee').on('mouseleave', function() {
+    $('.image img').prop('src', $('.image').data('default'));
+  });
+
+  $('.nominee:not(.selected)').on('click', function() {
+    if ($(this).hasClass('selected')) return false; // don't send ajax request for something already picked
+    var _this = $(this),
+        img = '/img/' + _this.data('img') + '.jpg',
+        nid = _this.data('nid'),
+        cid = $('#header').data('cid'),
+        uid = $('#header').data('uid');
+
+    $.ajax({
+      url: '/prediction',
+      type: 'post',
+      data: {
+        uid: uid,
+        cid: cid,
+        nid: nid
+      }
+    }).done(function(d) {
+      if (d) {
+        $('.image img').prop('src', img).parent().data('default', img);
+        $('.nominee').removeClass('selected');
+        _this.addClass('selected');
+        $('#predind').html('✅');
+        ajaxResult(true);
+      } else {
+        console.log('Could not save prediction');
+        ajaxResult(false);
+      }
+    }).fail(function(err) {
+      console.log('Could not save prediction: ');
+      ajaxResult(false);
+    })
+  })
+
+  function ajaxResult(outcome) {
+    var popup = $('#popup'),
+        msg = outcome ? 'prediction saved' : 'Could not update prediction',
+        cls = outcome ? 'success' : 'failure';
+
+    popup.html(msg).addClass(cls).fadeIn();
+    window.setTimeout(function() {
+      popup.removeClass(cls).fadeOut();
+    }, 1500);
+  }
+
+</script>
