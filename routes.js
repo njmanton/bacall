@@ -21,15 +21,9 @@ const routes = app => {
     res.render('about');
   });
 
-  // app.get('/tmdb', (req, res) => {
-  //   tmdb.images({
-  //     id: 17,
-  //     type: 1
-  //   }, urls => {
-  //     res.send(urls);
-  //   })
-
-  // });
+  app.get('/test', (req, res) => {
+    res.send('OK');
+  });
 
   // handle user signup form
   app.post('/signup', (req, res) => {
@@ -53,26 +47,50 @@ const routes = app => {
   });
 
   // routing for users
+  // no category get rerouted to cid:1
   app.get('/player/:code', (req, res) => {
+    res.redirect(['/player',req.params.code,'1'].join('/'));
+  });
+
+  // routing for player predictions
+  app.get('/player/:code/:cat', (req, res) => {
+    // check if deadline reached
     const expired = (new Date() > config.deadline || config.exp_test);
+    // first check if the code is real
     player.exists(req.params.code, check => {
       if (check.id) {
-        pred.preds(check.id, data => {
-          if (data.code) { // if preds returned an error, go back to main page and display error
-            res.render('main', { expired: expired, error: data.code, signups: config.placeholders() })
+        // player exists, so retrieve predictions
+        pred.preds(check.id, req.params.cat, data => {
+          if (data.code) {
+            res.render('main', {});
           } else {
-            res.render('players', {
-              expired: expired,
-              user: check, 
-              data: data, 
-            });
+            // get the list of all categories for the navigation
+            pred.list(cats => {
+              // loop through nominees to get prediction for the default image
+              let img = '';
+              for (let x = 0; x < data.length; x++) {
+                if (data[x].pred) {
+                  // short-circuit the loop once we find a prediction
+                  img = data[x].image; break;
+                }
+              }
+              res.render('players', {
+                expired: expired,
+                user: check,
+                data: data,
+                cat: cats[req.params.cat - 1],
+                img: img
+              });
+              //res.send(`<pre>${ JSON.stringify([data, cats[req.params.cat - 1], img], null, 2) }</pre>`);
+            })
+
           }
         })
       } else {
-        res.render('main', { expired: expired, error: check.err, signups: config.placeholders() })
-      } 
+        res.render('main', {});
+      }
     })
-  })
+  });
 
   // handle prediction update
   app.post('/prediction', (req, res) => {
@@ -81,27 +99,21 @@ const routes = app => {
     })
   });
 
-  // handle setting a category winner
-  // app.post('/setwinner', (req, res) => {
-  //   pred.setwinner(req.body, check => {
-  //     res.send(check);
-  //   })
-  // });
-
   // render a view of a category, with predictions
   app.get('/category/:cat', (req, res) => {
 
-    if (req.params.cat > 0 && req.params.cat < 25) {
+    if (req.params.cat > 0 && req.params.cat < 26) {
       pred.categoryDetails(req.params.cat, data => {
         tmdb.images({
           id: data.winner.tmdb,
           type: data.winner.class
         }, urls => {
-          res.render('category', {
-            layout: 'layout_cat',
-            data: data,
-            images: urls
-          })          
+          // res.render('category', {
+          //   layout: 'layout_cat',
+          //   data: data,
+          //   images: urls
+          // })
+          res.send(`<pre>${ JSON.stringify([data, urls], null, 2) }</pre>`);
         })
       })
     } else {
@@ -115,13 +127,6 @@ const routes = app => {
       res.send(check);
     })
   });
-
-  // get list of users predicting nom in cat
-  // app.get('/prediction/userbycat/:cat/:nom', (req, res) => {
-  //   pred.getUsersByBet(req.params.cat, req.params.nom, list => {
-  //     res.send(list);
-  //   })
-  // });
 
   // get list of existing franchises
   app.get('/player/franchise/:fragment', (req, res) => {
