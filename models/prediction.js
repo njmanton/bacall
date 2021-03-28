@@ -11,7 +11,7 @@ const pred = {
 
   // simple query to get list of categories and their ids
   list: done => {
-    const sql = 'SELECT id, name FROM categories';
+    const sql = 'SELECT id, name, class, lastyear FROM categories';
     db.use().query(sql, (err, rows) => {
       if (err) {
         done(err);
@@ -21,55 +21,16 @@ const pred = {
     })
   },
 
-  preds: (uid, done) => {
-
-    // horrible convoluted query and subquery to get predictions :-(
-    var sql = 'SELECT N.image, N.film, N.id AS nid, N.name AS nominee, N.tmdb_id AS tmdb, C.lastyear AS ly, C.class AS class, C.weight, C.id AS cid, C.name AS category, (I.nominee_id > 0) AS pred FROM nominees N JOIN categories C ON N.category_id = C.id LEFT JOIN (SELECT category_id, nominee_id FROM predictions P WHERE user_id = ?) I ON (I.category_id = C.id AND I.nominee_id = N.id) ORDER BY cid, nid';
-    db.use().query(sql, uid, (err, rows) => {
-
+  preds: (uid, cid, done) => {
+    const sql = 'SELECT N.image, N.film, N.id AS nid, N.name AS nominee, N.tmdb_id AS tmdb, (I.nominee_id > 0) AS pred FROM nominees N JOIN categories C ON N.category_id = C.id LEFT JOIN (SELECT category_id, nominee_id FROM predictions P WHERE user_id = ?) I ON (I.category_id = C.id AND I.nominee_id = N.id) WHERE c.id = ? ORDER BY nid';
+    db.use().query(sql, [uid, cid], (err, rows) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         done(err);
       } else {
-        let data = [],
-              pcid = 0;
-
-        // iterate through results to build up nested object category 1-M nominees
-        for (let i = 0; i < rows.length; i++) {
-          let row = rows[i];
-          if (row.cid != pcid) {
-            data[row.cid - 1] = {
-              id: row.cid,
-              category: row.category,
-              lastyear: row.ly,
-              class: row.class,
-              weight: row.weight,
-              pred: {},
-              noms: []
-            }
-          }
-          data[row.cid - 1].noms.push({
-            id: row.nid,
-            name: row.nominee,
-            film: row.film,
-            image: row.image,
-            pred: row.pred,
-            tmdb: row.tmdb
-          })
-          if (row.pred == 1) {
-            data[row.cid - 1].pred = {
-              id: row.nid,
-              name: row.nominee,
-              film: row.film,
-              image: row.image
-            }
-          }
-          pcid = row.cid;
-        }
-        done(data);
+        done(rows);
       }
     })
-
   },
 
   save: (body, done) => {
@@ -153,7 +114,7 @@ const pred = {
 
   categories: done => {
     // return list of unannounced categories for CLI
-    let sql = 'SELECT id AS value, name FROM categories WHERE winner_id IS NULL';
+    const sql = 'SELECT id AS value, name FROM categories WHERE winner_id IS NULL';
     db.use().query(sql, (err, rows) => {
       if (err) {
         done(err);
@@ -165,7 +126,7 @@ const pred = {
 
   nominees: (cat, done) => {
     // return list of nominees for a given category for CLI
-    let sql = 'SELECT N.id AS value, N.name, C.name AS cat FROM nominees N JOIN categories C ON C.id = N.category_id WHERE category_id = ?';
+    const sql = 'SELECT N.id AS value, N.name, C.name AS cat FROM nominees N JOIN categories C ON C.id = N.category_id WHERE category_id = ?';
     db.use().query(sql, cat, (err, rows) => {
       if (err) {
         done(err);
@@ -187,8 +148,14 @@ const pred = {
         } else {
           db.use().query('SELECT name FROM categories WHERE id = ?', data.cid, (cerr, cat) => {
             db.use().query('SELECT name FROM nominees WHERE id = ?', data.nid, (nerr, nom) => {
-              logger.info(`Set winner of Best ${ cat[0].name } to ${ nom[0].name }`);
-              done({ err: false, msg: `The Oscar for ${ cat[0].name } goes to - ${ nom[0].name }` });              
+              db.use().query('SELECT COUNT(*)/SUM(nominee_id = winner_id) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id WHERE C.id = ?', data.cid, (serr, value) => {
+                const score = (JSON.parse(JSON.stringify(value))[0].score);
+                db.use().query('UPDATE predictions SET score = ? WHERE category_id = ? AND nominee_id = ?', [score, data.cid, data.nid], (err, rows) => {
+                  logger.info(`Set winner of Best ${ cat[0].name } to ${ nom[0].name }`);
+                  console.log(rows.changedRows);
+                  done({ err: false, msg: `The BAFTA for ${ cat[0].name } goes to - ${ nom[0].name }\n${ rows.changedRows } prediction(s) correct, scoring ${ score }` });                 
+                })
+              })
             })
           })
         }
@@ -211,7 +178,7 @@ const pred = {
 
   results: done => {
 
-    const sql = 'SELECT username AS player, code, SUM((winner_id = nominee_id) * weight) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id GROUP BY username ORDER BY 3 DESC';
+    const sql = 'SELECT username AS player, code, SUM(score) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id GROUP BY username ORDER BY 3 DESC';
     db.use().query(sql, (err, rows) => {
       let result = { error: null, data: null };
       if (err) {
