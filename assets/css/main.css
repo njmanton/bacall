@@ -60,30 +60,29 @@ h3 {
   color: gold; }
 
 .top-pad {
-  background-image: url("../img/joker_happyface1.jpg");
+  background-image: url("../img/bafta.jpg");
   background-size: contain;
-  background-position: center top;
-  background-color: rgba(0, 0, 0, 0.95);
+  background-position: left top;
+  background-color: #222;
   background-repeat: no-repeat;
-  height: 40vh; }
+  height: 30vh; }
   .top-pad div {
-    text-align: center;
-    padding-top: 1em;
+    text-align: left;
+    padding-left: 5em;
     color: #222;
     font-size: 1.2em;
     font-weight: bold; }
 
 @media (min-width: 1125px) {
   .top-pad {
-    background-position: right top; }
+    background-position: left top; }
     .top-pad div {
-      font-size: 2.5em;
-      padding-right: 65%;
+      font-size: 3em;
       color: #ccc;
-      padding-top: 3em; } }
+      padding-top: 1em; } }
 
 .top-pad-60 {
-  height: 60vh; }
+  height: 40vh; }
 
 del {
   font-style: italic; }
