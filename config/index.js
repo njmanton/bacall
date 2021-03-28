@@ -4,7 +4,7 @@
 const exp_test = 0;
 exports.exp_test = exp_test;
 
-const deadline_date = '2021-04-25T22:00';
+const deadline_date = '2021-04-11T18:00';
 exports.deadline = new Date(deadline_date);;
 
 var signups = [
