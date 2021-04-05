@@ -1,0 +1,49 @@
+<div class="content">
+  <h3>Total score: {{ total }}</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>&nbsp;</th>
+        <th>Prediction</th>
+        <th>Points</th>
+        <th>Winner</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each data }}
+      <tr class="{{#if pts }}corr{{/if }}">
+        <td class="wrap">{{ category }}</td>
+        <td>
+          <img class="thumb" src="/img/{{ pimage }}.jpg" />
+        </td>
+        <td class="wrap">{{{ prediction }}}</td>
+        <td>{{#if wimage }}{{ pts }}{{ else }}-{{/if }}</td>
+        <td class="wrap">{{ winner }}</td>
+        <td>
+          {{#if wimage }}<img class="thumb" src="/img/{{ wimage }}.jpg" />{{/if}}
+        </td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .thumb {
+    max-wdith: 2em;
+    max-height: 3em;
+  }
+  .corr td {
+    background-color: #9f9;
+  }
+  td {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .wrap {
+    max-width: 3em;
+  }
+</style>
