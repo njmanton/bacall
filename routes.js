@@ -21,8 +21,13 @@ const routes = app => {
     res.render('about');
   });
 
-  app.get('/test', (req, res) => {
-    res.send('OK');
+  app.get('/test/:uid', (req, res) => {
+    pred.summary(req.params.uid, data => {
+      res.render('summary', {
+        data: data.table,
+        total: data.total
+      });
+    })
   });
 
   // handle user signup form
@@ -99,27 +104,25 @@ const routes = app => {
     })
   });
 
-  // render a view of a category, with predictions
+  // render a summary of given category
   app.get('/category/:cat', (req, res) => {
+    tmdb.images(req.params.cat, data => {
+      res.render('category', {
+        layout: 'layout_cat',
+        data: data,
+        cat: req.params.cat
+      });
+      //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`)
+    })
+  });
 
-    if (req.params.cat > 0 && req.params.cat < 26) {
-      pred.categoryDetails(req.params.cat, data => {
-        tmdb.images({
-          id: data.winner.tmdb,
-          type: data.winner.class
-        }, urls => {
-          // res.render('category', {
-          //   layout: 'layout_cat',
-          //   data: data,
-          //   images: urls
-          // })
-          res.send(`<pre>${ JSON.stringify([data, urls], null, 2) }</pre>`);
-        })
-      })
-    } else {
-      res.status(404).render('404', { err: 'invalid category' });
-    }
-  })
+  // ajax request for pie chart on category page
+  app.get('/api/cat/:cat', (req, res) => {
+    //res.send(['a', 'b', 'c']);
+    pred.pie(req.params.cat, data => {
+      res.send(data);
+    })
+  });
 
   // check the uniqueness of a signups name and email
   app.post('/player/check', (req, res) => {
