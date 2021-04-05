@@ -9,8 +9,6 @@ $(document).ready(function() {
     e.stopPropagation();
   });
 
-  cntpred();
-
   // predictions page
   $('div.nom').on('click', function() {
     var _this  = $(this),
@@ -41,7 +39,6 @@ $(document).ready(function() {
             $('.updated').fadeOut();
           }, 3000);
           $('.text' + cid).text(": " + name); // change the accordion header to prediction
-          cntpred();
         } else {
           console.log('could not save prediction');
         }
