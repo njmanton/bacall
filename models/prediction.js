@@ -40,7 +40,7 @@ const pred = {
   },
 
   summary: (uid, done) => {
-    const sql = 'SELECT N.name AS prediction, N.id AS pid, N.image AS pimage, C.name AS category, P.score AS pts, W.name AS winner, W.id AS wid, W.image AS wimage FROM predictions P INNER JOIN nominees N ON P.nominee_id = N.id LEFT JOIN categories C ON P.category_id = C.id LEFT JOIN nominees W ON C.winner_id = W.id WHERE P.user_id = ?';
+    const sql = 'SELECT N.name AS prediction, N.id AS pid, N.image AS pimage, C.name AS category, C.id AS cid, P.score AS pts, W.name AS winner, W.id AS wid, W.image AS wimage FROM predictions P INNER JOIN nominees N ON P.nominee_id = N.id LEFT JOIN categories C ON P.category_id = C.id LEFT JOIN nominees W ON C.winner_id = W.id WHERE P.user_id = ?';
     db.use().query(sql, uid, (err, rows) => {
       if (!rows.length || err) {
         done({ err: 'no data' })
@@ -49,9 +49,8 @@ const pred = {
         for (let x = 0; x < rows.length; x++) {
           rows[x].pts = Math.round(rows[x].pts * 10) / 10;
           score += rows[x].pts;
-          rows[x].prediction = rows[x].prediction.replace(' ', '<br />');
+          //rows[x].prediction = rows[x].prediction.replace(' ', '<br />');
         }
-        console.log(rows);
         done({
           table: rows,
           total: score
