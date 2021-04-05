@@ -6,7 +6,6 @@ const db = require('../models/'),
       moment = require('moment'),
       config = require('../config/');
 
-
 const pred = {
 
   // simple query to get list of categories and their ids
@@ -31,6 +30,34 @@ const pred = {
         done(rows);
       }
     })
+  },
+
+  pie: (cid, done) => {
+    const sql = 'SELECT N.name, COUNT(N.id) AS y FROM nominees N INNER JOIN predictions P ON P.nominee_id = N.id WHERE P.category_id = ? GROUP BY N.name ORDER BY 2 DESC';
+    db.use().query(sql, cid, (err, rows) => {
+      done(rows);
+    })
+  },
+
+  summary: (uid, done) => {
+    const sql = 'SELECT N.name AS prediction, N.id AS pid, N.image AS pimage, C.name AS category, P.score AS pts, W.name AS winner, W.id AS wid, W.image AS wimage FROM predictions P INNER JOIN nominees N ON P.nominee_id = N.id LEFT JOIN categories C ON P.category_id = C.id LEFT JOIN nominees W ON C.winner_id = W.id WHERE P.user_id = ?';
+    db.use().query(sql, uid, (err, rows) => {
+      if (!rows.length || err) {
+        done({ err: 'no data' })
+      } else {
+        let score = 0;
+        for (let x = 0; x < rows.length; x++) {
+          rows[x].pts = Math.round(rows[x].pts * 10) / 10;
+          score += rows[x].pts;
+          rows[x].prediction = rows[x].prediction.replace(' ', '<br />');
+        }
+        console.log(rows);
+        done({
+          table: rows,
+          total: score
+        });
+      }
+    });
   },
 
   save: (body, done) => {
@@ -61,7 +88,7 @@ const pred = {
   category: (cat, done) => {
 
     // get all predictions by nominee for a given category
-    const sql = 'SELECT N.id, N.name, COUNT(P.id) AS cnt, (C.winner_id = N.id) AS winner FROM predictions P JOIN nominees N ON N.id = P.nominee_id JOIN categories C ON C.id = P.category_id WHERE P.category_id = ? GROUP BY N.id ORDER BY cnt DESC';
+    const sql = 'SELECT N.id, N.name, N.image, COUNT(P.id) AS cnt, (C.winner_id = N.id) AS winner FROM predictions P JOIN nominees N ON N.id = P.nominee_id JOIN categories C ON C.id = P.category_id WHERE P.category_id = ? GROUP BY N.id ORDER BY cnt DESC';
     db.use().query(sql, cat, (err, rows) => {
       if (err) {
         done(err);
