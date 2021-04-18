@@ -10,7 +10,7 @@ const pred = {
 
   // simple query to get list of categories and their ids
   list: done => {
-    const sql = 'SELECT id, name, class, lastyear FROM categories';
+    const sql = 'SELECT id, name, class, lastyear, precursors FROM categories';
     db.use().query(sql, (err, rows) => {
       if (err) {
         done(err);
@@ -42,7 +42,7 @@ const pred = {
   summary: (uid, done) => {
     const sql = 'SELECT N.name AS prediction, N.id AS pid, N.image AS pimage, C.name AS category, C.id AS cid, P.score AS pts, W.name AS winner, W.id AS wid, W.image AS wimage FROM predictions P INNER JOIN nominees N ON P.nominee_id = N.id LEFT JOIN categories C ON P.category_id = C.id LEFT JOIN nominees W ON C.winner_id = W.id WHERE P.user_id = ?';
     db.use().query(sql, uid, (err, rows) => {
-      if (!rows.length || err) {
+      if (err || !rows.length) {
         done({ err: 'no data' })
       } else {
         let score = 0;
@@ -67,12 +67,12 @@ const pred = {
         let now = moment().format('YYYY-MM-DD HH:mm:ss');
         if (rows && rows.length) { // row exists so update
           db.use().query('UPDATE predictions SET ? WHERE id = ?', [{ user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }, rows[0].id], (err, rows) => {
-            logger.info(`Prediction updated: uid:${ body.uid } | category:${ body.cid } | nominee:${ body.nid }`);
+            logger.info(`Prediction updated: uid:${ body.uid } | cid:${ body.cid } | nid:${ body.nid }`);
             done((rows) ? rows.affectedRows.toString() : false);
           })
         } else { // row doesn't exist so insert
           db.use().query('INSERT INTO predictions SET ?', { user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }, (err, rows) => {
-            logger.info(`Prediction created: uid:${ body.uid } | category:${ body.cid } | nominee:${ body.nid }`);
+            logger.info(`Prediction created: uid:${ body.uid } | cid:${ body.cid } | nid:${ body.nid }`);
             done((rows) ? rows.affectedRows.toString() : false);
           })
         }
