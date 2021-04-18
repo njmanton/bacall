@@ -23,7 +23,7 @@ const mail = {
     }
 
     var msg = {
-      from: 'Oscar Preds <oscars@mxxyqh.com>',
+      from: 'Oscar Preds <oscars+noreply@mxxyqh.com>',
       to: recipient,
       bcc: 'njmanton@gmail.com',
       subject: 'Your signup code for My 20 Year Oscar Hell',
