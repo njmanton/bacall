@@ -1,106 +1,57 @@
-{{#if images.backdrop }}
-<div class="backdrop" style="background-image: url({{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ images.backdrop }}"></div>
+{{#if data.backdrop }}
+<div class="backdrop" style="min-height: 250px; background-image: url({{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ data.backdrop }}"></div>
 {{ else }}
 <div class="top-pad">
-  <div>WELCOME TO THE 7TH ANNUAL MY</div>
+  
 </div>
 {{/if }}
-
-<div class="content-cat container-fluid">
-  <h3>Best {{ data.winner.category }} : {{#if data.winner.name }}{{ data.winner.name }}{{ else }}<span style="color: #ccc;">tbc</span>{{/if }}</h3>
-  <div class="row">
-    <div class="col">
-      {{#if data.winner.id }}
-        {{#if images.poster }}
-        <img style="width: 100%;" src="{{ tmdb_base_url }}{{ tmdb_poster_size }}{{ images.poster }}" alt="{{ data.winner.name }}">
-        {{ else }}
-        <img style="width: 100%;" src="/img/{{ data.winner.image }}.jpg" alt="{{ data.winner.name }}" />
-        {{/if }}
+<div class="row">
+  <div class="col-sm">
+    <h3>{{ data.category }}</h3>
+    {{#if data.winner }}
+      <h4>Winner - {{ data.winner }}</h4>
+      {{#if data.singular }}
+      <p>There was only 1 correct prediction, scoring <em>{{ data.points }}</em></p>
       {{ else }}
-      <img class="placeholder" src="/img/{{#if data.winner.class }}person{{ else }}camera{{/if }}.svg" alt="No winner yet" />
+      <p>There were {{ data.correct }} correct predictions, each worth <em>{{ data.points }}</em></p>
+      <img style="max-width: 50%;" src="{{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ data.poster }}" alt="Poster of {{ data.winner }}">
       {{/if }}
-    </div>
-    <div class="col-8">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th>Votes</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each data.noms }}
-            <tr class="{{#if winner }}winner{{/if }}">
-              <td>{{ @key }}</td>
-              <td>
-                {{#each noms }}
-                {{#unless null }}<span title="{{ this }}" class="block"></span>{{/unless }}
-                {{/each }}
-              </td>
-              <td>{{ cnt }}</td>
-            </tr>
-            {{/each }}
-          </tbody>
-        </table>
-    </div>
+    {{/if }}
+  </div>
+  <div class="col-sm">
+    <figure class="highcharts-figure">
+      <div id="container"></div>
+    </figure>
   </div>
 </div>
-<style>
-  .block {
-    display: inline-block;
-    background-color: blue;
-    margin: 0.3em 1px;
-    height: 1em;
-    width: 1em;
-  }
 
-  tr.winner .block {
-    background-color: gold;
-  }
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+  $(document).ready(function() {
+    var chart = Highcharts.chart('container', {
+      chart: {
+        type: 'pie'
+      },
+      title: null,
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.y}'
+          },
+          size: '100%'
+        }
+      }
+    });
 
-  .backdrop {
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 40vh;
-    background-position: center;
-  }
-  h3 {
-    text-align: center;
-    font-family: 'Limelight', cursive;
-    font-size: 1em;
-    border: 3px solid gold;
-    margin: 0 auto 1em auto;
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    max-width: 90%;
-    padding: 0.8em 1.2em;
-    display: block;
-    background-color: rgb(21,21,21);
-    color: white;
-  }
-
-  @media (max-width: 992px) {
-    .content-cat .col-8 {
-      min-width: 100%;
-    }    
-  }
-
-
-  @media (min-width: 992px) {
-    h3 {
-      font-size: 2em;
-      border: 10px solid gold;
-      max-width: 50%;
-    }
-    .block {
-      height: 1.2em;
-      width: 4em;
-    }
-  }
-
-  img.placeholder {
-    height: 450px;
-    width: 300px;
-  }
-</style>
+    $.get(`/api/cat/{{ cat }}`).done(function(data) {
+      chart.addSeries({
+        name: 'Predictions',
+        data: data,
+        innerSize: '20%'
+      })
+    })
+  })
+</script>

@@ -14,13 +14,19 @@
     <tbody>
       {{#each data }}
       <tr class="{{#if pts }}corr{{/if }}">
-        <td class="wrap">{{ category }}</td>
+        <td>
+          <div class="wrap"><a href="/category/{{ cid }}">{{ category }}</a></div>
+        </td>
         <td>
           <img class="thumb" src="/img/{{ pimage }}.jpg" />
         </td>
-        <td class="wrap">{{{ prediction }}}</td>
+        <td>
+          <div class="wrap">{{{ prediction }}}</div>
+        </td>
         <td>{{#if wimage }}{{ pts }}{{ else }}-{{/if }}</td>
-        <td class="wrap">{{ winner }}</td>
+        <td>
+          <div class="wrap">{{ winner }}</div>
+        </td>
         <td>
           {{#if wimage }}<img class="thumb" src="/img/{{ wimage }}.jpg" />{{/if}}
         </td>
@@ -38,12 +44,14 @@
   .corr td {
     background-color: #9f9;
   }
-  td {
-    overflow: hidden;
-    white-space: nowrap;
+  .wrap {
+    //overflow: hidden;
+    //white-space: nowrap;
     text-overflow: ellipsis;
+    max-height: 3em;
+    overflow-y: hidden;
   }
   .wrap {
-    max-width: 3em;
+    max-width: 9em;
   }
 </style>

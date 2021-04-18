@@ -1,11 +1,19 @@
 <div class="content">
   <div id="popup"></div>
   <div class="header" id="header" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">{{ user.username }} - <span id="predcnt"></span>/25</div>
-  <div class="banner">Welcome to the 8th Annual...</div>
-  <div class="title"> <a href="" id="prev">◀</a> {{ cat.name }} <span id="predind" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span> <a href="" id="next">▶</a></div>
+  <nav class="title row">
+    <div class="col">
+      <a href="" id="prev">◀ prev</a>
+    </div>
+    <div class="col">
+      {{ cat.name }} <span id="predind" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
+    </div>
+    <div class="col">
+      <a href="" id="next">next ▶</a>
+    </div>
+  </nav>
   <div class="choices row">
-    
-    <div class="selection col-xs-2">
+    <div class="selection col">
       <div>
         <p>Last Year: {{ cat.lastyear }}</p>
       </div>
@@ -14,9 +22,10 @@
           {{ nominee }} {{#if film }}<p><em>({{ film }})</em></p>{{/if }}
         </div>
       {{/each}}
+      <p class="precursors">{{{ cat.precursors }}}</p>
     </div>
    
-    <div class="image col-xs-2" data-default="
+    <div class="image col" data-default="
     {{#if img }}/img/{{ img }}.jpg
     {{else }}
       {{#if cat.class }}
@@ -26,7 +35,7 @@
       {{/if }}
     {{/if }}
     ">
-      <img src="" alt="Poster or portrait of selected nominee" />
+      <img style="width: 70%; margin-right: 0; text-align: right;" src="" alt="Poster or portrait of selected nominee" />
     </div>
 
   </div>
@@ -42,6 +51,7 @@
     color: #222;
     padding: 0.8em;
     border-radius: 0.3em;
+    z-index: 100;
   }
   .success {
     background-color: yellowgreen;
@@ -56,7 +66,15 @@
   div.nominee:hover {
     background-color: #a9f;
   }  
-  div.nominee { cursor: pointer };
+  div.nominee { cursor: pointer }
+
+  nav a {text-decoration: none; }
+  nav div { text-align: center; }
+  nav div:first-child { text-align: left; }
+  nav div:last-child { text-align: right; }
+
+  .precursors { font-size: 0.8em; }
+
 </style>
 
 <script>
@@ -66,8 +84,8 @@
         cur = prevurl.pop(),
         nexturl = JSON.parse(JSON.stringify(prevurl));
 
-    var prevcat = (cur == 1) ? 25 : (cur * 1) - 1,
-        nextcat = (cur == 25) ? 1 : (cur * 1) + 1;
+    var prevcat = (cur == 1) ? 23 : (cur * 1) - 1,
+        nextcat = (cur == 23) ? 1 : (cur * 1) + 1;
 
     prevurl.push(prevcat);
     nexturl.push(nextcat);
@@ -87,7 +105,7 @@
     $('.image img').prop('src', $('.image').data('default'));
   });
 
-  $('.nominee:not(.selected)').on('click', function() {
+  $('.nominee').on('click', function() {
     if ($(this).hasClass('selected')) return false; // don't send ajax request for something already picked
     var _this = $(this),
         img = '/img/' + _this.data('img') + '.jpg',

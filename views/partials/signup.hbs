@@ -1,25 +1,27 @@
 <section id="signup">
   <h4>Sign up</h4>
-  {{#if expired }}
-  <p class="alert alert-danger">The deadline for making predictions has now expired. See the <a href="/scoreboard">leaderboard</a> page to see how you did.<br />or see the <a href="/results">results</a> for each category.</p>
-  {{else}}
-  <p>Enter your name and email to get started. The deadline for entering or changing predictions is <strong>6pm 24th February GMT</strong>.</p>
-  <form method="post" action="/signup">
-    <div class="signup-container">
-      <label for="username">What's your name? <span class="sub-label"> This is how you'll appear on the leaderboard (3-25 chars)</span></label>
-      <input autocomplete="off" placeholder="e.g. {{ signups.uid }}" id="username" name="username" type="text" maxlength="25">
-      <span id="username-not-valid" class="intrainput"></span>
-    </div>
-    <div class="signup-container">
-      <label for="email">What's your email? <span class="sub-label">You'll get a single email with your signup code</span></label>
-      <input autocomplete="off" placeholder="e.g. {{ signups.email }}" id="email" name="email" type="email">
-      <span id="email-not-valid" class="intrainput"></span>
-    </div>
-    <div class="signup-container">
-      <label for="franchise">What's your team name? <span class="sub-label">(Optional)</span></label>
-      <input autocomplete="off" placeholder="" id="franchise" name="franchise" type="text">
-    </div>
-    <input id="signup-submit" type="submit" class="btn btn-success" value="Sign up" />
-  </form>
-  {{/if }}
+  <div>
+    {{#if expired }}
+    <p class="alert alert-danger">The deadline for making predictions has now expired. See the <a href="/scoreboard">leaderboard</a> page to see how you did.<br />or see the <a href="/results">results</a> for each category.</p>
+    {{else}}
+    <p>Enter your name and email to get started. The deadline for entering or changing predictions is <strong>6pm 11th April BST</strong>.</p>
+    <form method="post" action="/signup">
+      <div class="signup-container">
+        <label for="username">What's your name? <span class="sub-label"> This is how you'll appear on the leaderboard (3-25 chars)</span></label>
+        <input autocomplete="off" placeholder="e.g. {{ signups.uid }}" id="username" name="username" type="text" maxlength="25">
+        <span id="username-not-valid" class="intrainput"></span>
+      </div>
+      <div class="signup-container">
+        <label for="email">What's your email? <span class="sub-label">You'll get a single email with your signup code</span></label>
+        <input autocomplete="off" placeholder="e.g. {{ signups.email }}" id="email" name="email" type="email">
+        <span id="email-not-valid" class="intrainput"></span>
+      </div>
+      <div class="signup-container">
+        <label for="franchise">What's your team name? <span class="sub-label">(Optional)</span></label>
+        <input autocomplete="off" placeholder="" id="franchise" name="franchise" type="text">
+      </div>
+      <input id="signup-submit" type="submit" class="btn btn-success" value="Sign up" />
+    </form>
+    {{/if }}    
+  </div>
 </section>

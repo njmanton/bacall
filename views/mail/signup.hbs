@@ -1,17 +1,19 @@
-<h2>My 20 Year BAFTA Hell 2021</h2>
+<h2>My 20 Year Oscar Hell 2021</h2>
 
-<p>Hi {{ username }}. Thank you for signing up to M20YOH</p>
+<p>Hi {{ username }}. Thank you for signing up to this year's M20YOH competition.</p>
 
 {{#if franchise }}
 <p>You have joined the team: {{ franchise }}</p>
 {{/if }}
 
 <p>Your unique code is:</p>
-<p><a style="font-size: 2em; font-weight: bold; text-decoration: none; color: #db592e; " href="https://baftas.mxxyqh.com/player/{{ code }}">{{ code }}</a></p>
-<p>Click on the code, or here <a href="https://baftas.mxxyqh.com/player/{{ code }}">https://baftas.mxxyqh.com/player/{{ code }}</a> to see your predictions page.</p>
+<p><a style="font-size: 2em; font-weight: bold; text-decoration: none; color: #db592e; " href="https://oscars.mxxyqh.com/player/{{ code }}">{{ code }}</a></p>
+<p>Click on the code, or here <a href="https://oscars.mxxyqh.com/player/{{ code }}">https://oscars.mxxyqh.com/player/{{ code }}</a> to see your predictions page.</p>
 
-<p>Good luck!</p>
+<p>If you've taken part in previous years, a quick reminder of the rule changes this time:</p>
+<p>Points for a category are no longer fixed, and now depend on the number of predictions made. For example, if there are 10 predictions with 4 correct, then each correct prediction scores 10/4 = 2.5pts. Therefore going for outside bets is risky, but comes with greater reward.</p>
+<p>Good Luck!</p>
 
 <footer style="width: 100%; border-top: 2px solid #222;">
-  <p style="color: #">My 20 Year BAFTA Hell v{{ app.version }}</p>
+  <p style="color: #">My 20 Year Oscar Hell v{{ app.version }}</p>
 </footer>
