@@ -7,9 +7,12 @@ html {
 
 body {
   font-family: 'Open Sans', sans-serif;
-  color: #ccc;
+  color: #333;
   margin: 0 auto;
-  max-width: 1200px; }
+  max-width: 800px; }
+
+h5 {
+  font-size: 1rem; }
 
 .debug {
   background-color: #222;
@@ -37,8 +40,6 @@ body {
   display: none; }
 
 footer {
-  position: fixed;
-  bottom: 0;
   background-color: black; }
   footer p {
     margin: .7em 1em; }
@@ -61,11 +62,11 @@ h3 {
 
 .top-pad {
   background-image: url("../img/oscar_hell_sign_v1.jpg");
-  background-size: cover;
-  background-position: left top;
+  background-size: contain;
+  background-position: center top;
   background-color: #222;
   background-repeat: no-repeat;
-  height: 30vh; }
+  height: 20vh; }
   .top-pad div {
     text-align: left;
     padding-left: 1em;
@@ -73,12 +74,14 @@ h3 {
     font-size: 1.2em;
     font-weight: bold; }
 
-@media (min-width: 1125px) {
+@media (min-width: 700px) {
   .top-pad {
-    background-position: left top; }
-    .top-pad div {
-      font-size: 3em;
-      padding-top: 1em; } }
+    height: 40vh; } }
+
+@media (min-width: 992px) {
+  .top-pad div {
+    font-size: 2em;
+    padding-top: 1em; } }
 
 .top-pad-60 {
   height: 40vh; }
@@ -93,47 +96,76 @@ del {
   padding: 2em 1em;
   min-height: 60vh;
   width: 100%;
-  color: #ccc;
-  font-size: 1.3em; }
+  color: #333;
+  font-size: 1.0em; }
+
+@media (min-width: 700px) {
+  .content {
+    font-size: 1.3em; } }
 
 .content-cat {
   background-color: #111;
   padding: 0 1em;
   min-height: 60vh;
   width: 100%;
-  color: #ccc;
+  color: #333;
   font-size: 1.3em;
   border-top: 10px solid gold; }
   .content-cat td {
     vertical-align: middle; }
 
-.card {
-  background-color: inherit; }
+/* prediction screen */
+#popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+  color: #222;
+  padding: 0.8em;
+  border-radius: 0.3em;
+  z-index: 100; }
 
-.card-header {
-  background-color: inherit;
-  border-bottom: 2px solid #777; }
-  .card-header button {
-    font-size: 1.2em;
-    text-decoration: none;
-    color: #ccc; }
+.success {
+  background-color: yellowgreen; }
 
-button.btn-link.opened {
-  color: #daa520; }
+.failure {
+  background-color: orange; }
 
-.nom {
-  float: left;
-  margin: .5em auto 1em;
-  position: relative; }
-  .nom img {
-    max-height: 45vw; }
+div.selected {
+  background-color: #63f; }
 
-.nopred {
-  font-style: italic;
+div.nominee:hover {
+  background-color: #a9f; }
+
+div.nominee {
+  cursor: pointer; }
+
+nav a:hover {
+  text-decoration: none; }
+
+nav div {
+  text-align: center; }
+
+nav div:first-child {
+  text-align: left; }
+
+nav div:last-child {
+  text-align: right; }
+
+.precursors {
   color: #999; }
+  .precursors p {
+    font-size: 0.7em;
+    font-style: italic; }
 
-.picked {
-  border-bottom: .7em solid green; }
+img.poster {
+  width: 70%;
+  margin-right: 0;
+  text-align: right; }
+
+.roh td, .roh th {
+  font-size: 0.8em; }
 
 span.label {
   position: absolute;
@@ -144,7 +176,7 @@ span.label {
   height: 100%;
   max-width: 100%;
   text-align: center;
-  color: #ccc;
+  color: #333;
   font-size: .6em;
   padding-top: 3em;
   background-color: rgba(51, 51, 51, 0.7);
@@ -171,7 +203,7 @@ span.label {
 #signup-submit {
   display: block;
   margin: .5em auto;
-  color: #ccc; }
+  color: #333; }
 
 .signup-container {
   margin: .5em; }
@@ -185,7 +217,7 @@ input#email,
 input#franchise {
   display: inline-block;
   border: 0;
-  border-bottom: 2px #ccc solid;
+  border-bottom: 2px #333 solid;
   box-shadow: none;
   height: 3rem;
   width: 75%;
