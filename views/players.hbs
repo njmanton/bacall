@@ -19,10 +19,14 @@
       </div>
       {{#each data }}
         <div class="nominee {{#if pred }}selected{{/if }}" data-img="{{ image }}" data-nid="{{ nid }}">
-          {{ nominee }} {{#if film }}<p><em>({{ film }})</em></p>{{/if }}
+          <p>{{ nominee }}{{#if film }}<br /><em>({{ film }})</em>{{/if }}</p>
         </div>
       {{/each}}
-      <p class="precursors">{{{ cat.precursors }}}</p>
+      <div class="precursors">
+        <h5>Awards season winners:</h5>
+        <p>{{{ cat.precursors }}}</p>        
+      </div>
+
     </div>
    
     <div class="image col" data-default="
@@ -35,45 +39,18 @@
       {{/if }}
     {{/if }}
     ">
-      <img style="width: 70%; margin-right: 0; text-align: right;" src="" alt="Poster or portrait of selected nominee" />
+      <img class="poster" src="" alt="Poster or portrait of selected nominee" />
     </div>
 
   </div>
 </div>
 
 <style>
-  #popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    /* bring your own prefixes */
-    transform: translate(-50%, -50%);
-    color: #222;
-    padding: 0.8em;
-    border-radius: 0.3em;
-    z-index: 100;
-  }
-  .success {
-    background-color: yellowgreen;
-  }
-  .failure {
-    background-color: orange;
-  }
+
   div.header { background-color: #222;}
-  div.selected { 
-    background-color: #63f;
-  }
-  div.nominee:hover {
-    background-color: #a9f;
-  }  
-  div.nominee { cursor: pointer }
 
-  nav a {text-decoration: none; }
-  nav div { text-align: center; }
-  nav div:first-child { text-align: left; }
-  nav div:last-child { text-align: right; }
 
-  .precursors { font-size: 0.8em; }
+
 
 </style>
 
