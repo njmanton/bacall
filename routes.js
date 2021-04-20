@@ -22,12 +22,13 @@ const routes = app => {
   });
 
   // get the summary table for a player - should only be available after deadline
-  app.get('/summary/:uid', (req, res) => {
-    pred.summary(req.params.uid, data => {
+  app.get('/summary/:code', (req, res) => {
+    pred.summary(req.params.code, data => {
       //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
       res.render('summary', {
         data: data.table,
-        total: data.total
+        total: data.total,
+        username: data.username
       });
     })
   });
@@ -63,40 +64,52 @@ const routes = app => {
   app.get('/player/:code/:cat', (req, res) => {
     // check if deadline reached
     const expired = (new Date() > config.deadline || config.exp_test);
-    // first check if the code is real
-    player.exists(req.params.code, check => {
-      if (check.id) {
-        // player exists, so retrieve predictions
-        pred.preds(check.id, req.params.cat, data => {
-          if (data.code) {
-            res.render('main', {});
-          } else {
-            // get the list of all categories for the navigation
-            pred.list(cats => {
-              // loop through nominees to get prediction for the default image
-              let img = '';
-              for (let x = 0; x < data.length; x++) {
-                if (data[x].pred) {
-                  // short-circuit the loop once we find a prediction
-                  img = data[x].image; break;
+    if (expired) {
+      pred.summary(req.params.code, data => {
+        //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
+        res.render('summary', {
+          data: data.table,
+          total: data.total,
+          past_deadline: true
+        });
+      })
+    } else {
+      // first check if the code is real
+      player.exists(req.params.code, check => {
+        if (check.id) {
+          // player exists, so retrieve predictions
+          pred.preds(check.id, req.params.cat, data => {
+            if (data.code) {
+              res.render('main', {});
+            } else {
+              // get the list of all categories for the navigation
+              pred.list(cats => {
+                // loop through nominees to get prediction for the default image
+                let img = '';
+                for (let x = 0; x < data.length; x++) {
+                  if (data[x].pred) {
+                    // short-circuit the loop once we find a prediction
+                    img = data[x].image; break;
+                  }
                 }
-              }
-              res.render('players', {
-                expired: expired,
-                user: check,
-                data: data,
-                cat: cats[req.params.cat - 1],
-                img: img
-              });
-              //res.send(`<pre>${ JSON.stringify([data, cats[req.params.cat - 1], img], null, 2) }</pre>`);
-            })
+                res.render('players', {
+                  expired: expired,
+                  user: check,
+                  data: data,
+                  cat: cats[req.params.cat - 1],
+                  img: img
+                });
+                //res.send(`<pre>${ JSON.stringify([data, cats[req.params.cat - 1], img], null, 2) }</pre>`);
+              })
 
-          }
-        })
-      } else {
-        res.render('main', {});
-      }
-    })
+            }
+          })
+        } else {
+          res.render('main', {});
+        }
+      })      
+    }
+
   });
 
   // handle prediction update

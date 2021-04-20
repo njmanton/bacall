@@ -39,28 +39,34 @@ const pred = {
     })
   },
 
-  summary: (uid, done) => {
-    const sql = 'SELECT N.name AS prediction, N.id AS pid, N.image AS pimage, C.name AS category, C.id AS cid, P.score AS pts, W.name AS winner, W.id AS wid, W.image AS wimage FROM predictions P INNER JOIN nominees N ON P.nominee_id = N.id LEFT JOIN categories C ON P.category_id = C.id LEFT JOIN nominees W ON C.winner_id = W.id WHERE P.user_id = ?';
-    db.use().query(sql, uid, (err, rows) => {
-      if (err || !rows.length) {
-        done({ err: 'no data' })
-      } else {
-        let score = 0;
-        for (let x = 0; x < rows.length; x++) {
-          rows[x].pts = Math.round(rows[x].pts * 10) / 10;
-          score += rows[x].pts;
-          //rows[x].prediction = rows[x].prediction.replace(' ', '<br />');
+  summary: (code, done) => {
+    let sql = 'SELECT id, username FROM users WHERE code = ?';
+    db.use().query(sql, code, (err, rows) => {
+      const uid = rows && rows[0] ? rows[0].id : null;
+      const un = rows && rows[0] ? rows[0].username : null;
+      sql = 'SELECT N.name AS prediction, N.id AS pid, N.image AS pimage, C.name AS category, C.id AS cid, P.score AS pts, W.name AS winner, W.id AS wid, W.image AS wimage FROM predictions P INNER JOIN nominees N ON P.nominee_id = N.id LEFT JOIN categories C ON P.category_id = C.id LEFT JOIN nominees W ON C.winner_id = W.id WHERE P.user_id = ?';
+      db.use().query(sql, uid, (err, rows) => {
+        if (err || !rows.length) {
+          done({ err: 'no data' })
+        } else {
+          let score = 0;
+          for (let x = 0; x < rows.length; x++) {
+            rows[x].pts = Math.round(rows[x].pts * 10) / 10;
+            score += rows[x].pts;
+            //rows[x].prediction = rows[x].prediction.replace(' ', '<br />');
+          }
+          done({
+            table: rows,
+            total: score,
+            username: un
+          });
         }
-        done({
-          table: rows,
-          total: score
-        });
-      }
-    });
+      });
+    })
   },
 
   save: (body, done) => {
-    if (body.cid && body.uid && body.nid && (new Date() < config.deadline)) {
+    if (body.cid && body.uid && body.nid && (new Date() < config.deadline) && !config.exp_test) {
       // first see if there's an existing row
       var sql = 'SELECT id FROM predictions WHERE user_id = ? AND category_id = ?';
       db.use().query(sql, [body.uid, body.cid], (err, rows) => {
@@ -172,14 +178,16 @@ const pred = {
         if (err) {
           done({ err: true, msg: err })
         } else {
+          // get the category/nominee names
+          // then calculate score based on total predictions / correct predictions
           db.use().query('SELECT name FROM categories WHERE id = ?', data.cid, (cerr, cat) => {
             db.use().query('SELECT name FROM nominees WHERE id = ?', data.nid, (nerr, nom) => {
               db.use().query('SELECT COUNT(*)/SUM(nominee_id = winner_id) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id WHERE C.id = ?', data.cid, (serr, value) => {
                 const score = (JSON.parse(JSON.stringify(value))[0].score);
+                // finally update all correct predictions with the score
                 db.use().query('UPDATE predictions SET score = ? WHERE category_id = ? AND nominee_id = ?', [score, data.cid, data.nid], (err, rows) => {
                   logger.info(`Set winner of Best ${ cat[0].name } to ${ nom[0].name }`);
-                  console.log(rows.changedRows);
-                  done({ err: false, msg: `The BAFTA for ${ cat[0].name } goes to - ${ nom[0].name }\n${ rows.changedRows } prediction(s) correct, scoring ${ score }` });                 
+                  done({ err: false, msg: `The Oscar for ${ cat[0].name } goes to - ${ nom[0].name }\n${ rows.changedRows } prediction(s) correct, scoring ${ score }` });                 
                 })
               })
             })
