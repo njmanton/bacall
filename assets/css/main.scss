@@ -223,10 +223,29 @@ div.nominee:hover {
 
 div.nominee { cursor: pointer }
 
-nav a:hover {text-decoration: none; }
-nav div { text-align: center; }
-nav div:first-child { text-align: left; }
-nav div:last-child { text-align: right; }
+.nominee p {
+  padding: 0.3em 0.5em ;
+  margin: 0.1em 0;
+}
+
+nav {
+  padding: 0.6em;
+  background-color: #222;
+  margin-bottom: 1em;
+  color: #ccc;
+  a:hover {
+    text-decoration: none;
+  }
+  div {
+    text-align: center;
+  }
+  div:first-child {
+    text-align: left;
+  }
+  div:last-child {
+    text-align: right;
+  }
+}
 
 .precursors {
   color: #999;
@@ -237,7 +256,7 @@ nav div:last-child { text-align: right; }
 }
 
 img.poster {
-  width: 70%; 
+  width: 85%; 
   margin-right: 0; 
   text-align: right;
 }
