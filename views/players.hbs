@@ -1,7 +1,8 @@
+<div class="top-pad"></div>
 <div class="content">
   <div id="popup"></div>
-  <div class="header" id="header" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">{{ user.username }} - <span id="predcnt"></span>/25</div>
-  <nav class="title row">
+  
+  <nav class="title row" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">
     <div class="col">
       <a href="" id="prev">◀ prev</a>
     </div>
@@ -12,21 +13,23 @@
       <a href="" id="next">next ▶</a>
     </div>
   </nav>
+
   <div class="choices row">
     <div class="selection col">
-      <div>
+      <div class="nominees" style="margin-bottom: 1em;">
+        {{#each data }}
+          <div class="nominee {{#if pred }}selected{{/if }}" data-img="{{ image }}" data-nid="{{ nid }}">
+            <p>{{ nominee }}{{#if film }}<br /><em>({{ film }})</em>{{/if }}</p>
+          </div>
+        {{/each}}        
+      </div>
+      <div class="precursors">
         <p>Last Year: {{ cat.lastyear }}</p>
       </div>
-      {{#each data }}
-        <div class="nominee {{#if pred }}selected{{/if }}" data-img="{{ image }}" data-nid="{{ nid }}">
-          <p>{{ nominee }}{{#if film }}<br /><em>({{ film }})</em>{{/if }}</p>
-        </div>
-      {{/each}}
       <div class="precursors">
         <h5>Awards season winners:</h5>
         <p>{{{ cat.precursors }}}</p>        
       </div>
-
     </div>
    
     <div class="image col" data-default="
@@ -49,12 +52,7 @@
 </div>
 
 <style>
-
   div.header { background-color: #222;}
-
-
-
-
 </style>
 
 <script>
@@ -90,8 +88,8 @@
     var _this = $(this),
         img = '/img/' + _this.data('img') + '.jpg',
         nid = _this.data('nid'),
-        cid = $('#header').data('cid'),
-        uid = $('#header').data('uid');
+        cid = $('nav').data('cid'),
+        uid = $('nav').data('uid');
 
     $.ajax({
       url: '/prediction',
