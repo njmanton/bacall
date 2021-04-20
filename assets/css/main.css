@@ -64,19 +64,19 @@ h3 {
   background-image: url("../img/oscar_hell_sign_v1.jpg");
   background-size: contain;
   background-position: center top;
-  background-color: #222;
   background-repeat: no-repeat;
   height: 20vh; }
   .top-pad div {
     text-align: left;
-    padding-left: 1em;
+    padding-left: 1.5em;
+    padding-top: 0.5em;
     color: #d6c104;
     font-size: 1.2em;
     font-weight: bold; }
 
 @media (min-width: 700px) {
   .top-pad {
-    height: 40vh; } }
+    height: 35vh; } }
 
 @media (min-width: 992px) {
   .top-pad div {
@@ -101,7 +101,7 @@ del {
 
 @media (min-width: 700px) {
   .content {
-    font-size: 1.3em; } }
+    font-size: 1.1em; } }
 
 .content-cat {
   background-color: #111;
