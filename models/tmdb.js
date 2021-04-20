@@ -21,8 +21,8 @@ const tmdb = {
           backdrop: null,
           category: winner.cname,
           winner: winner.wname, 
-          correct: winner.correct, 
-          points: Math.round((winner.preds / winner.correct) * 100) / 100,
+          correct: winner.correct * 1, 
+          points: winner.correct == '0' ? 0 : Math.round((winner.preds / winner.correct) * 100) / 100,
           singular: (winner.correct == 1)
         };
 
