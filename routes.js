@@ -21,8 +21,10 @@ const routes = app => {
     res.render('about');
   });
 
-  app.get('/test/:uid', (req, res) => {
+  // get the summary table for a player - should only be available after deadline
+  app.get('/summary/:uid', (req, res) => {
     pred.summary(req.params.uid, data => {
+      //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
       res.render('summary', {
         data: data.table,
         total: data.total
