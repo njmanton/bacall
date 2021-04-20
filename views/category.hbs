@@ -13,7 +13,7 @@
       {{#if data.singular }}
       <p>There was only 1 correct prediction, scoring <em>{{ data.points }}</em></p>
       {{ else }}
-      <p>There were {{ data.correct }} correct predictions, each worth <em>{{ data.points }}</em></p>
+      <p>There were {{ data.correct }} correct predictions{{#if data.correct }}, each worth <em>{{ data.points }}</em>{{/if }}</p>
       <img style="max-width: 50%;" src="{{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ data.poster }}" alt="Poster of {{ data.winner }}">
       {{/if }}
     {{/if }}
