@@ -212,7 +212,7 @@ const pred = {
 
   results: done => {
 
-    const sql = 'SELECT username AS player, code, SUM(score) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id GROUP BY username ORDER BY 3 DESC';
+    const sql = 'SELECT username AS player, code, ROUND(SUM(score),2) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id GROUP BY username ORDER BY 3 DESC';
     db.use().query(sql, (err, rows) => {
       let result = { error: null, data: null };
       if (err) {
