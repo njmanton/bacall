@@ -21,6 +21,10 @@ const routes = app => {
     res.render('about');
   });
 
+  app.get('/analysis', (req, res) => {
+    res.render('analysis');
+  });
+
   // get the summary table for a player - should only be available after deadline
   app.get('/summary/:code', (req, res) => {
     pred.summary(req.params.code, data => {
