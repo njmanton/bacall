@@ -7,3 +7,4 @@ logs/*.log
 TODO.md
 *.code-workspace
 .vscode
+*.sql
