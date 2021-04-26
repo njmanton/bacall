@@ -118,13 +118,13 @@ $(document).ready(function() {
     checkForm();
   })
 
-  $('#franchise').easyAutocomplete({
-    url: function(phrase) {
-      return '/player/franchise/' + phrase
-    },
-    getValue: 'franchise',
-    adjustWidth: false
-  })
+  // $('#franchise').easyAutocomplete({
+  //   url: function(phrase) {
+  //     return '/player/franchise/' + phrase
+  //   },
+  //   getValue: 'franchise',
+  //   adjustWidth: false
+  // })
 
   function checkForm() {
     var submit = $('#signup-submit');
