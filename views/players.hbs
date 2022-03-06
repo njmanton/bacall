@@ -33,12 +33,12 @@
     </div>
    
     <div class="image col" data-default="
-    {{#if img }}/img/{{ img }}.jpg
+    {{#if img }}/img/{{ img }}.jpeg
     {{else }}
       {{#if cat.class }}
         /img/person.svg
       {{else }}
-        /img/camera.svg      
+        /img/camera.svg
       {{/if }}
     {{/if }}
     ">
@@ -75,7 +75,7 @@
   nav();
 
   $('.nominee').on('mouseenter', function() {
-    var img = '/img/' + $(this).data('img') + '.jpg';
+    var img = '/img/' + $(this).data('img') + '.jpeg';
     $('.image img').prop('src', img);
   });
 
@@ -86,7 +86,7 @@
   $('.nominee').on('click', function() {
     if ($(this).hasClass('selected')) return false; // don't send ajax request for something already picked
     var _this = $(this),
-        img = '/img/' + _this.data('img') + '.jpg',
+        img = '/img/' + _this.data('img') + '.jpeg',
         nid = _this.data('nid'),
         cid = $('nav').data('cid'),
         uid = $('nav').data('uid');
