@@ -187,7 +187,7 @@ const pred = {
                 // finally update all correct predictions with the score
                 db.use().query('UPDATE predictions SET score = ? WHERE category_id = ? AND nominee_id = ?', [score, data.cid, data.nid], (err, rows) => {
                   logger.info(`Set winner of Best ${ cat[0].name } to ${ nom[0].name }`);
-                  done({ err: false, msg: `The Oscar for ${ cat[0].name } goes to - ${ nom[0].name }\n${ rows.changedRows } prediction(s) correct, scoring ${ score }` });                 
+                  done({ err: false, msg: `The Oscar for ${ cat[0].name } goes to - ${ nom[0].name }\n${ rows.changedRows } prediction${ (rows.changedRows == 1) ? '' : 's' } correct, scoring ${ score }` });                 
                 })
               })
             })
