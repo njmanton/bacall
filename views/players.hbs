@@ -4,13 +4,13 @@
   
   <nav class="title row" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">
     <div class="col">
-      <a href="" id="prev">◀ prev</a>
+      <a title="⬅️ Key" href="" id="prev">◀ prev</a>
     </div>
     <div class="col">
       {{ cat.name }} <span id="predind" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
     </div>
     <div class="col">
-      <a href="" id="next">next ▶</a>
+      <a title="Key ➡️" href="" id="next">next ▶</a>
     </div>
   </nav>
 
@@ -73,6 +73,15 @@
 
   }
   nav();
+
+  // allow cursor key navigation through categories
+  window.addEventListener("keydown", function(event) {
+    if (event.key == 'ArrowLeft') {
+      window.location.href = $("#prev").attr('href');
+    } else if (event.key == 'ArrowRight') {
+      window.location.href = $("#next").attr('href');
+    }
+  }, true);
 
   $('.nominee').on('mouseenter', function() {
     var img = '/img/' + $(this).data('img') + '.jpeg';
