@@ -51,13 +51,13 @@ const pred = {
         } else {
           let score = 0;
           for (let x = 0; x < rows.length; x++) {
-            rows[x].pts = Math.round(rows[x].pts * 10) / 10;
+            rows[x].pts = Math.round(rows[x].pts * 100) / 100;
             score += rows[x].pts;
             //rows[x].prediction = rows[x].prediction.replace(' ', '<br />');
           }
           done({
             table: rows,
-            total: score,
+            total: score.toFixed(2),
             username: un
           });
         }
