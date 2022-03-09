@@ -5,6 +5,19 @@
   
 </div>
 {{/if }}
+
+<nav class="title row" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">
+  <div class="col">
+    <a title="⬅️ Key" href="" id="prev">◀ prev</a>
+  </div>
+  <div class="col">
+    {{ data.category }} <span id="predind" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
+  </div>
+  <div class="col">
+    <a title="Key ➡️" href="" id="next">next ▶</a>
+  </div>
+</nav>
+
 <div class="row">
   <div class="col-sm">
     <h3>{{ data.category }}</h3>
@@ -46,6 +59,33 @@
         }
       }
     });
+
+    function nav() {
+      //$('.image img').prop('src', $('.image').data('default'));
+      var prevurl = window.location.pathname.split('/'),
+          cur = prevurl.pop(),
+          nexturl = JSON.parse(JSON.stringify(prevurl));
+
+      var prevcat = (cur == 1) ? 23 : (cur * 1) - 1,
+          nextcat = (cur == 23) ? 1 : (cur * 1) + 1;
+
+      prevurl.push(prevcat);
+      nexturl.push(nextcat);
+      
+      $('#prev').prop('href', prevurl.join('/'));
+      $('#next').prop('href', nexturl.join('/'));
+
+    }
+    nav();
+
+    // allow cursor key navigation through categories
+    window.addEventListener("keydown", function(event) {
+      if (event.key == 'ArrowLeft') {
+        window.location.href = $("#prev").attr('href');
+      } else if (event.key == 'ArrowRight') {
+        window.location.href = $("#next").attr('href');
+      }
+    }, true);
 
     $.get(`/api/cat/{{ cat }}`).done(function(data) {
       chart.addSeries({
