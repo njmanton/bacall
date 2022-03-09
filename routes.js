@@ -74,6 +74,7 @@ const routes = app => {
         res.render('summary', {
           data: data.table,
           total: data.total,
+          username: data.username,
           past_deadline: true
         });
       })
