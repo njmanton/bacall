@@ -183,7 +183,7 @@ const pred = {
           db.use().query('SELECT name FROM categories WHERE id = ?', data.cid, (cerr, cat) => {
             db.use().query('SELECT name FROM nominees WHERE id = ?', data.nid, (nerr, nom) => {
               db.use().query('SELECT COUNT(*)/SUM(nominee_id = winner_id) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id WHERE C.id = ?', data.cid, (serr, value) => {
-                const score = (JSON.parse(JSON.stringify(value))[0].score);
+                const score = Math.pow((JSON.parse(JSON.stringify(value))[0].score),0.5).toFixed(2);
                 // finally update all correct predictions with the score
                 db.use().query('UPDATE predictions SET score = ? WHERE category_id = ? AND nominee_id = ?', [score, data.cid, data.nid], (err, rows) => {
                   logger.info(`Set winner of Best ${ cat[0].name } to ${ nom[0].name }`);
