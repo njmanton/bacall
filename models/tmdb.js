@@ -12,7 +12,7 @@ const tmdb = {
     if (!category || category < 1 || category > 25) {
       done({ error: 'invalid category' });
     } else {
-      const sql = 'SELECT C.class, C.name AS cname, C.winner_id, N.id, N.name AS wname, N.tmdb_id, COUNT(P.id) AS preds, SUM(P.nominee_id = C.winner_id) AS correct FROM categories C LEFT JOIN nominees N ON C.winner_id = N.id LEFT JOIN predictions P ON P.category_id = C.id WHERE C.id = ?;'
+      const sql = 'SELECT C.class, C.name AS cname, C.winner_id, N.id, N.name AS wname, N.tmdb_id, MIN(P.score) AS score, COUNT(P.id) AS preds, SUM(P.nominee_id = C.winner_id) AS correct FROM categories C LEFT JOIN nominees N ON C.winner_id = N.id LEFT JOIN predictions P ON P.category_id = C.id WHERE C.id = ?;'
       db.use().query(sql, category, (err, rows) => {
         const winner = rows[0] || []; // get the winner data
         let data = {
@@ -22,7 +22,7 @@ const tmdb = {
           category: winner.cname,
           winner: winner.wname, 
           correct: winner.correct * 1, 
-          points: winner.correct == '0' ? 0 : Math.round((winner.preds / winner.correct) * 100) / 100,
+          points: (winner.score * 1).toFixed(2),
           singular: (winner.correct == 1)
         };
 
