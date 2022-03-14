@@ -237,10 +237,10 @@ input#franchise {
 
 .intrainput {
   display: inline-block;
-  margin-left: -4.2rem;
+  margin-left: -2rem;
   font-weight: bold;
-  min-width: 2.6rem;
-  text-align: right; }
+  min-width: 2rem;
+  text-align: center; }
   .intrainput.success {
     color: #43ac6a; }
   .intrainput.err {
