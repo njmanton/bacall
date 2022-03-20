@@ -8,3 +8,4 @@ TODO.md
 *.code-workspace
 .vscode
 *.sql
+ecosystem.config.js

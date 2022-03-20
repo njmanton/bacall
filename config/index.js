@@ -7,7 +7,7 @@ exports.exp_test = exp_test;
 const deadline_date = '2022-03-27T23:00Z';
 exports.deadline = new Date(deadline_date);;
 
-var signups = [
+const signups = [
   { uid: 'rubeus', email: 'rhagrid@hogwarts.ac.uk' },
   { uid: 'dan', email: 'd.truman@nasa.gov' },
   { uid: 'holly', email: 'gennaro@nakatomi.com' },
