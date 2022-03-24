@@ -1,0 +1,14 @@
+[
+  { "uid": "rubeus", "email": "rhagrid@hogwarts.ac.uk" },
+  { "uid": "dan", "email": "d.truman@nasa.gov" },
+  { "uid": "holly", "email": "gennaro@nakatomi.com" },
+  { "uid": "mbd", "email": "milesdyson@cyberdyne.com" },
+  { "uid": "stan", "email": "goodspeed@fbi.gov" },
+  { "uid": "ellen", "email": "ripley@wayland-yutani.com" },
+  { "uid": "eldon", "email": "eldon@tyrell.com" },
+  { "uid": "tyler", "email": "durden@projectmayhem.org" },
+  { "uid": "norville", "email": "nbarnes@hudsucker.com" },
+  { "uid": "fatamy", "email": "p.hobart@barden.edu" },
+  { "uid": "max", "email": "manager@kellermans.us" },
+  { "uid": "kiki", "email": "support@kikisdelivery.jp"}
+]
