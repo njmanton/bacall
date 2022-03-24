@@ -14,7 +14,10 @@ const signups = [
   { uid: 'mbd', email: 'milesdyson@cyberdyne.com' },
   { uid: 'stan', email: 'goodspeed@fbi.gov' },
   { uid: 'ellen', email: 'ripley@wayland-yutani.com' },
-  { uid: 'eldon', email: 'eldon@tyrell.com' }
+  { uid: 'eldon', email: 'eldon@tyrell.com' },
+  { uid: 'tyler', email: 'durden@projectmayhem.org' },
+  { uid: 'norville', email: 'nbarnes@hudsucker.com' },
+  { uid: 'fatamy', email: 'phobart@barden.edu' }
 ];
 
 exports.placeholders = () => {
