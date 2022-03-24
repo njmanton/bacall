@@ -15,7 +15,7 @@ var express = require('express'),
     moment  = require('moment'),
     bars    = require('express-handlebars');
 
-app.engine('.hbs', bars({
+app.engine('.hbs', bars.engine({
   defaultLayout: 'layout', extname: '.hbs'
 }));
 app.set('view engine', '.hbs');
