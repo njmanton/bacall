@@ -29,7 +29,7 @@
     "express": "^4.17.1",
     "express-handlebars": "^6.0.3",
     "inquirer": "^8.2.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "moviedb": "^0.2.10",
     "mysql2": "^2.2.5",
     "request": "^2.88.2",
