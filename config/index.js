@@ -4,7 +4,7 @@
 const exp_test = 0;
 exports.exp_test = exp_test;
 
-const deadline_date = '2022-03-27T23:00Z';
+const deadline_date = '2023-03-12T23:00Z';
 exports.deadline = new Date(deadline_date);;
 
 exports.placeholders = () => {

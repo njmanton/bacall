@@ -5,10 +5,9 @@
   { "uid": "mbd", "email": "milesdyson@cyberdyne.com" },
   { "uid": "stan", "email": "goodspeed@fbi.gov" },
   { "uid": "ellen", "email": "ripley@wayland-yutani.com" },
-  { "uid": "eldon", "email": "eldon@tyrell.com" },
   { "uid": "tyler", "email": "durden@projectmayhem.org" },
-  { "uid": "norville", "email": "nbarnes@hudsucker.com" },
-  { "uid": "fatamy", "email": "p.hobart@barden.edu" },
+  { "uid": "fat_amy", "email": "p.hobart@barden.edu" },
   { "uid": "max", "email": "manager@kellermans.us" },
-  { "uid": "kiki", "email": "support@kikisdelivery.jp"}
+  { "uid": "kiki", "email": "support@kikisdelivery.jp" },
+  { "uid": "pete", "email": "mitchell@miramar.navy.mil" }
 ]

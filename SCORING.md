@@ -23,5 +23,5 @@ The table shows the final scoring for 2019 by three different scoring methods:
 For 11 players, if everyone picks the same winning nominee (e.g. _Shallow_), they each score `11/11` points.
 For a category where only two players predicted the correct winner (e.g. _Black Panther_ for costume design), then they both score `11/2 = 5.5`. This incentivises not 'going with the herd', but with higher risk.
 
-## Damped Scoring:
+## Dampened Scoring:
 Sharing points across all predictions can lead to very big scores (the only correct prediction out of 10 would score 10 points) and a lack of balance. So, taking the square root of predictions/correct predictions, you can reward risk-taking without 1-2 results dominating the scoring.
