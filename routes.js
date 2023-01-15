@@ -21,9 +21,21 @@ const routes = app => {
     res.render('about');
   });
 
-  app.get('/analysis', (req, res) => {
-    res.render('analysis');
-  });
+  // app.get('/analysis', (req, res) => {
+  //   res.render('analysis');
+  // });
+
+  // app.get('/analysis_93', (req, res) => {
+  //   res.render('analysis_93');
+  // });
+
+  // app.get('/analysis_94', (req, res) => {
+  //   res.render('analysis_94');
+  // });
+
+  app.get('/recap/:code', (req, res) => {
+    res.render('recap/analysis_' + req.params.code);
+  })
 
   // get the summary table for a player - should only be available after deadline
   app.get('/summary/:code', (req, res) => {
