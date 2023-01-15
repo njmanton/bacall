@@ -46,12 +46,14 @@ db.conn( err => {
   if (err) {
     console.log(`database: Error - can't connect`);
   } else {
-    console.log('database  : connected');
-    app.listen(app.get('port'), () => {
-      console.log(`system up : ${ moment().format('DD MMM HH:mm:ss') } `)
-      console.log(`port      : ${ app.get('port') }`);
-      logger.info(`${ pkg.name } started`);
-      console.log(`--------------------------------------`);
-    })
+    db.use().promise().query('SELECT DATABASE();').then(rows => {
+      console.log('Database  :', rows[0][0]['DATABASE()']);
+      app.listen(app.get('port'), () => {
+        console.log(`system up : ${ moment().format('DD MMM HH:mm:ss') } `)
+        console.log(`port      : ${ app.get('port') }`);
+        logger.info(`${ pkg.name } started`);
+        console.log(`--------------------------------------`);
+      })
+    });
   }
 })
