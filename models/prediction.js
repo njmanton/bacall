@@ -40,12 +40,12 @@ const pred = {
   },
 
   summary: (code, done) => {
-    let sql = 'SELECT id, username FROM users WHERE code = ?';
+    let sql = 'SELECT id, username FROM users WHERE id = ?';
     db.use().query(sql, code, (err, rows) => {
       const uid = rows && rows[0] ? rows[0].id : null;
       const un = rows && rows[0] ? rows[0].username : null;
       sql = 'SELECT N.name AS prediction, N.id AS pid, N.image AS pimage, C.name AS category, C.id AS cid, P.score AS pts, W.name AS winner, W.id AS wid, W.image AS wimage FROM predictions P INNER JOIN nominees N ON P.nominee_id = N.id LEFT JOIN categories C ON P.category_id = C.id LEFT JOIN nominees W ON C.winner_id = W.id WHERE P.user_id = ?';
-      db.use().query(sql, uid, (err, rows) => {
+      db.use().query(sql, code, (err, rows) => {
         if (err || !rows.length) {
           done({ err: 'no data' })
         } else {
@@ -91,7 +91,6 @@ const pred = {
   },
 
   category: (cat, done) => {
-
     // get all predictions by nominee for a given category
     const sql = 'SELECT N.id, N.name, N.image, COUNT(P.id) AS cnt, (C.winner_id = N.id) AS winner FROM predictions P JOIN nominees N ON N.id = P.nominee_id JOIN categories C ON C.id = P.category_id WHERE P.category_id = ? GROUP BY N.id ORDER BY cnt DESC';
     db.use().query(sql, cat, (err, rows) => {
@@ -101,7 +100,6 @@ const pred = {
         done(rows);
       }
     })
-
   },
 
   categoryDetails: (cat, done) => {
@@ -211,8 +209,7 @@ const pred = {
   },
 
   results: done => {
-
-    const sql = 'SELECT username AS player, code, ROUND(SUM(score),2) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id GROUP BY username ORDER BY 3 DESC';
+    const sql = 'SELECT username AS player, U.id AS id, code, ROUND(SUM(score),2) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id GROUP BY username ORDER BY 4 DESC';
     db.use().query(sql, (err, rows) => {
       let result = { error: null, data: null };
       if (err) {

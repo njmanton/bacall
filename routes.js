@@ -5,6 +5,7 @@ const routes = app => {
 
   const player = require('./models/player'),
         pred = require('./models/prediction'),
+        fs = require('fs'),
         logger = require('winston'),
         https = require('https'),
         tmdb = require('./models/tmdb'),
@@ -22,8 +23,12 @@ const routes = app => {
   });
 
   app.get('/recap/:code', (req, res) => {
-    res.render('recap/analysis_' + req.params.code, { title: 'Recap' });
-  })
+    if (fs.existsSync(`./views/recap/analysis_${ req.params.code }.hbs`)) {
+      res.render(`recap/analysis_${ req.params.code }`, { title: 'Recap' });
+    } else {
+      res.status(404).render('404');
+    }
+  });
 
   // get the summary table for a player - should only be available after deadline
   app.get('/summary/:id', (req, res) => {
@@ -48,14 +53,15 @@ const routes = app => {
   // get the scoreboard
   app.get('/scoreboard', (req, res) => {
     pred.results( data => {
-      res.render('scoreboard', { table: data, expired: true });
+      res.render('scoreboard', { table: data, expired: true , title: 'Leaderboard' });
+      //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
     })
   });
 
   // show a list of results
   app.get('/results', (req, res) => {
     pred.list(data => {
-      res.render('results', { list: data });
+      res.render('results', { list: data, title: 'Results by Category' });
     })
   });
 
@@ -111,6 +117,7 @@ const routes = app => {
             }
           })
         } else {
+          // invalid code
           res.render('main', {});
         }
       })      
