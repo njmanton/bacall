@@ -18,33 +18,22 @@ const routes = app => {
 
   // other static routes
   app.get('/about', (req, res) => {
-    res.render('about');
+    res.render('about', { title: 'About M20YOH' });
   });
 
-  // app.get('/analysis', (req, res) => {
-  //   res.render('analysis');
-  // });
-
-  // app.get('/analysis_93', (req, res) => {
-  //   res.render('analysis_93');
-  // });
-
-  // app.get('/analysis_94', (req, res) => {
-  //   res.render('analysis_94');
-  // });
-
   app.get('/recap/:code', (req, res) => {
-    res.render('recap/analysis_' + req.params.code);
+    res.render('recap/analysis_' + req.params.code, { title: 'Recap' });
   })
 
   // get the summary table for a player - should only be available after deadline
-  app.get('/summary/:code', (req, res) => {
-    pred.summary(req.params.code, data => {
+  app.get('/summary/:id', (req, res) => {
+    pred.summary(req.params.id, data => {
       //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
       res.render('summary', {
         data: data.table,
         total: data.total,
-        username: data.username
+        username: data.username,
+        title: `Summary for ${ data.username }`
       });
     })
   });
@@ -142,7 +131,8 @@ const routes = app => {
       res.render('category', {
         layout: 'layout_cat',
         data: data,
-        cat: req.params.cat
+        cat: req.params.cat,
+        title: `Best ${ data.category }`
       });
       //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`)
     })
