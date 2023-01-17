@@ -197,7 +197,6 @@ const pred = {
   },
 
   getWinner: (cat, done) => {
-
     db.use().query('SELECT C.id AS cid, C.name AS category, C.lastyear, N.id, N.name AS winner, N.film, N.image FROM categories C LEFT JOIN nominees N ON C.winner_id = N.id WHERE C.id = ?', cat, (err, rows) => {
       if (err) {
         done(err);
@@ -208,8 +207,10 @@ const pred = {
 
   },
 
-  results: done => {
-    const sql = 'SELECT username AS player, U.id AS id, code, ROUND(SUM(score),2) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id GROUP BY username ORDER BY 4 DESC';
+  // calculate overall scores
+  results: (nobots, done) => {
+    const sql = `SELECT username AS player, U.id AS id, bot, ROUND(SUM(score),2) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id ${ (nobots) ? 'WHERE bot = 0': '' } GROUP BY username ORDER BY 4 DESC`;
+    //console.log(sql);
     db.use().query(sql, (err, rows) => {
       let result = { error: null, data: null };
       if (err) {
@@ -232,9 +233,7 @@ const pred = {
       }
       done(result);
     })
-
   }
-
 }
 
 module.exports = pred;

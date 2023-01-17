@@ -9,6 +9,18 @@ $(document).ready(function() {
     e.stopPropagation();
   });
 
+  if (document.location.search == '?nobots=true') {
+    $('#nobots').prop('checked', true);
+  }
+
+  $('#nobots').on('click', function() {
+    if (document.getElementById('nobots').checked) {
+      document.location.href = '/scoreboard?nobots=true';
+    } else {
+      document.location.href = '/scoreboard';
+    }
+  });
+
   // predictions page
   $('div.nom').on('click', function() {
     var _this  = $(this),

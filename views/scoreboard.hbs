@@ -1,13 +1,13 @@
-<div class="top-pad">
-  <div>WELCOME TO THE 9TH ANNUAL MY</div>
-</div>
-
+<style>
+  tr.bot td { background-color: yellow; }
+</style>
 <div class="content container-fluid">
 <h3>Leaderboard</h3>
 
 {{#unless expired }}
 
 {{ else }}
+<input type="checkbox" id="nobots" value="" /><label for="nobot"> Exclude bots?</label>
 <table class="table" id="results">
   <thead>
     <tr>
@@ -18,7 +18,7 @@
   </thead>
   <tbody>
     {{#each table.data }}
-    <tr>
+    <tr {{#if bot }}class="bot"{{/if }}>
       <td class="{{#if @first }}winner{{/if }}">{{#if @first }}<span class="lead">&#127942;</span>{{ else }}{{ rank }}{{/if}}</td>
       <td class="{{#if @first }}winner{{/if }}"><a href="/summary/{{ id }}">{{ player }}</a></td>
       <td width="500px">

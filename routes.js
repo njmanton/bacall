@@ -52,9 +52,10 @@ const routes = app => {
 
   // get the scoreboard
   app.get('/scoreboard', (req, res) => {
-    pred.results( data => {
+    // if passed as a query string, exclude bot users from scoreboard
+    const nobots = (req.query.nobots && req.query.nobots == 'true');
+    pred.results(nobots, data => {
       res.render('scoreboard', { table: data, expired: true , title: 'Leaderboard' });
-      //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
     })
   });
 
