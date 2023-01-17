@@ -9,6 +9,7 @@ $(document).ready(function() {
     e.stopPropagation();
   });
 
+  // set up checkbox for filtering bots from scoreboard
   if (document.location.search == '?nobots=true') {
     $('#nobots').prop('checked', true);
   }
@@ -21,47 +22,7 @@ $(document).ready(function() {
     }
   });
 
-  // predictions page
-  $('div.nom').on('click', function() {
-    var _this  = $(this),
-        uid    = $('h3').data('id'),
-        cid    = _this.data('cid'),
-        nid    = _this.data('nid'),
-        name   = _this.data('name'),
-        divs   = _this.parent().parent().find('.nom');
-
-    // only make ajax call if clcicked nom is not already picked
-    if (!_this.hasClass('picked')) {
-      $.ajax({
-        url: '/prediction',
-        type: 'post',
-        data: {
-          nid: nid,
-          cid: cid,
-          uid: uid
-        }
-        
-      }).done(function(d) {
-        if (d) {
-          console.log('success', d);
-          divs.removeClass('picked');
-          _this.addClass('picked');
-          _this.parent().parent().parent().parent().parent().find('.updated').fadeIn();
-          window.setTimeout(function() {
-            $('.updated').fadeOut();
-          }, 3000);
-          $('.text' + cid).text(": " + name); // change the accordion header to prediction
-        } else {
-          console.log('could not save prediction');
-        }
-      }).fail(function(e) {
-        console.log('error saving prediction');
-      })
-    }
-
-  });
-
-  // main page (signups)
+  // main page (signups) *******************************
   $('#signup-submit').attr('disabled', 'disabled');
 
   $('#signup #username').on('keyup', function() {
@@ -130,14 +91,6 @@ $(document).ready(function() {
     checkForm();
   })
 
-  // $('#franchise').easyAutocomplete({
-  //   url: function(phrase) {
-  //     return '/player/franchise/' + phrase
-  //   },
-  //   getValue: 'franchise',
-  //   adjustWidth: false
-  // })
-
   function checkForm() {
     var submit = $('#signup-submit');
     var state = ($('#email-not-valid').hasClass('success') && ($('#username').val().length > 2) && $('#username-not-valid').hasClass('success'));
@@ -146,6 +99,93 @@ $(document).ready(function() {
     } else {
       submit.attr('disabled', 'disabled');
     }
+  }
+
+  // player prediction page *******************************
+
+  // set up the navigation for each category
+  function nav() {
+    var maxCats = 23; // changed in 2021
+    $('.image img').prop('src', $('.image').data('default'));
+    var prevurl = window.location.pathname.split('/'),
+        cur = prevurl.pop(),
+        nexturl = JSON.parse(JSON.stringify(prevurl));
+
+    var prevcat = (cur == 1) ? maxCats : (cur * 1) - 1,
+        nextcat = (cur == maxCats) ? 1 : (cur * 1) + 1;
+
+    prevurl.push(prevcat);
+    nexturl.push(nextcat);
+    
+    $('#prev').prop('href', prevurl.join('/'));
+    $('#next').prop('href', nexturl.join('/'));
+
+  }
+  nav();
+
+  // allow cursor key navigation through categories
+  window.addEventListener("keydown", function(event) {
+    if (event.key == 'ArrowLeft') {
+      window.location.href = $("#prev").attr('href');
+    } else if (event.key == 'ArrowRight') {
+      window.location.href = $("#next").attr('href');
+    }
+  }, true);
+
+  // handle the image switch on mouseover events
+  $('.nominee').on('mouseenter', function() {
+    var img = '/img/' + $(this).data('img') + '.jpeg';
+    $('.image img').prop('src', img);
+  });
+
+  $('.nominee').on('mouseleave', function() {
+    $('.image img').prop('src', $('.image').data('default'));
+  });
+
+  // handler for clicking to make a prediction
+  $('.nominee').on('click', function() {
+    if ($(this).hasClass('selected')) return false; // don't send ajax request for something already picked
+    var _this = $(this),
+        img = '/img/' + _this.data('img') + '.jpeg',
+        nid = _this.data('nid'),
+        cid = $('nav').data('cid'),
+        uid = $('nav').data('uid');
+
+    $.ajax({
+      url: '/prediction',
+      type: 'post',
+      data: {
+        uid: uid,
+        cid: cid,
+        nid: nid
+      }
+    }).done(function(d) {
+      if (d) {
+        $('.image img').prop('src', img).parent().data('default', img);
+        $('.nominee').removeClass('selected');
+        _this.addClass('selected');
+        $('#predind').html('✅');
+        ajaxResult(true);
+      } else {
+        console.log('Could not save prediction');
+        ajaxResult(false);
+      }
+    }).fail(function(err) {
+      console.log('Could not save prediction: ');
+      ajaxResult(false);
+    })
+  })
+
+  // show/fade popup with result of ajax request
+  function ajaxResult(outcome) {
+    var popup = $('#popup'),
+        msg = outcome ? 'prediction saved' : 'Could not update prediction',
+        cls = outcome ? 'success' : 'failure';
+
+    popup.html(msg).addClass(cls).fadeIn();
+    window.setTimeout(function() {
+      popup.removeClass(cls).fadeOut();
+    }, 1500);
   }
 
   // results.hbs
