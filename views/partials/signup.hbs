@@ -4,7 +4,7 @@
     {{#if expired }}
     <p class="alert alert-danger">The deadline for making predictions has now expired. See the <a href="/scoreboard">leaderboard</a> page to see how you did.<br />or see the <a href="/results">results</a> for each category.</p>
     {{else}}
-    <p>Enter your name and email to get started. The deadline for entering or changing predictions is <strong>11pm 27th March GMT</strong>.</p>
+    <p>Enter your name and email to get started. The deadline for entering or changing predictions is <strong>{{ deadline }}</strong>.</p>
     <form method="post" action="/signup">
       <div class="signup-container">
         <label for="username">What's your name? <span class="sub-label"> This is how you'll appear on the leaderboard (3-25 chars)</span></label>

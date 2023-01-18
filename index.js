@@ -30,6 +30,7 @@ app.use((req, res, next) => {
   res.locals.ver = pkg.version;
   res.locals.app = pkg.name;
   res.locals.env = process.env.OSCAR_ENV;
+  res.locals.deadline = moment(config.deadline).format('Do MMM [at] HH:mm zz');
   next();
 })
 app.locals.tmdb_base_url = 'https://image.tmdb.org/t/p/';
