@@ -32,15 +32,22 @@ const routes = app => {
 
   // get the summary table for a player - should only be available after deadline
   app.get('/summary/:id', (req, res) => {
-    pred.summary(req.params.id, data => {
-      //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
-      res.render('summary', {
-        data: data.table,
-        total: data.total,
-        username: data.username,
-        title: `Summary for ${ data.username }`
-      });
-    })
+    const expired = (new Date() > config.deadline || config.exp_test);
+    console.log(expired);
+    if (!expired) {
+      res.render('main', { expired: expired });
+    } else {
+      pred.summary(req.params.id, data => {
+        //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
+        res.render('summary', {
+          data: data.table,
+          total: data.total,
+          username: data.username,
+          title: `Summary for ${ data.username }`
+        });
+      })    
+    }
+
   });
 
   // handle user signup form
@@ -110,7 +117,8 @@ const routes = app => {
                   user: check,
                   data: data,
                   cat: cats[req.params.cat - 1],
-                  img: img
+                  img: img,
+                  title: `Best ${ cats[req.params.cat - 1].name }`
                 });
                 //res.send(`<pre>${ JSON.stringify([data, cats[req.params.cat - 1], img], null, 2) }</pre>`);
               })
@@ -119,7 +127,8 @@ const routes = app => {
           })
         } else {
           // invalid code
-          res.render('main', {});
+          logger.info(`Invalid login from '${ req.params.code }'`);
+          res.render('main', { id_error: true, invalid_id: req.params.code });
         }
       })      
     }
