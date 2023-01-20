@@ -30,14 +30,23 @@
   </div>
   {{/if}}
 
-  {{#if error }}
+  {{#if id_error }}
   <div class="alert alert-danger alert-dismissable fade show" role="alert">
     <span class="alert-icon"><i class="fas fa-exclamation-circle" aria-hidden="true"></i></span>
-    <span class="alert-text">Sorry, that doesn't appear to be a valid code.</span>
+    <span class="alert-text">Sorry, but <b>'{{ invalid_id }}'</b> doesn't appear to be a valid player code.</span>
     <button type="button" class="close" data-dismiss="alert" aria-label="close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   {{/if}}
 
+  {{#if error_500 }}
+  <div class="alert alert-danger alert-dismissable fade show" role="alert">
+    <span class="alert-icon"><i class="fas fa-exclamation-circle" aria-hidden="true"></i></span>
+    <span class="alert-text">Sorry, an error has occurred. Please try again later. The error has been logged.</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {{/if}}
 </div>

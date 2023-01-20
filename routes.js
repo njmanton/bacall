@@ -69,7 +69,12 @@ const routes = app => {
   // show a list of results
   app.get('/results', (req, res) => {
     pred.list(data => {
-      res.render('results', { list: data, title: 'Results by Category' });
+      if (data.error) {
+        res.status(500).send('sorry, there was an error retrieving the results');
+      } else {
+        res.render('results', { list: data, title: 'Results by Category' });
+      }
+      
     })
   });
 
@@ -81,7 +86,7 @@ const routes = app => {
 
   // routing for player predictions
   app.get('/player/:code/:cat', (req, res) => {
-    // check if deadline reached
+    // check if deadline reached. If it has redirect to summary page
     const expired = (new Date() > config.deadline || config.exp_test);
     if (expired) {
       pred.summary(req.params.code, data => {
@@ -95,12 +100,12 @@ const routes = app => {
       })
     } else {
       // first check if the code is real
-      player.exists(req.params.code, check => {
-        if (check.id) {
+      player.exists(req.params.code, user => {
+        if (user.id) {
           // player exists, so retrieve predictions
-          pred.preds(check.id, req.params.cat, data => {
-            if (data.code) {
-              res.render('main', {});
+          pred.preds(user.id, req.params.cat, data => {
+            if (data.code) { // returns a code property if there was an SQL error
+              res.render('main', { error_500: true });
             } else {
               // get the list of all categories for the navigation
               pred.list(cats => {
@@ -114,7 +119,7 @@ const routes = app => {
                 }
                 res.render('players', {
                   expired: expired,
-                  user: check,
+                  user: user,
                   data: data,
                   cat: cats[req.params.cat - 1],
                   img: img,

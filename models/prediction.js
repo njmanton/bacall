@@ -11,24 +11,22 @@ const pred = {
   // simple query to get list of categories and their ids
   list: done => {
     const sql = 'SELECT id, name, class, lastyear, precursors FROM categories';
-    db.use().query(sql, (err, rows) => {
-      if (err) {
-        done(err);
-      } else {
-        done(rows);
-      }
+    db.use().promise().query(sql).then(([rows, fields]) => {
+      done(rows);
+    }).catch(err => {
+      console.log(err);
+      done({ error: true });
     })
   },
 
   preds: (uid, cid, done) => {
     const sql = 'SELECT N.image, N.film, N.id AS nid, N.name AS nominee, N.tmdb_id AS tmdb, (I.nominee_id > 0) AS pred FROM nominees N JOIN categories C ON N.category_id = C.id LEFT JOIN (SELECT category_id, nominee_id FROM predictions P WHERE user_id = ?) I ON (I.category_id = C.id AND I.nominee_id = N.id) WHERE C.id = ? ORDER BY nid';
-    db.use().query(sql, [uid, cid], (err, rows) => {
-      if (err) {
-        console.error(err);
-        done(err);
-      } else {
-        done(rows);
-      }
+    db.use().promise().query(sql, [uid, cid]).then(([rows, fields]) => {
+      done(rows);
+    }).catch(err => {
+      console.log(err);
+      logger.error(`Error retrieving predictions for user_id: ${ uid }`);
+      done(err);
     })
   },
 
