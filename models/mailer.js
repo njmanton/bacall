@@ -35,7 +35,7 @@ const mail = {
 
     sg.send(msg)
       .then(() => {
-        logger.info(`new sign-up by ${ context.name } ${ recipient }`);
+        logger.info(`new sign-up by ${ context.username } (${ recipient })`);
         done();
        })
       .catch(error => {
