@@ -13,17 +13,16 @@ const player = {
       done({ err: 'Invalid code' });
     } else {
       const sql = 'SELECT id, username, franchise FROM users WHERE code = ? LIMIT 1';
-
-      db.use().query(sql, code, (err, rows) => {
-        let result = { err: null, id: null, name: null }; // object to return to valid code check
-        if (err) {
-          result.err = err.code;
-        } else if (!rows.length) {
+      let result = { err: null, id: null, name: null }; // object to return to valid code check
+      db.use().promise().execute(sql, [code]).then(([rows, fields]) => {
+        if (!rows.length) {
           result.err = 'Invalid code';
         } else {
           result = rows[0];
-
         }
+      }).catch(err => {
+        result.err = err.code;
+      }).finally(() => {
         done(result);
       });
     }
@@ -41,24 +40,18 @@ const player = {
       return false;
     }
     
-    db.use().query(sql, val, (err, rows) => {
-      if (err) {
-        done(null);
-      } else {
-        done(rows.length == 0);
-      }
-    })
+    db.use().promise().execute(sql, [val]).then(([rows, fields]) => {
+      done(rows.length == 0);
+    }).catch(err => { })
 
   },
 
   franchise: (fragment, done) => {
     // can't get db.use() to recognise parameterised LIKE query. Need to sanitise input
     const sql = `SELECT DISTINCT franchise FROM users WHERE franchise LIKE ` + db.use().escape('%'+fragment+'%');
-    db.use().query(sql, (err, rows, fields) => {
+    db.use().promise().query(sql).then(([rows, fields]) => {
       done(rows);
-    })
-    //done(null);
-
+    }).catch(err => { done(false) })
   },
 
   create: (username, email, franchise, done) => {
@@ -73,34 +66,24 @@ const player = {
       code += letters[idx];
     }
 
-    const user = {
-      username: username, 
-      email: email, 
-      franchise: franchise,
-      code: code,
-      registered: new Date()
+    const sql = 'INSERT INTO users SEhT username = ?, email = ?, franchise = ?, code = ?, registered = ?';
+    const result = {
+      error: null,
+      code: null
     };
-    const sql = 'INSERT INTO users SET ?';
-
-    db.use().query(sql, user, (err, rows) => {
-      const result = {
-        error: null,
-        code: null
-      };
-      if (err) {
-        result.error = err.code;
-        console.log(err);
-      } else {
-        result.code = code;
-        mail.send(email, user, result => {
-          logger.info(`signup email sent to ${ user.email }`);
-        })
-      }
+    db.use().promise().execute(sql, [username, email, franchise, code, new Date()]).then(([rows, fields]) => {
+      result.code = code;
+      // mail.send(email, user, result => {
+      //   logger.info(`signup email sent to ${ user.email }`);
+      // })
+    }).catch(err => { 
+      logger.error(`Error processing signup for ${ email }. The code was '${ err.code }'`);
+      result.error = true;
+      console.log(err);
+    }).finally(() => {
       done(result);
     })
-
   }
-
 }
 
 module.exports = player;
