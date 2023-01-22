@@ -7,7 +7,6 @@ const routes = app => {
         pred = require('./models/prediction'),
         fs = require('fs'),
         logger = require('winston'),
-        https = require('https'),
         tmdb = require('./models/tmdb'),
         config = require('./config/');
 
@@ -37,7 +36,7 @@ const routes = app => {
     if (!expired) {
       res.render('main', { expired: expired });
     } else {
-      pred.summary(req.params.id, data => {
+      pred.summary(req.params.id, false, data => {
         //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
         res.render('summary', {
           data: data.table,
@@ -47,13 +46,25 @@ const routes = app => {
         });
       })    
     }
-
   });
 
   // handle user signup form
   app.post('/signup', (req, res) => {
     player.create(req.body.username, req.body.email, req.body.franchise, check => {
-      res.render('main', { signup: check, signups: config.placeholders() });
+      if (check.error) {
+        res.render('main', {
+          signups: config.placeholders(),
+          message: true,
+          message_err: true,
+          message_text: `Sorry, an error occurred processing your form. Please try again.`
+        })
+      } else {
+        res.render('main', { 
+          message: true, 
+          message_text: `Signup successful! Your code is <strong>${ check.code }</strong>. Use this to make your predictions at <a href="/player/${ check.code }">https://oscars.mxxyqh.com/player/${ check.code }</a> (You'll get an email too).`,
+          signups: config.placeholders() 
+        });
+      }
     })
   })
 
@@ -74,7 +85,6 @@ const routes = app => {
       } else {
         res.render('results', { list: data, title: 'Results by Category' });
       }
-      
     })
   });
 
@@ -89,13 +99,15 @@ const routes = app => {
     // check if deadline reached. If it has redirect to summary page
     const expired = (new Date() > config.deadline || config.exp_test);
     if (expired) {
-      pred.summary(req.params.code, data => {
+      pred.summary(req.params.code, true, data => { 
         //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
         res.render('summary', {
           data: data.table,
           total: data.total,
           username: data.username,
-          past_deadline: true
+          message: true,
+          message_err: true,
+          message_text: 'The predictions deadline has now passed. You have been redirected to the summary page.'
         });
       })
     } else {
@@ -105,7 +117,11 @@ const routes = app => {
           // player exists, so retrieve predictions
           pred.preds(user.id, req.params.cat, data => {
             if (data.code) { // returns a code property if there was an SQL error
-              res.render('main', { error_500: true });
+              res.render('main', { 
+                message: true,
+                message_err: true,
+                message_text: 'Sorry, an error has occurred. Please try again later. The error has been logged.' 
+              });
             } else {
               // get the list of all categories for the navigation
               pred.list(cats => {
@@ -133,9 +149,13 @@ const routes = app => {
         } else {
           // invalid code
           logger.info(`Invalid login from '${ req.params.code }'`);
-          res.render('main', { id_error: true, invalid_id: req.params.code });
+          res.render('main', { 
+            message: true,
+            message_err: true,
+            message_text: `Sorry, but <b>'${ req.params.code }'</b> doesn't appear to be a valid player code.`
+          })
         }
-      })      
+      })   
     }
 
   });

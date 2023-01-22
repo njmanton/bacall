@@ -1,52 +1,13 @@
 <div id="messages">
 
-  {{#if signup.error }}
-  <div class="alert alert-danger alert-dismissable fade show" role="alert">
-    <span class="alert-icon"><i class="fas fa-exclamation-circle" aria-hidden="true"></i></span>
-    <span class="alert-text">Something went wrong in registering your details. The error code was: {{ signup.error }}</span>
+  {{#if message }}
+  <div class="alert alert-{{#if message_err }}danger{{ else }}success{{/if }} alert-dismissable fade show" role="alert">
+    <span class="alert-icon"><i class="fas fa-{{#if message_err }}exclamation{{ else }}check{{/if }}-circle" aria-hidden="true"></i></span>
+    <span class="alert-text">{{{ message_text }}}</span>
     <button type="button" class="close" data-dismiss="alert" aria-label="close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   {{/if}}
 
-  {{#if past_deadline }}
-  <div class="alert alert-danger alert-dismissable fade show" role="alert">
-    <span class="alert-icon"><i class="fas fa-exclamation-circle" aria-hidden="true"></i></span>
-    <span class="alert-text">The predictions deadline has now passed, You have been redirected to the summary page.</span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  {{/if}}
-
-  {{#if signup.code }}
-  <div class="alert alert-success alert-dismissable fade show" role="alert">
-    <span class="alert-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
-    <span class="alert-text">Signup successful! Your code is <strong>{{ signup.code }}</strong>. Use this to make your predictions at <a href="/player/{{ signup.code }}">https://oscars.mxxyqh.com/player/{{ signup.code }}</a> (You'll get an email too).</span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  {{/if}}
-
-  {{#if id_error }}
-  <div class="alert alert-danger alert-dismissable fade show" role="alert">
-    <span class="alert-icon"><i class="fas fa-exclamation-circle" aria-hidden="true"></i></span>
-    <span class="alert-text">Sorry, but <b>'{{ invalid_id }}'</b> doesn't appear to be a valid player code.</span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  {{/if}}
-
-  {{#if error_500 }}
-  <div class="alert alert-danger alert-dismissable fade show" role="alert">
-    <span class="alert-icon"><i class="fas fa-exclamation-circle" aria-hidden="true"></i></span>
-    <span class="alert-text">Sorry, an error has occurred. Please try again later. The error has been logged.</span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  {{/if}}
 </div>
