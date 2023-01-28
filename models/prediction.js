@@ -14,8 +14,8 @@ const pred = {
     db.use().promise().query(sql).then(([rows, fields]) => {
       done(rows);
     }).catch(err => {
-      console.log(err);
-      done({ error: true });
+      logger.error(`Error in pred.list (${ err.code })`);
+      done({ err: err.code });
     })
   },
 
@@ -24,20 +24,19 @@ const pred = {
     db.use().promise().execute(sql, [uid, cid]).then(([rows, fields]) => {
       done(rows);
     }).catch(err => {
-      console.log(err);
       logger.error(`Error retrieving predictions for user_id: ${ uid }`);
-      done(err);
+      done({ err: err.code });
     })
   },
 
   pie: (cid, done) => {
-    const sql = 'SELECT N.name, COUNT(N.id) AS y FROM nominees N INNER JOIN predictions P ON P.nominee_id = N.id WHERE P.category_id = ? GROUP BY N.name ORDER BY 2 DESC';
+    const sql = 'SELjjjECT N.name, COUNT(N.id) AS y FROM nominees N INNER JOIN predictions P ON P.nominee_id = N.id WHERE P.category_id = ? GROUP BY N.name ORDER BY 2 DESC';
     db.use().promise().execute(sql, [cid]).then(([rows, fields]) => {
       done(rows);
     }).catch(err => {
       console.log(err);
       logger.error(`Error ${ err.code } retrieving pie chart data`);
-      done(err);
+      done(false);
     })
   },
 
@@ -59,8 +58,13 @@ const pred = {
             total: score.toFixed(2),
             username: un
           });
-      }).catch(err => {});
-    }).catch(err => { console.log(err); done(false) });
+      }).catch(err => {
+        console.log('inner catch');
+        done({ err: err.code });
+      });
+    }).catch(err => { 
+      console.log(err); 
+      done({err: err.code }) });
   },
 
   save: (body, done) => {
@@ -70,17 +74,25 @@ const pred = {
       db.use().promise().execute(sql, [body.uid, body.cid]).then(([rows, fields]) => {
         let now = moment().format('YYYY-MM-DD HH:mm:ss');
         if (rows && rows.length) { // row exists so update
-          db.use().query('UPDATE predictions SET ? WHERE id = ?', [{ user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }, rows[0].id], (err, rows) => {
+          db.use().promise().query('UPDATE predictions SET ? WHERE id = ?', [{ user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }, rows[0].id]).then(([rows, fields]) => {
             logger.info(`Prediction updated: uid:${ body.uid } | cid:${ body.cid } | nid:${ body.nid }`);
             done((rows) ? rows.affectedRows.toString() : false);
+          }).catch(err => {
+            logger.error(`Could not save prediction (${ err.code })`);
+            done(false);
           })
         } else { // row doesn't exist so insert
-          db.use().query('INSERT INTO predictions SET ?', { user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }, (err, rows) => {
+          db.use().promise().query('INSERT INTO predictions SET ?', { user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }).then(([rows, fields]) => {
             logger.info(`Prediction created: uid:${ body.uid } | cid:${ body.cid } | nid:${ body.nid }`);
             done((rows) ? rows.affectedRows.toString() : false);
+          }).catch(err => {
+            logger.error(`Could not save prediction (${ err.code })`);
+            done(false);
           })
         }
-      }).catch(err => { console.log(err) })
+      }).catch(err => { 
+        done(false); 
+      })
     } else {
       // parameters not properly sent
       done(false);
@@ -132,7 +144,10 @@ const pred = {
     const sql = 'SELECT id AS value, name FROM categories WHERE winner_id IS NULL';
     db.use().promise().query(sql).then(([rows, fields]) => {
       done(rows);
-    }).catch(err => {})
+    }).catch(err => {
+      console.log('err')
+      done({ err: err.code });
+    })
   },
 
   nominees: (cat, done) => {
@@ -143,41 +158,11 @@ const pred = {
     }).catch(err => {})
   },
 
-  // setWinner: (data, done) => {
-  //   // sets the winner of a category and saves to database
-  //   if (!process.env.OSCAR_ADMIN) {
-  //     done({ err: true, msg: `permission denied` });
-  //   } else {
-  //     // data object should contain cid & nid
-  //     db.use().query('UPDATE categories SET winner_id = ? WHERE id = ?', [data.nid, data.cid], (err, rows) => {
-  //       if (err) {
-  //         done({ err: true, msg: err })
-  //       } else {
-  //         // get the category/nominee names
-  //         // then calculate score based on total predictions / correct predictions
-  //         db.use().query('SELECT name FROM categories WHERE id = ?', data.cid, (cerr, cat) => {
-  //           db.use().query('SELECT name FROM nominees WHERE id = ?', data.nid, (nerr, nom) => {
-  //             db.use().query('SELECT COUNT(*)/SUM(nominee_id = winner_id) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id WHERE C.id = ?', data.cid, (serr, value) => {
-  //               const score = Math.pow((JSON.parse(JSON.stringify(value))[0].score),0.5).toFixed(2);
-  //               // finally update all correct predictions with the score
-  //               db.use().query('UPDATE predictions SET score = ? WHERE category_id = ? AND nominee_id = ?', [score, data.cid, data.nid], (err, rows) => {
-  //                 logger.info(`Set winner of Best ${ cat[0].name } to ${ nom[0].name }`);
-  //                 done({ err: false, msg: `The Oscar for ${ cat[0].name } goes to - ${ nom[0].name }\n${ rows.changedRows } prediction${ (rows.changedRows == 1) ? '' : 's' } correct, scoring ${ score }` });                 
-  //               })
-  //             })
-  //           })
-  //         })
-  //       }
-  //     })
-  //   }
-  // },
-
-  // new version with promises
   setWinner: (data, done) => {
     // set the winner of a category and save to database
     // data is an array of [nominee_id, category_id]
     if (!process.env.OSCAR_ADMIN) {
-      done({ err: true, msg: 'permission denied' });
+      done({ err: 'Permission denied' });
     } else {
       db.use().promise().execute('UPDATE categories SET winner_id = ? WHERE id = ?', [data.nid, data.cid]).then(([rows, fields]) => {
         const getCat = db.use().promise().execute('SELECT name FROM categories WHERE id = ?', [data.cid]),
@@ -188,11 +173,16 @@ const pred = {
           const score = Math.pow((rows[2][0][0].score),0.5).toFixed(2);
           db.use().promise().execute('UPDATE predictions SET score = ? WHERE category_id = ? AND nominee_id = ?', [score, data.cid, data.nid]).then(([rows, fields]) => {
             logger.info(`Set winner of Best ${ cName } to ${ wName }`);
-            console.log(rows);
             done(rows);
           })
-        }).catch(err => { done(err); })
-      }).catch(err => { console.log(err); done(false) })
+        }).catch(err => { 
+          logger.error(`Error in pred.setWinner (${ err.code })`)
+          done({ err: err.code }); 
+        })
+      }).catch(err => { 
+        logger.error(`Error in pred.setWinner (${ err.code })`)
+        done({ err: err.code });
+      })
     }
   },
 
@@ -209,7 +199,7 @@ const pred = {
     db.use().promise().query(sql).then(([rows, fields]) => {
       let result = { error: null, data: null };
       result.data = rows;
-      // loop through rows, assigning a rank
+      // loop through rows, assigning a rank  
       let prev_score = 0, 
           rank = 1, 
           row = 0;
@@ -223,7 +213,10 @@ const pred = {
         rows[i].rank = rank;
       }
       done(result);
-    }).catch(err => {})
+    }).catch(err => {
+      logger.error(`Error in pred.results: ${ err.code }`)
+      done({ err: err.code });
+    })
   }
 }
 
