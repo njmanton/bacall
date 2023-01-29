@@ -21,7 +21,16 @@ if (moment().isBefore(config.deadline) && !config.exp_test) {
 
 db.conn( err => {
 
-  pred.categories( response => {
+  pred.categories(response => {
+    if (response.length == 0) {
+      console.log(chalk.bold.red('No categories to select!'));
+      process.exit(0);
+    }
+    if (response.err) {
+      console.log(chalk.bold.red('Something went wrong 😢'));
+      process.exit(0);
+    }
+    const order = (24 - response.length); // to set order of awards
     inq.prompt({
       type: 'list',
       name: 'category',
@@ -40,13 +49,22 @@ db.conn( err => {
             nid: winner.id,
             cid: cat,
           }
-          pred.setWinner(arr, outcome => {
+          pred.setWinner(arr, order, outcome => {
             if (outcome.err) {
               console.log(chalk.bold.red(outcome.msg));
+              process.exit(0);
             } else {
               console.log(chalk.bold.green(outcome.msg));
+              pred.saveWinner(done => {
+                if (done) {
+                  console.log(chalk.bold.green('Live scores updated'));
+                  process.exit(0);
+                } else {
+                  console.log(chalk.bold.red('Error saving live scores'));
+                  process.exit(0);
+                }
+              })
             }
-            process.exit(0);
           })
           //process.exit(0); 
         })

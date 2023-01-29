@@ -1,12 +1,15 @@
 // jshint node: true, esversion: 6
 'use strict';
 
-const db = require('../models/'),
-      logger = require('winston'),
-      moment = require('moment'),
-      config = require('../config/');
+const db            = require('../models/'),
+      logger        = require('winston'),
+      fs            = require('fs'),
+      { stringify } = require('csv-stringify'),
+      config        = require('../config/');
 
-const pred = {
+
+
+ const pred = {
 
   // simple query to get list of categories and their ids
   list: done => {
@@ -29,15 +32,16 @@ const pred = {
     })
   },
 
-  pie: (cid, done) => {
-    const sql = 'SELjjjECT N.name, COUNT(N.id) AS y FROM nominees N INNER JOIN predictions P ON P.nominee_id = N.id WHERE P.category_id = ? GROUP BY N.name ORDER BY 2 DESC';
-    db.use().promise().execute(sql, [cid]).then(([rows, fields]) => {
-      done(rows);
-    }).catch(err => {
-      console.log(err);
-      logger.error(`Error ${ err.code } retrieving pie chart data`);
-      done(false);
-    })
+  pie: async (cid, done) => {
+    const sql = 'SELECT N.name, COUNT(N.id) AS y FROM nominees N INNER JOIN predictions P ON P.nominee_id = N.id WHERE P.category_id = ? GROUP BY N.name ORDER BY 2 DESC';
+    const x = await db.use().promise().execute(sql, [cid]);
+    done(x[0]);
+    // db.use().promise().execute(sql, [cid]).then(([rows, fields]) => {
+    //   done(rows);
+    // }).catch(err => {
+    //   logger.error(`Error ${ err.code } retrieving pie chart data`);
+    //   done(false);
+    // })
   },
 
   // get a summary results table for a player. If 'type' is true, find by user.code otherwise user.id
@@ -59,11 +63,9 @@ const pred = {
             username: un
           });
       }).catch(err => {
-        console.log('inner catch');
         done({ err: err.code });
       });
     }).catch(err => { 
-      console.log(err); 
       done({err: err.code }) });
   },
 
@@ -72,9 +74,8 @@ const pred = {
       // first see if there's an existing row
       var sql = 'SELECT id FROM predictions WHERE user_id = ? AND category_id = ?';
       db.use().promise().execute(sql, [body.uid, body.cid]).then(([rows, fields]) => {
-        let now = moment().format('YYYY-MM-DD HH:mm:ss');
         if (rows && rows.length) { // row exists so update
-          db.use().promise().query('UPDATE predictions SET ? WHERE id = ?', [{ user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }, rows[0].id]).then(([rows, fields]) => {
+          db.use().promise().query('UPDATE predictions SET ? WHERE id = ?', [{ user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: new Date() }, rows[0].id]).then(([rows, fields]) => {
             logger.info(`Prediction updated: uid:${ body.uid } | cid:${ body.cid } | nid:${ body.nid }`);
             done((rows) ? rows.affectedRows.toString() : false);
           }).catch(err => {
@@ -82,7 +83,7 @@ const pred = {
             done(false);
           })
         } else { // row doesn't exist so insert
-          db.use().promise().query('INSERT INTO predictions SET ?', { user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: now }).then(([rows, fields]) => {
+          db.use().promise().query('INSERT INTO predictions SET ?', { user_id: body.uid, category_id: body.cid, nominee_id: body.nid, updated: new Date() }).then(([rows, fields]) => {
             logger.info(`Prediction created: uid:${ body.uid } | cid:${ body.cid } | nid:${ body.nid }`);
             done((rows) ? rows.affectedRows.toString() : false);
           }).catch(err => {
@@ -91,6 +92,7 @@ const pred = {
           })
         }
       }).catch(err => { 
+        logger.error(`Could not save prediction (${ err.code })`);
         done(false); 
       })
     } else {
@@ -145,7 +147,6 @@ const pred = {
     db.use().promise().query(sql).then(([rows, fields]) => {
       done(rows);
     }).catch(err => {
-      console.log('err')
       done({ err: err.code });
     })
   },
@@ -158,13 +159,13 @@ const pred = {
     }).catch(err => {})
   },
 
-  setWinner: (data, done) => {
+  setWinner: (data, order, done) => {
     // set the winner of a category and save to database
     // data is an array of [nominee_id, category_id]
     if (!process.env.OSCAR_ADMIN) {
       done({ err: 'Permission denied' });
     } else {
-      db.use().promise().execute('UPDATE categories SET winner_id = ? WHERE id = ?', [data.nid, data.cid]).then(([rows, fields]) => {
+      db.use().promise().execute('UPDATE categories SET winner_id = ?, `order` = ?, UPDATED = ? WHERE id = ?', [data.nid, order, new Date(), data.cid]).then(([rows, fields]) => {
         const getCat = db.use().promise().execute('SELECT name FROM categories WHERE id = ?', [data.cid]),
               getNom = db.use().promise().execute('SELECT name FROM nominees WHERE id = ?', [data.nid]),
               getScore = db.use().promise().execute('SELECT COUNT(*)/SUM(nominee_id = winner_id) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id WHERE C.id = ?', [data.cid]);
@@ -173,7 +174,7 @@ const pred = {
           const score = Math.pow((rows[2][0][0].score),0.5).toFixed(2);
           db.use().promise().execute('UPDATE predictions SET score = ? WHERE category_id = ? AND nominee_id = ?', [score, data.cid, data.nid]).then(([rows, fields]) => {
             logger.info(`Set winner of Best ${ cName } to ${ wName }`);
-            done(rows);
+            done({ err: false, msg: `The Oscar for Best ${ cName } goes to: ${ wName }\n${ rows.affectedRows } prediction${ (rows.affectedRows == 1) ? '' : 's' } correct, scoring ${ score }` });
           })
         }).catch(err => { 
           logger.error(`Error in pred.setWinner (${ err.code })`)
@@ -184,6 +185,22 @@ const pred = {
         done({ err: err.code });
       })
     }
+  },
+
+  saveWinner: async done => {
+    // save the current score state to a csv
+    const sql = 'SELECT C.name AS cat, U.username AS user, P.score AS score FROM predictions AS P INNER JOIN categories AS C ON P.category_id = C.id INNER JOIN users AS U ON P.user_id = U.id WHERE C.winner_id IS NOT NULL ORDER BY U.id, C.order';
+    try {
+      const [rows, fields] = await db.use().promise().query(sql);
+      stringify(rows, { quoted_string: true, header: true, columns: ['cat', 'user', 'score'] }, (err, records) => {
+        fs.writeFileSync('./assets/js/live.csv', records);
+        done(true);
+      })
+    } catch (error) {
+      console.log(error.code);
+      done(false);
+    }
+
   },
 
   getWinner: (cat, done) => {
