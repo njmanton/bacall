@@ -39,7 +39,7 @@ const routes = app => {
   app.get('/summary/:id', (req, res) => {
     const expired = (new Date() > config.deadline || config.exp_test);
     if (!expired) {
-      res.render('main', { expired: expired });
+      res.render('main', { expired: expired, message: true, message_err: true, message_text: 'Summaries are unavailable until after the deadline' });
     } else {
       pred.summary(req.params.id, false, data => {
         if (!data.err) {
