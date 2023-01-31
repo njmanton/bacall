@@ -7,24 +7,6 @@ const db = require('../models/'),
 
 const player = {
 
-  exists: async (code, done) => {
-
-    if (!code || code.length !=8 ) {
-      done({ err: 'Invalid code' });
-    } else {
-      const sql = 'SELECT id, username, franchise FROM users WHERE code = ? LIMIT 1';
-      let result = { err: null, id: null, name: null }; // object to return to valid code check
-      const qry = await db.use().promise().execute(sql, [code]);
-      const rows = qry[0];
-      if (!rows.length) {
-        result.err = 'Invalid code';
-      } else {
-        result = rows[0];
-      }
-      done(result);
-    }
-  },
-
   unique: (type, val, done) => {
 
     if (type == 1) {
