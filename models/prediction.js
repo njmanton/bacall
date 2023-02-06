@@ -7,12 +7,10 @@ const db            = require('../models/'),
       { stringify } = require('csv-stringify'),
       config        = require('../config/');
 
-
-
  const pred = {
 
-  // simple query to get list of categories and their ids
   list: done => {
+    // simple query to get list of categories and their ids
     const sql = 'SELECT id, name, class, lastyear, precursors FROM categories';
     db.use().promise().query(sql).then(([rows, fields]) => {
       done(rows);
@@ -22,14 +20,23 @@ const db            = require('../models/'),
     })
   },
 
-  preds: (uid, cid, done) => {
+  preds: async (code, cid, done) => {
+    // get user id from code, then extract all pred for that player
+    const sqlGetUid = 'SELECT id FROM users WHERE code = ? LIMIT 1';
     const sql = 'SELECT N.image, N.film, N.id AS nid, N.name AS nominee, N.tmdb_id AS tmdb, (I.nominee_id > 0) AS pred FROM nominees N JOIN categories C ON N.category_id = C.id LEFT JOIN (SELECT category_id, nominee_id FROM predictions P WHERE user_id = ?) I ON (I.category_id = C.id AND I.nominee_id = N.id) WHERE C.id = ? ORDER BY nid';
-    db.use().promise().execute(sql, [uid, cid]).then(([rows, fields]) => {
-      done(rows);
-    }).catch(err => {
-      logger.error(`Error retrieving predictions for user_id: ${ uid }`);
-      done({ err: err.code });
-    })
+    try {
+      const [row] = await db.use().promise().execute(sqlGetUid, [code]);
+      if (!row.length) {
+        throw new Error('No such user');
+      }
+      const uid = row[0].id;
+      const [preds] = await db.use().promise().execute(sql, [uid, cid]);
+      done([preds, uid]);
+    } catch (error) {
+      logger.error(`error in pred.preds (${ error.code })`)
+      done({ err: error.message, code: error.code });
+    }
+
   },
 
   pie: async (cid, done) => {
@@ -102,53 +109,15 @@ const db            = require('../models/'),
 
   },
 
-  category: (cat, done) => {
-    // get all predictions by nominee for a given category
-    const sql = 'SELECT N.id, N.name, N.image, COUNT(P.id) AS cnt, (C.winner_id = N.id) AS winner FROM predictions P JOIN nominees N ON N.id = P.nominee_id JOIN categories C ON C.id = P.category_id WHERE P.category_id = ? GROUP BY N.id ORDER BY cnt DESC';
-    db.use().promise().execute(sql, [cat]).then(([rows, fields]) => {
-      done(rows);
-    }).catch(err => {})
-  },
-
-  categoryDetails: (cat, done) => {
-    // return object to render category view
-    let data = { winner: null, noms: null },
-        preds  = 'SELECT U.username, N.name, (C.winner_id = N.id) AS winner FROM nominees N LEFT JOIN predictions P on P.nominee_id = N.id LEFT JOIN categories C on N.category_id = C.id LEFT JOIN users U on U.id = P.user_id WHERE N.category_id = ? ORDER BY winner DESC, name ASC',
-        winner = 'SELECT C.id AS cid, C.class, C.name AS category, C.lastyear, N.id, N.tmdb_id AS tmdb, N.name AS name, N.film, N.image FROM categories C LEFT JOIN nominees N ON C.winner_id = N.id WHERE C.id = ?';
-
-    db.use().promise().execute(winner, [cat]).then(([rows, fields]) => {
-      data.winner = rows[0];
-      db.use().promise().execute(preds, [cat]).then(([rows, fields]) => {
-        let prev = null,
-            arr = {};
-        for (let i = 0; i < rows.length; i++) {
-          let name = rows[i].name;
-          if (!(name in arr)) {
-            arr[name] = {
-              winner: rows[i].winner,
-              cnt: 0,
-              noms: []
-            }
-          }
-          if (rows[i].username) {
-            arr[name].noms.push(rows[i].username);
-            arr[name].cnt++;
-          }
-        }
-        data.noms = arr;
-        done(data);
-      }).catch(err => {})
-    }).catch(err => {})
-  },
-
-  categories: done => {
+  categories: async done => {
     // return list of unannounced categories for CLI
-    const sql = 'SELECT id AS value, name FROM categories WHERE winner_id IS NULL';
-    db.use().promise().query(sql).then(([rows, fields]) => {
+    try {
+      const sql = 'SELECT id AS value, name FROM categories WHERE winner_id IS NULL';
+      const [rows, fields] = await db.use().promise().query(sql);
       done(rows);
-    }).catch(err => {
+    } catch (err) {
       done({ err: err.code });
-    })
+    }
   },
 
   nominees: (cat, done) => {
@@ -234,6 +203,13 @@ const db            = require('../models/'),
       logger.error(`Error in pred.results: ${ err.code }`)
       done({ err: err.code });
     })
+  },
+
+  progress: async (uid, done) => {
+    // return an array of each cat and whether player uid has made  a prediction
+    const sql = 'SELECT NOT(ISNULL(S.nominee_id)) AS complete FROM categories AS C LEFT JOIN (SELECT category_id, nominee_id FROM predictions WHERE user_id = ?) AS S ON C.id = S.category_id ORDER BY C.id';
+    const [rows, fields] = await db.use().promise().execute(sql, [uid]);
+    done(rows);
   }
 }
 
