@@ -1,12 +1,43 @@
-<div class="content">
+<div class="content container">
   <div id="popup"></div>
-  
-  <nav class="title row" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">
+  <div class="row">
+    <table id="progress" class="" style="width: 100%;">
+        <tbody>
+          <tr style="height: 0.75em;">
+            <td data-pcid="1" class="cat"><p></p></td>
+            <td data-pcid="2" class="cat"><p></p></td>
+            <td data-pcid="3" class="cat"><p></p></td>
+            <td data-pcid="4" class="cat"><p></p></td>
+            <td data-pcid="5" class="cat"><p></p></td>
+            <td data-pcid="6" class="cat"><p></p></td>
+            <td data-pcid="7" class="cat"><p></p></td>
+            <td data-pcid="8" class="cat"><p></p></td>
+            <td data-pcid="9" class="cat"><p></p></td>
+            <td data-pcid="10" class="cat"><p></p></td>
+            <td data-pcid="11" class="cat"><p></p></td>
+            <td data-pcid="12" class="cat"><p></p></td>
+            <td data-pcid="13" class="cat"><p></p></td>
+            <td data-pcid="14" class="cat"><p></p></td>
+            <td data-pcid="15" class="cat"><p></p></td>
+            <td data-pcid="16" class="cat"><p></p></td>
+            <td data-pcid="17" class="cat"><p></p></td>
+            <td data-pcid="18" class="cat"><p></p></td>
+            <td data-pcid="19" class="cat"><p></p></td>
+            <td data-pcid="20" class="cat"><p></p></td>
+            <td data-pcid="21" class="cat"><p></p></td>
+            <td data-pcid="22" class="cat"><p></p></td>
+            <td data-pcid="23" class="cat"><p></p></td>
+          </tr>
+        </tbody>
+    </table>    
+  </div>
+  <nav id="pred_list" class="title row" data-uid="{{ user }}" data-cid="{{ cat.id }}">
+      
     <div class="col">
       <a title="⬅️ Key" href="" id="prev">◀ prev</a>
     </div>
     <div class="col">
-      {{ cat.name }} <span id="predind" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
+      {{ cat.name }} <span id="predind" class="badge bg-secondary" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
     </div>
     <div class="col">
       <a title="Key ➡️" href="" id="next">next ▶</a>
@@ -22,17 +53,10 @@
           </div>
         {{/each}}        
       </div>
-      <div class="precursors">
-        <p>Last Year: {{ cat.lastyear }}</p>
-      </div>
-      <div class="precursors">
-        <h5>Awards season winners:</h5>
-        <p>{{{ cat.precursors }}}</p>        
-      </div>
     </div>
    
     <div class="image col" data-default="
-    {{#if img }}/img/{{ img }}.jpeg
+    {{#if img }}/img/{{ img }}.jpg
     {{else }}
       {{#if cat.class }}
         /img/person.svg
@@ -44,6 +68,13 @@
       <img class="poster" src="" alt="Poster or portrait of selected nominee" />
     </div>
 
+  </div>
+  <div class="precursors">
+    <p>Last Year: {{ cat.lastyear }}</p>
+  </div>
+  <div class="precursors">
+    <h5>Awards season winners:</h5>
+    <p>{{{ cat.precursors }}}</p>        
   </div>
   <div style="padding-top: 2em" class="key precursors">
     <p>GG - Golden Globes, CC - Critics' Choice, BAFTA - British Academy of Film and Television Arts, PGA - Producers' Guild of America, DGA - Directors' Guild of America, SAG - Screen Actor's Guild, Annie - Animation, ISA - Independent Spirit Awards</p>
