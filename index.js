@@ -5,15 +5,15 @@
 index.js main - entry point for app
 ******************************************************************************/
 
-var express = require('express'),
-    app     = express(),
-    db      = require('./models/'),
-    pkg     = require('./package.json'),
-    config  = require('./config/'),
-    logger  = require('./logs/'),
-    bp      = require('body-parser'),
-    moment  = require('moment'),
-    bars    = require('express-handlebars');
+var express       = require('express'),
+    app           = express(),
+    db            = require('./models/'),
+    pkg           = require('./package.json'),
+    config        = require('./config/'),
+    logger        = require('./logs/'),
+    bp            = require('body-parser'),
+    { DateTime }  = require('luxon'),
+    bars          = require('express-handlebars');
 
 app.engine('.hbs', bars.engine({
   defaultLayout: 'layout', extname: '.hbs'
@@ -30,9 +30,10 @@ app.use((req, res, next) => {
   res.locals.ver = pkg.version;
   res.locals.app = pkg.name;
   res.locals.env = process.env.OSCAR_ENV;
-  res.locals.deadline = moment(config.deadline).format('Do MMM [at] HH:mm zz');
+  res.locals.deadline = DateTime.fromJSDate(config.deadline).toLocaleString(DateTime.DATETIME_FULL);
   next();
 })
+
 app.locals.tmdb_base_url = 'https://image.tmdb.org/t/p/';
 app.locals.tmdb_poster_size = 'w300/';
 app.locals.tmdb_backdrop_size = 'w1280/';
@@ -50,7 +51,7 @@ db.conn( err => {
     db.use().promise().query('SELECT DATABASE();').then(rows => {
       console.log('Database  :', rows[0][0]['DATABASE()']);
       app.listen(app.get('port'), () => {
-        console.log(`system up : ${ moment().format('DD MMM HH:mm:ss') } `)
+        console.log(`system up : ${ DateTime.now().toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS) } `)
         console.log(`port      : ${ app.get('port') }`);
         logger.info(`${ pkg.name } started`);
         console.log(`--------------------------------------`);

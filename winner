@@ -7,14 +7,14 @@ command line tool to set winners of categories
 
 *********************************************************/
 
-var db      =  require('./models/'),
-    inq     =  require('inquirer'),
-    chalk   =  require('chalk'),
-    moment  =  require('moment'),
-    pred    =  require('./models/prediction'),
-    config  =  require('./config/');
+const db            =  require('./models/'),
+      inq           =  require('inquirer'),
+      chalk         =  require('chalk'),
+      { DateTime }  = require('luxon'),
+      pred          =  require('./models/prediction'),
+      config        =  require('./config/');
 
-if (moment().isBefore(config.deadline) && !config.exp_test) {
+if ((DateTime.now() < DateTime.fromJSDate(config.deadline)) && !config.exp_test) {
   console.log(chalk.bold.red('Results cannot be entered before the deadline has been reached!'));
   process.exit(1);
 }
