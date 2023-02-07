@@ -1,13 +1,12 @@
-<div class="top-pad">
-  <div>WELCOME TO THE 9TH ANNUAL MY</div>
-</div>
-
 <div class="content container-fluid">
   <h2>Categories</h2>
-  <ul>
-  {{#each list }}
-  <li><a href="/category/{{ id }}">{{ name }}</a></li>
-  {{/each }}
-  </ul>
-
+  <div class="grid">
+    {{#each list }}
+    <div class="cat-list align-middle">
+      <a class="d-flex align-items-center" href="/category/{{ id }}">
+        <p class="text-break">{{ name }}</p>
+      </a>
+    </div>
+    {{/each }}
+  </div>
 </div>
