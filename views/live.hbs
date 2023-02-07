@@ -1,0 +1,65 @@
+<section class="content">
+  <h1>Live scoring chart</h1>
+  <figure class="highcharts-figure">
+    {{!-- <p class="loading"></p> --}}
+    <div id="container"><p>Loading data <img src="/img/ajax-loader.gif" alt="waiting indicator" /></p></div>
+  </figure>
+</section>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script>
+  $(document).ready(() => {
+    const getCSV = async url => {
+      
+      const res = await fetch(url, {
+        method: 'get',
+        headers: { 'content-type': 'text/csv' }
+      });
+
+      if (res.status == 200) {
+        const data = await res.text();
+
+        var chart = Highcharts.chart('container', {
+          chart: {
+            type: 'line',
+            height: 600
+          },
+          title: null,
+          credits: { enabled: false },
+        });
+        const rows = data.split('\n');
+        let preUser = '',
+            pts = [];
+        for (let x = 1; x < rows.length; x++) {
+          const row = rows[x].split(',');
+          if (row[1] != preUser && x > 1) {
+            // new user so add previous data to chart
+            chart.addSeries({
+              name: preUser.replaceAll('"',''),
+              data: pts
+            })
+            pts = (row[2] == 'NULL') ? [0] : [row[2] * 1];
+          } else {
+            let curr = (pts.slice(-1) * 1); 
+            pts.push((row[2] == 'NULL' ? curr : curr + (row[2] * 1)));
+          }
+          preUser = row[1];
+        }
+        // end of loop so add the final series if more than one set of predictions
+        try {
+          chart.addSeries({
+            name: preUser.replaceAll('"',''),
+            data: pts
+          })
+        } catch { }
+        //$('.loading').fadeOut(10);
+      } else {
+        $('#container').html('Failed to load data');
+      }      
+    }
+
+    getCSV('/js/live.csv');
+
+  })
+</script>
