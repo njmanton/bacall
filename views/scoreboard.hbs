@@ -2,12 +2,13 @@
   tr.bot td { background-color: yellow; }
 </style>
 <div class="content container-fluid">
-<h3>Leaderboard</h3>
+<h2>Leaderboard</h2>
 
 {{#unless expired }}
 
 {{ else }}
-<input type="checkbox" id="nobots" value="" /><label for="nobot"> Exclude bots?</label>
+<input type="checkbox" class="form-check-input" id="nobots" value="" />
+<label class="form-check-label" for="nobot">Exclude bots?</label>
 <table class="table" id="results">
   <thead>
     <tr>
