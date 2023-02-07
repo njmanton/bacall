@@ -59,7 +59,7 @@ const routes = app => {
 
   // handle user signup form
   app.post('/signup', (req, res) => {
-    player.create(req.body.username, req.body.email, req.body.franchise, check => {
+    player.create(req.body.username, req.body.email, check => {
       if (check.error) {
         res.render('main', {
           signups: config.placeholders(),
@@ -70,7 +70,7 @@ const routes = app => {
       } else {
         res.render('main', { 
           message: true, 
-          message_text: `Signup successful! Your code is <strong>${ check.code }</strong>. Use this to make your predictions at <a href="/player/${ check.code }">https://oscars.mxxyqh.com/player/${ check.code }</a> (You'll get an email too).`,
+          message_text: `Signup successful! Your code is <strong>${ check.code }</strong>. Use this to make your predictions at&nbsp; <a href="/player/${ check.code }">https://oscars.mxxyqh.com/player/${ check.code }</a>$nbsp;(You'll get an email too).`,
           signups: config.placeholders() 
         });
       }
@@ -113,8 +113,8 @@ const routes = app => {
     const expired = (new Date() > config.deadline || config.exp_test);
     if (expired) {
       pred.summary(req.params.code, true, data => { 
-        //res.send(`<pre>${ JSON.stringify(data, null, 2) }</pre>`);
         res.render('summary', {
+          //debug: config.debug(data),
           data: data.table,
           total: data.total,
           username: data.username,
@@ -124,55 +124,49 @@ const routes = app => {
         });
       })
     } else {
-      // first check if the code is real
-      player.exists(req.params.code, user => {
-        if (user.id) {
-          // player exists, so retrieve predictions
-          pred.preds(user.id, req.params.cat, data => {
-            if (data.err) { // returns a code property if there was an SQL error
-              res.render('main', { 
-                message: true,
-                message_err: true,
-                message_text: 'Sorry, an error has occurred. Please try again later. The error has been logged.' 
-              });
-            } else {
-              // get the list of all categories for the navigation
-              pred.list(cats => {
-                if (cats.err) {
-                  res.status(500).send(`Sorry, there was an error retrieving data (${ cats.err })`)
-                } else {
-                  // loop through nominees to get prediction for the default image
-                  let img = '';
-                  for (let x = 0; x < data.length; x++) {
-                    if (data[x].pred) {
-                      // short-circuit the loop once we find a prediction
-                      img = data[x].image; break;
-                    }
-                  }
-                  res.render('players', {
-                    expired: expired,
-                    user: user,
-                    data: data,
-                    cat: cats[req.params.cat - 1],
-                    img: img,
-                    title: `Best ${ cats[req.params.cat - 1].name }`
-                  });                  
-                }
-              })
-            }
-          })
-        } else {
-          // invalid code
+      // get all preds for :code
+      pred.preds(req.params.code, req.params.cat, data => {
+        if (data.err == 'No such user') {
           logger.info(`Invalid login from '${ req.params.code }'`);
           res.render('main', { 
             message: true,
             message_err: true,
             message_text: `Sorry, but <b>'${ req.params.code }'</b> doesn't appear to be a valid player code.`
           })
+        } else if (data.code) {
+          // probably a SQL error
+          res.render('main', { 
+            message: true,
+            message_err: true,
+            message_text: 'Sorry, an error has occurred. Please try again later. The error has been logged.' 
+          });
+        } else {
+          pred.list(cats => {
+            if (cats.err) {
+              res.status(500).send(`Sorry, there was an error retrieving data (${ cats.err })`)
+            } else {
+              // loop through nominees to get prediction for the default image
+              let img = '';
+              for (let x = 0; x < data[0].length; x++) {
+                if (data[0][x].pred) {
+                  // short-circuit the loop once we find a prediction
+                  img = data[0][x].image; break;
+                }
+              }
+              res.render('players', {
+                debug: config.debug(data),
+                expired: expired,
+                user: data[1],
+                data: data[0],
+                cat: cats[req.params.cat - 1],
+                img: img,
+                title: `Best ${ cats[req.params.cat - 1].name }`
+              });                  
+            }
+          })
         }
-      })   
+      })
     }
-
   });
 
   // handle prediction update
@@ -191,11 +185,11 @@ const routes = app => {
         res.render('main', { message: true, message_err: true, message_text: 'Category id must be between 1 and 23'});
       } else {
         res.render('category', {
-          layout: 'layout_cat',
+          debug: config.debug(data),
           data: data,
           cat: req.params.cat,
           title: `Best ${ data.category }`
-        });        
+        });    
       }
     })
   });
@@ -203,6 +197,14 @@ const routes = app => {
   // ajax request for pie chart on category page
   app.get('/api/cat/:cat', (req, res) => {
     pred.pie(req.params.cat, data => {
+      res.send(data);
+    })
+  });
+
+  // get progress of predictions for :uid
+  app.get('/api/progress/:uid', (req, res) => {
+    pred.progress(req.params.uid, data => {
+      // data should be a 23 element array of 0,1 
       res.send(data);
     })
   });
@@ -222,8 +224,14 @@ const routes = app => {
   })
 
   app.get('/live', (req, res) => {
-    res.render('live', { title: 'demo chart' });
-  })
+    res.render('live', { title: 'Live scores' });
+  });
+
+  app.get('/test', (req, res) => {
+    pred.categories(data => {
+      res.json(data);
+    })
+  });
 
   // capture any other non-matching routes here
   app.get('*', (req, res) => {
