@@ -207,9 +207,14 @@ const db            = require('../models/'),
 
   progress: async (uid, done) => {
     // return an array of each cat and whether player uid has made  a prediction
-    const sql = 'SELECT NOT(ISNULL(S.nominee_id)) AS complete FROM categories AS C LEFT JOIN (SELECT category_id, nominee_id FROM predictions WHERE user_id = ?) AS S ON C.id = S.category_id ORDER BY C.id';
-    const [rows, fields] = await db.use().promise().execute(sql, [uid]);
-    done(rows);
+    try {
+      const sql = 'SELECT NOT(ISNULL(S.nominee_id)) AS complete FROM categories AS C LEFT JOIN (SELECT category_id, nominee_id FROM predictions WHERE user_id = ?) AS S ON C.id = S.category_id ORDER BY C.id';
+      const [rows, fields] = await db.use().promise().execute(sql, [uid]);
+      done(rows);
+    } catch (err) {
+      logger.error(`error in pred.progress (${ err })`);
+      done(null);
+    }
   }
 }
 
