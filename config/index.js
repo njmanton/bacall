@@ -12,3 +12,7 @@ exports.placeholders = () => {
         rnd = Math.floor(Math.random() * signups.length);
   return signups[rnd];
 }
+
+exports.debug = data => {
+  return JSON.stringify(data, null, 2);
+}
