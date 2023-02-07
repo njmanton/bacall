@@ -34,8 +34,7 @@ const player = {
     }).catch(err => { done(false) })
   },
 
-  create: (username, email, franchise, done) => {
-
+  create: (username, email, done) => {
     let code = '';
     const len = 8,
           letters = '2346789ABCDEFGHJKLMNPQRTUVWXYZ'; // don't use easily confused chars, e.g. I and 1
@@ -49,23 +48,23 @@ const player = {
     const user = {
       username: username, 
       email: email, 
-      franchise: franchise,
       code: code,
       registered: new Date()
     }
 
-    const sql = 'INSERT INTO users SET username = ?, email = ?, franchise = ?, code = ?, registered = ?';
+    const sql = 'INSERT INTO users SET username = ?, email = ?, code = ?, registered = ?';
     const result = {
       error: null,
       code: null
     };
-    db.use().promise().execute(sql, [username, email, franchise, code, new Date()]).then(([rows, fields]) => {
+    db.use().promise().execute(sql, [username, email, code, new Date()]).then(([rows, fields]) => {
       result.code = code;
       mail.send(email, user, result => {
         logger.info(`signup email sent to ${ user.email }`);
       })
     }).catch(err => { 
-      logger.error(`Error processing signup for ${ email }. The code was '${ err.code }'`);
+      console.log(err);
+      logger.error(`Error processing signup for ${ email }. The code was '${ err }'`);
       result.error = true;
     }).finally(() => {
       done(result);
