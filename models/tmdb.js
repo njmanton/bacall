@@ -16,7 +16,6 @@ const tmdb = {
       const sql = 'SELECT C.class, C.name AS cname, C.winner_id, N.id, N.name AS wname, N.film AS film, N.tmdb_id, MIN(P.score) AS score, COUNT(P.id) AS preds, SUM(P.nominee_id = C.winner_id) AS correct FROM categories C LEFT JOIN nominees N ON C.winner_id = N.id LEFT JOIN predictions P ON P.category_id = C.id WHERE C.id = ? GROUP BY C.class, C.name, C.winner_id, N.id, N.tmdb_id;'
       db.use().promise().execute(sql, [category]).then(([rows,fields]) => {
         const winner = rows[0] || []; // get the winner data
-        console.log(winner);
         let data = {
           error:null, 
           poster: null, 
@@ -26,7 +25,8 @@ const tmdb = {
           film: winner.film,
           correct: winner.correct * 1, 
           points: (winner.score * 1).toFixed(2),
-          singular: (winner.correct == 1)
+          singular: (winner.correct == 1),
+          preds: winner.preds
         };
 
         if (winner.class == 0 || winner.winner_id == 287) { // nominee is a movie (or multiple winners for EEAAO)
