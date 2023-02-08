@@ -224,7 +224,7 @@ $(document).ready(function() {
       width = len / max_count * 100;
     }
     _this.animate({
-        width: (width - 10) + '%'
+        width: (width - 15) + '%'
       }, 700);
   })
 
