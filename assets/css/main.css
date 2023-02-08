@@ -157,6 +157,10 @@ h5 {
   color: gold;
 }
 
+tr.bot td {
+  background-color: #cdc;
+}
+
 .content {
   box-sizing: border-box;
   padding: 2em 1em;
@@ -332,11 +336,24 @@ input#franchise:focus {
   width: 0;
   padding: 3px;
   height: 2em;
-  border-radius: 2px;
   background-color: #f04124;
+  display: inline-block;
 }
 .bar.win {
   background-color: #43ac6a;
+}
+
+.bar-arrow {
+  display: inline-block;
+  width: 0;
+  height: 2em;
+  border-top: 1em solid transparent;
+  border-bottom: 1em solid transparent;
+  margin-left: -0.3em;
+  border-left: 1em solid #f04124;
+}
+.bar-arrow.win {
+  border-left: 1em solid #43ac6a;
 }
 
 .grid {

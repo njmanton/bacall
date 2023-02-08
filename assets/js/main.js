@@ -223,12 +223,13 @@ $(document).ready(function() {
       width = (len) ? 100 : 0;
       max_count = len;
       _this.addClass('win');
+      _this.next().addClass('win');
     } else {
       width = len / max_count * 100;
     }
     _this.animate({
-        width: width + '%'
-      }, 900);
+        width: (width - 10) + '%'
+      }, 700);
   })
 
 })

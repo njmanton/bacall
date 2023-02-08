@@ -1,6 +1,3 @@
-<style>
-  tr.bot td { background-color: yellow; }
-</style>
 <div class="content container-fluid">
 <h2>Leaderboard</h2>
 
@@ -20,10 +17,11 @@
   <tbody>
     {{#each table.data }}
     <tr {{#if bot }}class="bot"{{/if }}>
-      <td class="{{#if @first }}winner{{/if }}">{{#if @first }}<span class="lead">&#127942;</span>{{ else }}{{ rank }}{{/if}}</td>
-      <td class="{{#if @first }}winner{{/if }}"><a href="/summary/{{ id }}">{{ player }}</a></td>
+      <td class="align-middle {{#if @first }}winner{{/if }}">{{#if @first }}<span class="lead">&#127942;</span>{{ else }}{{ rank }}{{/if}}</td>
+      <td class="align-middle {{#if @first }}winner{{/if }}"><a href="/summary/{{ id }}">{{ player }}</a></td>
       <td width="500px">
         <div class="bar" data-len="{{ score }}"></div>
+        <div class="bar-arrow"></div>
       </td>
       <td>{{ score }}</td>
     </tr>

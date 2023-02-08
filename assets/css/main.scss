@@ -178,6 +178,10 @@ h5 {
   }
 }
 
+tr.bot td {
+  background-color: #cdc;
+}
+
 .content {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -392,15 +396,28 @@ input#franchise {
   border: 0;
 }
 
+// format bars in leaderboard table
 .bar {
   width: 0;
   padding: 3px;
   height: 2em;
-  border-radius: 2px;
   background-color: $val-err;
+  display: inline-block;
 
   &.win {
     background-color: $val-ok;
+  }
+}
+.bar-arrow {
+  display: inline-block;
+  width: 0;
+  height: 2em;
+  border-top: 1em solid transparent;
+  border-bottom: 1em solid transparent;
+  margin-left: -0.3em;
+  border-left: 1em solid $val-err;
+  &.win {
+    border-left: 1em solid $val-ok;
   }
 }
 
