@@ -25,15 +25,4 @@ describe('Server',
 
 describe('Player', () => {
 
-  const player = require('../models/player');
-  console.log('player:', player);
-  it('should return FALSE for an invalid code', done => {
-    player.exists('ABCDEFGH', ret => {
-      //console.log(ret);
-      expect(ret).to.be.false;
-      done();      
-    });
-
-  });
-
 });

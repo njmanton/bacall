@@ -4,13 +4,23 @@
     {{>head }}    
   </head>
   <body class="overlay">
-    {{>messages }}
+    <header>
+      {{>messages }}
+      <div>
+        <p>Tenth Anniversary</p>
+        <a href="/" title="home"><img src="/img/mxxyqh10_white.png" alt="My 20 Year Oscar Hell Logo" /></a>
+      </div>
+    </header>
     {{{ body }}}
     {{#if env }}{{#if debug }}
     {{/if }}{{/if }}  
-    <footer class="container">
+    <footer>
       {{>footer }}
     </footer>
-  
+    {{#if debug }}
+    <div class="debug">
+      <pre>{{ debug }}</pre>
+    </div>
+    {{/if }}
   </body>
 </html>

@@ -1,41 +1,39 @@
-{{#if data.backdrop }}
-<div class="backdrop" style="min-height: 250px; background-image: url({{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ data.backdrop }}"></div>
-{{ else }}
-<div class="top-pad">
-  
-</div>
-{{/if }}
+<div class="content container">
+  <nav id="cat_list" class="title row" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">
+    <div class="col">
+      <a title="⬅️ Key" href="" id="prev">◀ prev</a>
+    </div>
+    <div class="col">
+      {{ data.category }} <span id="predind" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
+    </div>
+    <div class="col">
+      <a title="Key ➡️" href="" id="next">next ▶</a>
+    </div>
+  </nav>
 
-<nav class="title row" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">
-  <div class="col">
-    <a title="⬅️ Key" href="" id="prev">◀ prev</a>
-  </div>
-  <div class="col">
-    {{ data.category }} <span id="predind" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
-  </div>
-  <div class="col">
-    <a title="Key ➡️" href="" id="next">next ▶</a>
-  </div>
-</nav>
-
-<div class="row">
-  <div class="col-sm">
-    <h3>{{ data.category }}</h3>
-    {{#if data.winner }}
-      <h4>Winner - {{ data.winner }}</h4>
-      {{#if data.singular }}
-      <p>There was only 1 correct prediction, scoring <em>{{ data.points }}</em></p>
-      {{ else }}
-      <p>There were {{ data.correct }} correct predictions{{#if data.correct }}, each worth <em>{{ data.points }}</em>{{/if }}</p>
-      <img style="max-width: 50%;" src="{{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ data.poster }}" alt="Poster of {{ data.winner }}">
+  <div class="row">
+    <div class="col-sm">
+      <h2>Best {{ data.category }}</h2>
+      {{#if data.winner }}
+        <h3>{{ data.winner }} {{#if data.film }}<span>({{ data.film }})</span>{{/if }}</h3>
+        <img id="cat_img" style="max-width: 50%;" src="{{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ data.poster }}" alt="Poster of {{ data.winner }}">
       {{/if }}
-    {{/if }}
-  </div>
-  <div class="col-sm">
-    <figure class="highcharts-figure">
-      <div id="container"></div>
-    </figure>
-  </div>
+    </div>
+    <div class="col-sm">
+      <figure class="highcharts-figure">
+        <div id="container"></div>
+      </figure>
+      <div id="chart-pred-count">
+        {{#if data.preds }}
+        {{#if data.singular }}
+        <p>There was only 1 correct prediction, scoring <em>{{ data.points }}</em></p>
+        {{ else }}
+        <p>There were {{ data.correct }} correct predictions{{#if data.correct }}, each worth <em>{{ data.points }}</em>{{/if }}</p>
+        {{/if }}  
+        {{/if }}      
+      </div>
+    </div>
+  </div>  
 </div>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -87,12 +85,17 @@
       }
     }, true);
 
-    $.get(`/api/cat/{{ cat }}`).done(function(data) {
-      chart.addSeries({
-        name: 'Predictions',
-        data: data,
-        innerSize: '20%'
-      })
+    $.get(`/api/cat/{{ cat }}`).done(data => {
+      console.log(data);
+      if (data.length) {
+        chart.addSeries({
+          name: 'Predictions',
+          data: data,
+          innerSize: '20%'
+        })
+      } else {
+        $('#container').html('<div class="chart-no-data">There is no prediction data for this category</div>');
+      }
     })
   })
 </script>

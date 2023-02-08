@@ -1,9 +1,11 @@
 $(document).ready(function() {
 
-  // auto clear message boxes after 10s
+  if ($('.nominee').hasClass('selected')) $('div.image').addClass('selected');
+
+  // auto clear message boxes after 8s
   window.setTimeout(function() {
-    $('.alert .close').click();
-  }, 10000);
+    $('.btn-close').click();
+  }, 8000);
   
   $('a').on('click', function(e) {
     e.stopPropagation();
@@ -27,36 +29,40 @@ $(document).ready(function() {
 
   $('#signup #username').on('keyup', function() {
     
-    var uname = $(this).val();
+    var uname = $(this).val(),
+        unv = $('#username-not-valid')
     if (uname.length > 2) {
       $.ajax({
         type: 'POST',
         url: '/player/check',
         data: { type: 1, value: uname },
         beforeSend: function() {
-          $('#username-not-valid').show().html('<img src="/img/ajax-loader.gif" alt="..." />');
+          unv.show().html('<img src="/img/ajax-loader.gif" alt="..." />');
         }
       }).done(function(res) {
-        if (res === true) { // name is ok
-          $('#username-not-valid')
-            .removeClass('err')
-            .addClass('success')
-            .html('&#10003;')
-            .show();
+
+        if (res === '') { // db error
+          unv.addClass('err')
+             .removeClass('success')
+             .html('unable to check')
+             .show();
+        } else if (res === true) { // name is ok
+          unv.removeClass('err')
+             .addClass('success')
+             .html('&#10003;')
+             .show();
         } else {
-          $('#username-not-valid')
-            .addClass('err')
-            .removeClass('success')
-            .html('taken &#128542;')
-            .show();
+          unv.addClass('err')
+             .removeClass('success')
+             .html('taken &#128542;')
+             .show();
         }
         checkForm();
       });
     } else {
-      $('#username-not-valid').hide();
+      unv.hide();
     }
     checkForm();
-      
   })
 
   $('#signup #email').on('keyup', function() {
@@ -71,17 +77,15 @@ $(document).ready(function() {
         data: { type: 2, value: email }
       }).done(function(res) {
         if (res === true) {
-          $('#email-not-valid')
-            .removeClass('err')
-            .addClass('success')
-            .html('&#10003;')
-            .show();
+          env.removeClass('err')
+             .addClass('success')
+             .html('&#10003;')
+             .show();
         } else {
-          $('#email-not-valid')
-            .addClass('err')
-            .removeClass('success')
-            .text('taken')
-            .show();
+          env.addClass('err')
+             .removeClass('success')
+             .text('taken')
+             .show();
         }   
         checkForm();       
       });
@@ -110,7 +114,6 @@ $(document).ready(function() {
     var prevurl = window.location.pathname.split('/'),
         cur = prevurl.pop(),
         nexturl = JSON.parse(JSON.stringify(prevurl));
-
     var prevcat = (cur == 1) ? maxCats : (cur * 1) - 1,
         nextcat = (cur == maxCats) ? 1 : (cur * 1) + 1;
 
@@ -134,7 +137,7 @@ $(document).ready(function() {
 
   // handle the image switch on mouseover events
   $('.nominee').on('mouseenter', function() {
-    var img = '/img/' + $(this).data('img') + '.jpeg';
+    var img = '/img/' + $(this).data('img') + '.jpg';
     $('.image img').prop('src', img);
   });
 
@@ -146,10 +149,10 @@ $(document).ready(function() {
   $('.nominee').on('click', function() {
     if ($(this).hasClass('selected')) return false; // don't send ajax request for something already picked
     var _this = $(this),
-        img = '/img/' + _this.data('img') + '.jpeg',
+        img = '/img/' + _this.data('img') + '.jpg',
         nid = _this.data('nid'),
-        cid = $('nav').data('cid'),
-        uid = $('nav').data('uid');
+        cid = $('#pred_list').data('cid'),
+        uid = $('#pred_list').data('uid');
 
     $.ajax({
       url: '/prediction',
@@ -162,8 +165,10 @@ $(document).ready(function() {
     }).done(function(d) {
       if (d) {
         $('.image img').prop('src', img).parent().data('default', img);
+        $(`[data-pcid="${ cid }"]`).addClass('success');
         $('.nominee').removeClass('selected');
         _this.addClass('selected');
+        $('div.image').addClass('selected');
         $('#predind').html('✅');
         ajaxResult(true);
       } else {
@@ -186,6 +191,27 @@ $(document).ready(function() {
     window.setTimeout(function() {
       popup.removeClass(cls).fadeOut();
     }, 1500);
+  }
+
+  if ($('nav').data('uid')) {
+    // ajax call to get progress data for player from API
+    const uid = $('nav').data('uid');
+    $.ajax({
+      url: `/api/progress/${ uid }`,
+      type: 'get'
+    }).done(data => {
+      const cur = window.location.pathname.split('/').pop();
+      $(`[data-pcid="${ cur }"]`).addClass('highlite');
+      for (let x = 0; x < data.length; x++) {
+        if (data[x].complete == 1) { 
+          $(`[data-pcid="${ x + 1 }"]`).removeClass('failure').addClass('success');
+        } else {
+          $(`[data-pcid="${ x + 1 }"]`).removeClass('success').addClass('failure');
+        }
+      }
+    }).fail(err => {
+      console.log('error getting progress');
+    })
   }
 
   // results.hbs
