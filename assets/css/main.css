@@ -158,7 +158,13 @@ h5 {
 }
 
 tr.bot td {
-  background-color: #cdc;
+  background-color: #ccccd4;
+}
+tr.bot td a {
+  font-family: monospace;
+  color: lime;
+  background-color: #112;
+  padding: 0 0.2em;
 }
 
 .content {

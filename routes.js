@@ -79,13 +79,11 @@ const routes = app => {
 
   // get the scoreboard
   app.get('/scoreboard', (req, res) => {
-    // if passed as a query string, exclude bot users from scoreboard
-    const nobots = (req.query.nobots && req.query.nobots == 'true');
-    pred.results(nobots, data => {
+    pred.results( data => {
       if (data.err) {
         res.status(500).send(`Sorry, there was an error retrieving that data (${ data.err })`);
       } else {
-        res.render('scoreboard', { table: data, expired: true , title: 'Leaderboard' });
+        res.render('scoreboard', { debug: config.debug(data), table: data, expired: true , title: 'Leaderboard' });
       }
     })
   });

@@ -17,11 +17,7 @@ $(document).ready(function() {
   }
 
   $('#nobots').on('click', function() {
-    if (document.getElementById('nobots').checked) {
-      document.location.href = '/scoreboard?nobots=true';
-    } else {
-      document.location.href = '/scoreboard';
-    }
+    $('tr.bot td').toggle();
   });
 
   // main page (signups) *******************************

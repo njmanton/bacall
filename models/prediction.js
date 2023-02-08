@@ -180,29 +180,35 @@ const db            = require('../models/'),
   },
 
   // calculate overall scores
-  results: (nobots, done) => {
-    const sql = `SELECT username AS player, U.id AS id, bot, ROUND(SUM(score),2) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id ${ (nobots) ? 'WHERE bot = 0': '' } GROUP BY username ORDER BY 4 DESC`;
-    db.use().promise().query(sql).then(([rows, fields]) => {
-      let result = { error: null, data: null };
+  results: async done => {
+    const sql = `SELECT username AS player, U.id AS id, bot, ROUND(SUM(score),2) AS score FROM predictions P INNER JOIN categories C ON C.id = P.category_id INNER JOIN users U ON U.id = P.user_id GROUP BY username ORDER BY 4 DESC`;
+    let result = { error: null, data: null };
+    try {
+      const [rows, fields] = await db.use().promise().query(sql);
       result.data = rows;
       // loop through rows, assigning a rank  
       let prev_score = 0, 
           rank = 1, 
           row = 0;
       for (let i = 0; i < rows.length; i++) {
-        if (rows[i].score == prev_score) {
-          row++;
+        if (rows[i].bot) { // if this is a bot user, give them no rank
+          rank = '🤖';
         } else {
-          rank = ++row;
+          if (rows[i].score == prev_score) {
+            row++;
+          } else {
+            rank = ++row;
+          }
+          prev_score = rows[i].score;
         }
-        prev_score = rows[i].score;
         rows[i].rank = rank;
       }
       done(result);
-    }).catch(err => {
-      logger.error(`Error in pred.results: ${ err.code }`)
-      done({ err: err.code });
-    })
+    } catch (err) {
+      logger.error(`error in pred.results (${ err })`);
+      result.err = err;
+      done(result);
+    }
   },
 
   progress: async (uid, done) => {

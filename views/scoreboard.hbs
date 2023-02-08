@@ -4,8 +4,10 @@
 {{#unless expired }}
 
 {{ else }}
-<input type="checkbox" class="form-check-input" id="nobots" value="" />
-<label class="form-check-label" for="nobot">Exclude bots?</label>
+<div class="sub-label">
+  <input type="checkbox" class="form-check-input" id="nobots" value="" />
+  <label class="form-check-label" for="nobot">Exclude bots?</label>  
+</div>
 <table class="table" id="results">
   <thead>
     <tr>
@@ -17,13 +19,13 @@
   <tbody>
     {{#each table.data }}
     <tr {{#if bot }}class="bot"{{/if }}>
-      <td class="align-middle {{#if @first }}winner{{/if }}">{{#if @first }}<span class="lead">&#127942;</span>{{ else }}{{ rank }}{{/if}}</td>
-      <td class="align-middle {{#if @first }}winner{{/if }}"><a href="/summary/{{ id }}">{{ player }}</a></td>
+      <td class="align-middle {{#if @first }}winner{{/if }}">{{#if @first }}<span class="lead">&#127942;</span>{{ else }}{{{ rank }}}{{/if}}</td>
+      <td class="{{#if bot }}bot{{/if }} align-middle {{#if @first }}winner{{/if }}"><a href="/summary/{{ id }}">{{ player }}</a></td>
       <td width="500px">
         <div class="bar" data-len="{{ score }}"></div>
         <div class="bar-arrow"></div>
       </td>
-      <td>{{ score }}</td>
+      <td class="align-middle">{{ score }}</td>
     </tr>
     {{/each}}
   </tbody>
