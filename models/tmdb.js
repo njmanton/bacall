@@ -19,7 +19,6 @@ const tmdb = {
         let data = {
           error:null, 
           poster: null, 
-          backdrop: null,
           category: winner.cname,
           winner: winner.wname, 
           film: winner.film,
@@ -36,7 +35,6 @@ const tmdb = {
               const idx = Math.floor(Math.random() * (res.backdrops.length - 1)),
                     idx2 = Math.floor(Math.random() * (res.posters.length - 1));
               data.poster = res.posters[idx2].file_path;
-              data.backdrop = res.backdrops[idx].file_path;
               done(data);
             } catch(e) {
               data.err = e.message;

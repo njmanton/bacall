@@ -183,7 +183,6 @@ const routes = app => {
         res.render('main', { message: true, message_err: true, message_text: 'Category id must be between 1 and 23'});
       } else {
         res.render('category', {
-          debug: config.debug(data),
           data: data,
           cat: req.params.cat,
           title: `Best ${ data.category }`
