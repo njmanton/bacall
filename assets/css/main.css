@@ -157,6 +157,10 @@ h5 {
   color: gold;
 }
 
+#results th:first-of-type {
+  width: 2em;
+}
+
 tr.bot td {
   background-color: #ccccd4;
 }

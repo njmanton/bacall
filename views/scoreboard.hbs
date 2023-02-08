@@ -11,7 +11,7 @@
 <table class="table" id="results">
   <thead>
     <tr>
-      <th>Position</th>
+      <th style="text-align: center;">Position</th>
       <th>Player</th>
       <th colspan="2">Score</th>
     </tr>
@@ -19,7 +19,7 @@
   <tbody>
     {{#each table.data }}
     <tr {{#if bot }}class="bot"{{/if }}>
-      <td class="align-middle {{#if @first }}winner{{/if }}">{{#if @first }}<span class="lead">&#127942;</span>{{ else }}{{{ rank }}}{{/if}}</td>
+      <td style="text-align: center;" class="align-middle {{#if @first }}winner{{/if }}">{{#if @first }}<span class="lead">&#127942;</span>{{ else }}{{#if bot }}{{>robot }}{{ else }}{{ rank }}{{/if }}{{/if }}</td>
       <td class="{{#if bot }}bot{{/if }} align-middle {{#if @first }}winner{{/if }}"><a href="/summary/{{ id }}">{{ player }}</a></td>
       <td width="500px">
         <div class="bar" data-len="{{ score }}"></div>

@@ -178,6 +178,12 @@ h5 {
   }
 }
 
+#results {
+  th:first-of-type {
+    width: 2em;
+  }
+}
+
 tr.bot td {
   background-color: #ccccd4;
   a {
