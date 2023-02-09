@@ -213,22 +213,12 @@ const routes = app => {
     })
   });
 
-  // get list of existing franchises
-  app.get('/player/franchise/:fragment', (req, res) => {
-    player.franchise(req.params.fragment, list => {
-      res.send(list);
-    })
-  })
-
   app.get('/live', (req, res) => {
     res.render('live', { title: 'Live scores' });
   });
 
-  app.get('/test', (req, res) => {
-    pred.categories(data => {
-      res.json(data);
-    })
-  });
+  //app.get('/test', (req, res) => {
+  //});
 
   // capture any other non-matching routes here
   app.get('*', (req, res) => {

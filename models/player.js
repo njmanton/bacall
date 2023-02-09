@@ -26,14 +26,6 @@ const player = {
 
   },
 
-  franchise: (fragment, done) => {
-    // can't get db.use() to recognise parameterised LIKE query. Need to sanitise input
-    const sql = `SELECT DISTINCT franchise FROM users WHERE franchise LIKE ` + db.use().escape('%'+fragment+'%');
-    db.use().promise().query(sql).then(([rows, fields]) => {
-      done(rows);
-    }).catch(err => { done(false) })
-  },
-
   create: (username, email, done) => {
     let code = '';
     const len = 8,
