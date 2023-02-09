@@ -7,23 +7,26 @@ const db = require('../models/'),
 
 const player = {
 
-  unique: (type, val, done) => {
+  unique: async (type, val, done) => {
 
+    let sql = '';
     if (type == 1) {
-      var sql = 'SELECT id FROM users WHERE username = ?';
+      sql = 'SELECT id FROM users WHERE UPPER(username) = ?';
     } else if (type == 2) {
-      var sql = 'SELECT id FROM users WHERE email = ?';
+      sql = 'SELECT id FROM users WHERE UPPER(email) = ?';
     } else {
       return null;
     }
     
-    db.use().promise().execute(sql, [val]).then(([rows, fields]) => {
+    val = val.toUpperCase();
+    try {
+      const [rows, fields] = await db.use().promise().execute(sql, [val]);
       done(rows.length == 0);
-    }).catch(err => {
+    } catch (err) {
       logger.error(`Error in player.exists (${ err.code })`);
+      console.log(err);
       done(null);
-    })
-
+    }
   },
 
   create: (username, email, done) => {
