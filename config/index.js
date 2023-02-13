@@ -1,7 +1,7 @@
 // jshint node: true, esversion: 6
 'use strict';
 
-const exp_test = 0;
+const exp_test = (process.argv[2] === 'expired') || false;
 exports.exp_test = exp_test;
 
 const deadline_date = '2023-03-12T23:00Z';
