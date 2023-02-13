@@ -10,3 +10,4 @@ TODO.md
 *.sql
 ecosystem.config.js
 *.csv
+*.env

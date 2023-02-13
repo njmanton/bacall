@@ -20,6 +20,8 @@ app.engine('.hbs', bars.engine({
 }));
 app.set('view engine', '.hbs');
 
+require('dotenv').config(); // load env variables
+
 // set static route
 app.use(express.static('assets'));
 // use body-parser to get post data

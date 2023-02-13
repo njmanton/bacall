@@ -27,6 +27,7 @@
     "@sendgrid/mail": "^7.4.2",
     "body-parser": "^1.19.0",
     "csv-stringify": "^6.2.3",
+    "dotenv": "^16.0.3",
     "express": "^4.17.1",
     "express-handlebars": "^6.0.3",
     "inquirer": "^8.2.1",
