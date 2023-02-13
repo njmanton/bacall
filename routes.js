@@ -70,7 +70,7 @@ const routes = app => {
       } else {
         res.render('main', { 
           message: true, 
-          message_text: `Signup successful! Your code is <strong>${ check.code }</strong>. Use this to make your predictions at&nbsp; <a href="/player/${ check.code }">https://oscars.mxxyqh.com/player/${ check.code }</a>$nbsp;(You'll get an email too).`,
+          message_text: `Signup successful! Your code is &nbsp; <strong>${ check.code }</strong>. Use this to make your predictions at&nbsp; <a href="/player/${ check.code }">https://oscars.mxxyqh.com/player/${ check.code }</a> &nbsp; (You'll get an email too).`,
           signups: config.placeholders() 
         });
       }
