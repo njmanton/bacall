@@ -116,6 +116,7 @@ const db            = require('../models/'),
       const [rows, fields] = await db.use().promise().query(sql);
       done(rows);
     } catch (err) {
+      console.log(err);
       done({ err: err.code });
     }
   },
@@ -163,6 +164,7 @@ const db            = require('../models/'),
       const [rows, fields] = await db.use().promise().query(sql);
       stringify(rows, { quoted_string: true, header: true, columns: ['cat', 'user', 'score'] }, (err, records) => {
         fs.writeFileSync('./assets/js/live.csv', records);
+        logger.info('Current score state saved to csv');
         done(true);
       })
     } catch (error) {
