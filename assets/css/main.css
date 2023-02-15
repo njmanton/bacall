@@ -1,4 +1,5 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css");
+@import url("https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap5.min.css");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
 @import url("https://fonts.googleapis.com/css?family=Kaushan+Script");
 @import url("https://fonts.googleapis.com/css?family=Bebas+Neue");
@@ -154,7 +155,7 @@ h5 {
 
 .winner td {
   font-weight: bold;
-  color: gold;
+  color: #daa520;
 }
 
 #results th:first-of-type {
@@ -204,6 +205,11 @@ tr.bot td a {
 td.cat {
   border-left: 1px dashed #aaa;
   border-right: 1px dashed #aaa;
+  text-align: center;
+}
+
+.figure-caption {
+  font-size: 0.7em;
   text-align: center;
 }
 
@@ -296,8 +302,11 @@ img.poster {
   color: #333;
 }
 
-.signup-container {
-  margin: 0.5em;
+.deadline {
+  font-family: monospace;
+  font-size: 90%;
+  background-color: #ddd;
+  padding: 3px;
 }
 
 .sub-label {
@@ -306,33 +315,35 @@ img.poster {
 }
 
 input#username,
-input#email,
-input#franchise {
+input#email {
   display: inline-block;
   border: 0;
   border-bottom: 2px #333 solid;
   box-shadow: none;
   height: 3rem;
-  width: 75%;
-  background-color: inherit;
+  width: 100%;
+  background-color: #f6f6f6;
   color: inherit;
+  padding-left: 0.5em;
 }
 input#username:focus,
-input#email:focus,
-input#franchise:focus {
+input#email:focus {
   outline: none;
   border-bottom: 2px solid #fff !important;
 }
 
+label {
+  margin-right: 1em;
+}
+
 .intrainput {
   display: inline-block;
-  margin-left: -2rem;
   font-weight: bold;
-  min-width: 2rem;
   text-align: center;
 }
 .intrainput.success {
   color: #43ac6a;
+  background-color: inherit;
 }
 .intrainput.err {
   color: #f04124;

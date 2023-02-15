@@ -70,7 +70,7 @@ const routes = app => {
       } else {
         res.render('main', { 
           message: true, 
-          message_text: `Signup successful! Your code is &nbsp; <strong>${ check.code }</strong>. Use this to make your predictions at&nbsp; <a href="/player/${ check.code }">https://oscars.mxxyqh.com/player/${ check.code }</a> &nbsp; (You'll get an email too).`,
+          message_text: `Signup successful! Your code is &nbsp;<strong>${ check.code }</strong>. Use this to make your predictions at&nbsp; <a href="/player/${ check.code }">https://oscars.mxxyqh.com/player/${ check.code }</a> &nbsp; (You'll get an email too).`,
           signups: config.placeholders() 
         });
       }
@@ -194,7 +194,7 @@ const routes = app => {
   // ajax request for pie chart on category page
   app.get('/api/cat/:cat', (req, res) => {
     pred.pie(req.params.cat, data => {
-      res.send(data);
+      res.json(data);
     })
   });
 
@@ -202,9 +202,15 @@ const routes = app => {
   app.get('/api/progress/:uid', (req, res) => {
     pred.progress(req.params.uid, data => {
       // data should be a 23 element array of 0,1 
-      res.send(data);
+      res.json(data);
     })
   });
+
+  app.get('/api/logs', (req, res) => {
+    player.logs(data => {
+      res.json(data);
+    });
+  })
 
   // check the uniqueness of a signups name and email
   app.post('/player/check', (req, res) => {
@@ -215,6 +221,10 @@ const routes = app => {
 
   app.get('/live', (req, res) => {
     res.render('live', { title: 'Live scores' });
+  });
+
+  app.get('/logs', (req, res) => {
+    res.render('logfile', { title: 'M20YOH Logs' });
   });
 
   //app.get('/test', (req, res) => {

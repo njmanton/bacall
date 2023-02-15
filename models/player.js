@@ -64,6 +64,22 @@ const player = {
     }).finally(() => {
       done(result);
     })
+  },
+
+  logs: async done => {
+    // get text from activity.log
+    try {
+      logger.query({
+        from: '-4w',
+        limit: 100
+      }, (err, results) => {
+        if (err) throw err;
+        done(results['info-log']);
+      })
+    } catch (error) {
+      logger.error(`error in player.logs (${ error })`);
+      done(null);
+    }
   }
 }
 

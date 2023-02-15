@@ -1,0 +1,46 @@
+<section class="content" style="font-size: 1em;">
+  <h2>Logfile</h2>
+  <table id="tbl" class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Message</th>
+        <th scope="col">Level</th>
+      </tr>
+    </thead>
+    <tbody id="log_table">
+
+    </tbody>
+  </table>
+
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/luxon@3.2.1/build/global/luxon.min.js"></script>
+<script>
+  const getData = async url => {
+    const res = await fetch(url, {
+      method: 'get',
+      headers: { 'content-type': 'text/json' }
+    });
+    if (res.status == 200) {
+      const data = await res.json();
+      const DateTime = luxon.DateTime;
+      let dt = null,
+          cls = null;
+
+      for (let x = 0; x < data.length; x++) {
+        dt  = DateTime.fromISO(data[x].timestamp).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
+        cls = data[x].level == 'info' ? 'info' : 'danger';
+        $('#tbl tbody').prepend(`<tr class="table-${ cls }"><td>${ dt }</td><td>${ data[x].message }</td><td class="">${ data[x].level }</td></tr>`);
+      }
+      $('#tbl').DataTable({
+        info: true,
+        searching: false
+      });
+    }
+  }
+
+  $(document).ready(() => {
+    getData('/api/logs');
+  })
+</script>
