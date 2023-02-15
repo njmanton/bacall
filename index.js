@@ -53,9 +53,9 @@ db.conn( err => {
     db.use().promise().query('SELECT DATABASE();').then(rows => {
       console.log('Database  :', rows[0][0]['DATABASE()']);
       app.listen(app.get('port'), () => {
-        console.log(`system up : ${ DateTime.now().toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS) } `)
-        console.log(`port      : ${ app.get('port') }`);
-        logger.info(`${ pkg.name } started`);
+        console.log(`System up : ${ DateTime.now().toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS) } `)
+        console.log(`Port      : ${ app.get('port') }`);
+        logger.info(`Server started (${ pkg.name })`);
         console.log(`exp_test  : ${ config.exp_test }`);
         console.log(`--------------------------------------`);
       })
