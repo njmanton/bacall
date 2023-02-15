@@ -10,9 +10,12 @@ command line tool to set winners of categories
 const db            =  require('./models/'),
       inq           =  require('inquirer'),
       chalk         =  require('chalk'),
-      { DateTime }  = require('luxon'),
+      { DateTime }  =  require('luxon'),
       pred          =  require('./models/prediction'),
+      logger        =  require('./logs'),
       config        =  require('./config/');
+
+require('dotenv').config(); // load env variables
 
 if ((DateTime.now() < DateTime.fromJSDate(config.deadline)) && !config.exp_test) {
   console.log(chalk.bold.red('Results cannot be entered before the deadline has been reached!'));
@@ -20,56 +23,64 @@ if ((DateTime.now() < DateTime.fromJSDate(config.deadline)) && !config.exp_test)
 }
 
 db.conn( err => {
-
-  pred.categories(response => {
-    if (response.length == 0) {
-      console.log(chalk.bold.red('No categories to select!'));
-      process.exit(0);
-    }
-    if (response.err) {
-      console.log(chalk.bold.red('Something went wrong 😢'));
-      process.exit(0);
-    }
-    const order = (24 - response.length); // to set order of awards
-    inq.prompt({
-      type: 'list',
-      name: 'category',
-      message: 'select a category',
-      choices: response
-    }).then( answers => {
-      var cat = answers.category;
-      pred.nominees(cat, response => {
-        inq.prompt({
-          type: 'list',
-          name: 'id',
-          message: 'choose winner',
-          choices: response
-        }).then( winner => {
-          let arr = {
-            nid: winner.id,
-            cid: cat,
-          }
-          pred.setWinner(arr, order, outcome => {
-            if (outcome.err) {
-              console.log(chalk.bold.red(outcome.msg));
-              process.exit(0);
-            } else {
-              console.log(chalk.bold.green(outcome.msg));
-              pred.saveWinner(done => {
-                if (done) {
-                  console.log(chalk.bold.green('Live scores updated'));
-                  process.exit(0);
-                } else {
-                  console.log(chalk.bold.red('Error saving live scores'));
-                  process.exit(0);
-                }
-              })
+  try {
+    pred.categories(response => {
+      if (response.length == 0) {
+        console.log(chalk.bold.red('No categories to select!'));
+        process.exit(0);
+      }
+      if (response.err) {
+        console.log(chalk.bold.red('Something went wrong 😢'));
+        process.exit(0);
+      }
+      const order = (24 - response.length); // to set order of awards
+      inq.prompt({
+        type: 'list',
+        name: 'category',
+        message: 'select a category',
+        choices: response
+      }).then( answers => {
+        var cat = answers.category;
+        pred.nominees(cat, response => {
+          inq.prompt({
+            type: 'list',
+            name: 'id',
+            message: 'choose winner',
+            choices: response
+          }).then( winner => {
+            let arr = {
+              nid: winner.id,
+              cid: cat,
             }
+            pred.setWinner(arr, order, outcome => {
+              if (outcome.err) {
+                logger.info(outcome.msg);
+                console.log(chalk.bold.red(outcome.msg));
+                process.exit(0);
+              } else {
+                console.log(chalk.bold.green(outcome.msg));
+                pred.saveWinner(done => {
+                  if (done) {
+                    logger.info('updated live scores csv');
+                    console.log(chalk.bold.green('Live scores updated'));
+                    process.exit(0);
+                  } else {
+                    logger.error('could not update live scores csv');
+                    console.log(chalk.bold.red('Error saving live scores'));
+                    process.exit(0);
+                  }
+                })
+              }
+            })
+            //process.exit(0); 
           })
-          //process.exit(0); 
         })
       })
-    })
-  })
+    })    
+  } catch (error) {
+    console.error(error);
+    process.exit(0);
+  }
+
 
 })
