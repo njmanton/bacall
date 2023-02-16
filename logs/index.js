@@ -15,6 +15,12 @@ winston.add(winston.transports.File, {
   filename: './logs/errors.log',
   level: 'error',
   timestamp: true
+});
+winston.add(winston.transports.File, {
+  name: 'debug-log',
+  filename: './logs/debug.log',
+  level: 'debug',
+  timestamp: true
 })
 
 module.exports = winston;

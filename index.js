@@ -55,7 +55,7 @@ db.conn( err => {
       app.listen(app.get('port'), () => {
         console.log(`System up : ${ DateTime.now().toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS) } `)
         console.log(`Port      : ${ app.get('port') }`);
-        logger.info(`Server started (${ pkg.name })`);
+        logger.debug(`Server started (${ pkg.name })`);
         console.log(`exp_test  : ${ config.exp_test }`);
         console.log(`--------------------------------------`);
       })
