@@ -231,6 +231,13 @@ tr.bot td {
 
 /* prediction screen */
 
+#progress td:not(.highlite) {
+  cursor: pointer;
+  &:hover {
+    background-color: yellow;
+  }
+}
+
 td.cat {
   border-left: 1px dashed #aaa;
   border-right: 1px dashed #aaa;

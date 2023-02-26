@@ -61,6 +61,18 @@ $(document).ready(function() {
     checkForm();
   })
 
+  $('#progress td').on('click', function() {
+    // event handler for shortcut bar
+    let addr = window.location.pathname.split('/');
+    const curr = addr.pop(),
+          _this = $(this);
+
+    if (curr != _this.data('pcid')) {
+      addr.push($(this).data('pcid'));
+      window.location.href = addr.join('/');
+    }
+  });
+
   $('#signup #email').on('keyup', function() {
     var email = $('#email').val(),
         env = $('#email-not-valid'),
