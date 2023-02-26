@@ -1,13 +1,13 @@
 <div class="content container">
   <nav id="cat_list" class="title row" data-uid="{{ user.id }}" data-cid="{{ cat.id }}">
     <div class="col">
-      <a title="⬅️ Key" href="" id="prev">◀ prev</a>
+      <a title="⬅️ Key" href="" class="badge bg-secondary rounded-circle" id="prev"><img src="/img/chevron-left.svg" style="height: 1.7em;" alt="<"></a>
     </div>
     <div class="col">
-      {{ data.category }} <span id="predind" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
+      &nbsp;
     </div>
     <div class="col">
-      <a title="Key ➡️" href="" id="next">next ▶</a>
+      <a title="Key ➡️" href="" class="badge bg-secondary rounded-circle align-middle" id="next"><img src="/img/chevron-right.svg" style="height: 1.7em;" alt=">"></a>
     </div>
   </nav>
 
