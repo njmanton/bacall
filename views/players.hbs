@@ -4,29 +4,29 @@
     <table id="progress" class="" style="width: 100%;">
         <tbody>
           <tr style="height: 0.75em;">
-            <td data-pcid="1" class="cat"><p></p></td>
-            <td data-pcid="2" class="cat"><p></p></td>
-            <td data-pcid="3" class="cat"><p></p></td>
-            <td data-pcid="4" class="cat"><p></p></td>
-            <td data-pcid="5" class="cat"><p></p></td>
-            <td data-pcid="6" class="cat"><p></p></td>
-            <td data-pcid="7" class="cat"><p></p></td>
-            <td data-pcid="8" class="cat"><p></p></td>
-            <td data-pcid="9" class="cat"><p></p></td>
-            <td data-pcid="10" class="cat"><p></p></td>
-            <td data-pcid="11" class="cat"><p></p></td>
-            <td data-pcid="12" class="cat"><p></p></td>
-            <td data-pcid="13" class="cat"><p></p></td>
-            <td data-pcid="14" class="cat"><p></p></td>
-            <td data-pcid="15" class="cat"><p></p></td>
-            <td data-pcid="16" class="cat"><p></p></td>
-            <td data-pcid="17" class="cat"><p></p></td>
-            <td data-pcid="18" class="cat"><p></p></td>
-            <td data-pcid="19" class="cat"><p></p></td>
-            <td data-pcid="20" class="cat"><p></p></td>
-            <td data-pcid="21" class="cat"><p></p></td>
-            <td data-pcid="22" class="cat"><p></p></td>
-            <td data-pcid="23" class="cat"><p></p></td>
+            <td data-pcid="1" title="Best Film" class="cat"><p></p></td>
+            <td data-pcid="2" title="Best Actor" class="cat"><p></p></td>
+            <td data-pcid="3" title="Best Best Actress" class="cat"><p></p></td>
+            <td data-pcid="4" title="Best Supporting Actor" class="cat"><p></p></td>
+            <td data-pcid="5" title="Best Supporting Actress" class="cat"><p></p></td>
+            <td data-pcid="6" title="Best Animated Film" class="cat"><p></p></td>
+            <td data-pcid="7" title="Best Cinematography" class="cat"><p></p></td>
+            <td data-pcid="8" title="Best Costume Design" class="cat"><p></p></td>
+            <td data-pcid="9" title="Best Director" class="cat"><p></p></td>
+            <td data-pcid="10" title="Best Documentary Feature" class="cat"><p></p></td>
+            <td data-pcid="11" title="Best Documentary Short" class="cat"><p></p></td>
+            <td data-pcid="12" title="Best Film Editing" class="cat"><p></p></td>
+            <td data-pcid="13" title="Best International Feature" class="cat"><p></p></td>
+            <td data-pcid="14" title="Best Makeup" class="cat"><p></p></td>
+            <td data-pcid="15" title="Best Original Score" class="cat"><p></p></td>
+            <td data-pcid="16" title="Best Original Song" class="cat"><p></p></td>
+            <td data-pcid="17" title="Best Production Design" class="cat"><p></p></td>
+            <td data-pcid="18" title="Best Animated Short" class="cat"><p></p></td>
+            <td data-pcid="19" title="Best Live Action Short" class="cat"><p></p></td>
+            <td data-pcid="20" title="Best Sound" class="cat"><p></p></td>
+            <td data-pcid="21" title="Best Visual Effect" class="cat"><p></p></td>
+            <td data-pcid="22" title="Best Adapted Screenplay" class="cat"><p></p></td>
+            <td data-pcid="23" title="Best Original Screenplay" class="cat"><p></p></td>
           </tr>
         </tbody>
     </table>    
@@ -34,13 +34,13 @@
   <nav id="pred_list" class="title row" data-uid="{{ user }}" data-cid="{{ cat.id }}">
       
     <div class="col">
-      <a title="⬅️ Key" href="" id="prev">◀ prev</a>
+      <a title="⬅️ Key" href="" class="badge bg-secondary rounded-circle" id="prev"><img src="/img/chevron-left.svg" style="height: 1.7em;" alt="<"></a>
     </div>
     <div class="col">
-      {{ cat.name }} <span id="predind" class="badge bg-secondary" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
+      {{ cat.name }} <span id="predind" class="" style="cursor: help;" title="Prediction made">{{#if img }}✅{{/if }}</span>
     </div>
     <div class="col">
-      <a title="Key ➡️" href="" id="next">next ▶</a>
+      <a title="Key ➡️" href="" class="badge bg-secondary rounded-circle align-middle" id="next"><img src="/img/chevron-right.svg" style="height: 1.7em;" alt=">"></a>
     </div>
   </nav>
 
@@ -59,9 +59,9 @@
     {{#if img }}/img/{{ img }}.jpg
     {{else }}
       {{#if cat.class }}
-        /img/person.svg
+        /img/person2.svg
       {{else }}
-        /img/camera.svg
+        /img/camera2.svg
       {{/if }}
     {{/if }}
     ">

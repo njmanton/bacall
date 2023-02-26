@@ -17,6 +17,8 @@
       {{#if data.winner }}
         <h3>{{ data.winner }} {{#if data.film }}<span>({{ data.film }})</span>{{/if }}</h3>
         <img id="cat_img" style="max-width: 50%;" src="{{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ data.poster }}" alt="Poster of {{ data.winner }}">
+      {{ else }}
+        <h3>tba</h3>
       {{/if }}
     </div>
     <div class="col-sm">
