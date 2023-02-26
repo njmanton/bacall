@@ -36,11 +36,11 @@ const mail = {
     sg.send(msg)
       .then(() => {
         logger.info(`new sign-up by ${ context.username } (${ recipient })`);
-        done();
+        done(true);
        })
       .catch(error => {
         logger.error(`sign-up not processed: ${ error }`);
-        done(error);
+        done(false);
        });
 
   },

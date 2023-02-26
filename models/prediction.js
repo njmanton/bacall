@@ -9,15 +9,16 @@ const db            = require('../models/'),
 
  const pred = {
 
-  list: done => {
+  list: async done => {
     // simple query to get list of categories and their ids
     const sql = 'SELECT id, name, class, lastyear, precursors FROM categories';
-    db.use().promise().query(sql).then(([rows, fields]) => {
+    try {
+      const [rows, fields] = await db.use().promise().query(sql);
       done(rows);
-    }).catch(err => {
+    } catch (err) {
       logger.error(`Error in pred.list (${ err.code })`);
-      done({ err: err.code });
-    })
+      done({ err: err.code });      
+    }
   },
 
   preds: async (code, cid, done) => {
@@ -121,12 +122,16 @@ const db            = require('../models/'),
     }
   },
 
-  nominees: (cat, done) => {
+  nominees: async (cat, done) => {
     // return list of nominees for a given category for CLI
     const sql = 'SELECT N.id AS value, N.name, C.name AS cat FROM nominees N JOIN categories C ON C.id = N.category_id WHERE category_id = ?';
-    db.use().promise().execute(sql, [cat]).then(([rows, fields]) => {
-        done(rows);
-    }).catch(err => {})
+    try {
+      const [rows, fields] = await db.use().promise().execute(sql, [cat]);
+      done(rows);
+    } catch (err) {
+      logger.error(`error in pred.nominees (${ err })`);
+      done(null);
+    }
   },
 
   setWinner: (data, order, done) => {
@@ -174,11 +179,15 @@ const db            = require('../models/'),
 
   },
 
-  getWinner: (cat, done) => {
+  getWinner: async (cat, done) => {
     const sql = 'SELECT C.id AS cid, C.name AS category, C.lastyear, N.id, N.name AS winner, N.film, N.image FROM categories C LEFT JOIN nominees N ON C.winner_id = N.id WHERE C.id = ?';
-    db.use().promise().execute(sql, [cat]).then(([rows, fields]) => {
+    try {
+      const [rows, fields] = await db.use().promise().execute(sql, [cat]);
       done(rows);
-    }).catch(err => {})
+    } catch (err) {
+      logger.error(`error in pred.getWinner (${ err })`);
+      done(null);
+    }
   },
 
   // calculate overall scores
