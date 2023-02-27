@@ -11,11 +11,6 @@ $(document).ready(function() {
     e.stopPropagation();
   });
 
-  // set up checkbox for filtering bots from scoreboard
-  if (document.location.search == '?nobots=true') {
-    $('#nobots').prop('checked', true);
-  }
-
   $('#nobots').on('click', function() {
     $('tr.bot td').toggle();
   });
@@ -65,15 +60,16 @@ $(document).ready(function() {
     // event handler for shortcut bar
     let addr = window.location.pathname.split('/');
     const curr = addr.pop(),
-          _this = $(this);
+          pcid = $(this).data('pcid');
 
-    if (curr != _this.data('pcid')) {
-      addr.push($(this).data('pcid'));
+    if (curr != pcid) {
+      addr.push(pcid);
       window.location.href = addr.join('/');
     }
   });
 
   $('#signup #email').on('keyup', function() {
+    // validate uniqueness for email and username
     var email = $('#email').val(),
         env = $('#email-not-valid'),
         re = /\S+@\S+\.\S+/;
@@ -133,15 +129,6 @@ $(document).ready(function() {
 
   }
   nav();
-
-  // allow cursor key navigation through categories
-  window.addEventListener("keydown", function(event) {
-    if (event.key == 'ArrowLeft') {
-      window.location.href = $("#prev").attr('href');
-    } else if (event.key == 'ArrowRight') {
-      window.location.href = $("#next").attr('href');
-    }
-  }, true);
 
   // handle the image switch on mouseover events
   $('.nominee').on('mouseenter', function() {

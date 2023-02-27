@@ -84,3 +84,16 @@
 <style>
   div.header { background-color: #222;}
 </style>
+
+<script>
+  // allow cursor key navigation through categories
+  window.addEventListener("keydown", event => {
+    if (event.key == 'ArrowLeft') {
+      $("#prev").removeClass('bg-secondary').addClass('bg-warning');
+      window.location.href = $("#prev").attr('href');
+    } else if (event.key == 'ArrowRight') {
+      $("#next").removeClass('bg-secondary').addClass('bg-warning');
+      window.location.href = $("#next").attr('href');
+    }
+  }, true);
+</script>
