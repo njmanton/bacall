@@ -6,17 +6,19 @@
     {{else}}
     <p>Enter your name and email below to get started. The deadline for entering or changing predictions is <span class="deadline">{{ deadline }}</span>.</p>
     <form method="post" action="/signup">
-      <div class="mb-4">
-        <label class="form-label" for="username">What's your name?</label>
-        <input autocomplete="off" placeholder="e.g. {{ signups.uid }}" id="username" name="username" type="text" maxlength="25" aria-describedby="userHelp">
-        <span id="username-not-valid" class="intrainput"></span>
-        <div id="userHelp" class="form-text"> This is how you'll appear on the leaderboard (3-25 chars)</div>
-      </div>
-      <div class="mb-3">
-        <label class="form-label" for="email">What's your email?</label>
-        <input autocomplete="off" placeholder="e.g. {{ signups.email }}" id="email" name="email" type="email" aria-describedby="emailHelp">
-        <span id="email-not-valid" class="intrainput"></span>
-        <div id="emailHelp" class="form-text">To send you login details and results</div>
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label" for="username">What's your name?</label>
+          <input autocomplete="off" placeholder="e.g. {{ signups.uid }}" id="username" name="username" type="text" maxlength="25" aria-describedby="userHelp">
+          <span id="username-not-valid" class="intrainput"></span>
+          <div id="userHelp" class="form-text"> This is how you'll appear on the leaderboard (3-25 chars)</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="email">What's your email?</label>
+          <input autocomplete="off" placeholder="e.g. {{ signups.email }}" id="email" name="email" type="email" aria-describedby="emailHelp">
+          <span id="email-not-valid" class="intrainput"></span>
+          <div id="emailHelp" class="form-text">To send you login details and results</div>
+        </div>
       </div>
       <p><span class="sub-label">You'll receive a single email with signup details and one with the results after the ceremony. Your email will not be used for any other purpose, nor passed to any third party.</span></p>
       <input id="signup-submit" type="submit" class="btn btn-success" value="Sign up" />
