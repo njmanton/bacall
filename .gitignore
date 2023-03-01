@@ -11,3 +11,4 @@ TODO.md
 ecosystem.config.js
 *.csv
 *.env
+.eslintrc.json
