@@ -44,6 +44,7 @@ const routes = app => {
       pred.summary(req.params.id, false, data => {
         if (!data.err) {
           res.render('summary', {
+            debug: config.debug(data),
             data: data.table,
             total: data.total,
             username: data.username,
@@ -83,7 +84,11 @@ const routes = app => {
       if (data.err) {
         res.status(500).send(`Sorry, there was an error retrieving that data (${ data.err })`);
       } else {
-        res.render('scoreboard', { debug: config.debug(data), table: data, expired: true , title: 'Leaderboard' });
+        res.render('scoreboard', { 
+          debug: config.debug(data), 
+          table: data, 
+          expired: true, 
+          title: 'Leaderboard' });
       }
     })
   });
@@ -94,7 +99,7 @@ const routes = app => {
       if (data.err) {
         res.status(500).send(`Sorry, there was an error retrieving the results (${ data.err })`);
       } else {
-        res.render('results', { list: data, title: 'Results by Category' });
+        res.render('results', { debug: config.debug(data), list: data, title: 'Results by Category' });
       }
     })
   });
@@ -112,7 +117,7 @@ const routes = app => {
     if (expired) {
       pred.summary(req.params.code, true, data => { 
         res.render('summary', {
-          //debug: config.debug(data),
+          debug: config.debug(data),
           data: data.table,
           total: data.total,
           username: data.username,
@@ -183,6 +188,7 @@ const routes = app => {
         res.render('main', { message: true, message_err: true, message_text: 'Category id must be between 1 and 23'});
       } else {
         res.render('category', {
+          debug: config.debug(data),
           data: data,
           cat: req.params.cat,
           title: `Best ${ data.category }`

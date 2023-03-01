@@ -14,5 +14,5 @@ exports.placeholders = () => {
 }
 
 exports.debug = data => {
-  return JSON.stringify(data, null, 2);
+  return process.env.OSCAR_DEV ? JSON.stringify(data, null, 2) : null;
 }
