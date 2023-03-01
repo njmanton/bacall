@@ -488,3 +488,18 @@ label { margin-right: 1em; }
     color: #f66;
   }
 }
+
+//summary page
+.thumb {
+  max-width: 2em;
+  max-height: 3em;
+}
+.corr td {
+  background-color: #9f9;
+}
+.wrap {
+  text-overflow: ellipsis;
+  max-height: 3em;
+  overflow-y: hidden;
+  max-width: 12em;
+}
