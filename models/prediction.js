@@ -199,18 +199,21 @@ const db            = require('../models/'),
       result.data = rows;
       // loop through rows, assigning a rank  
       let prev_score = 0, 
+          prev_rank = 0,
           rank = 1, 
           row = 0;
       for (let i = 0; i < rows.length; i++) {
-        if (rows[i].bot) { // if this is a bot user, give them no rank
+        if (rows[i].bot == 1) { // if this is a bot user, give them no rank
           rank = '🤖';
         } else {
           if (rows[i].score == prev_score) {
             row++;
+            rank = prev_rank;
           } else {
             rank = ++row;
           }
           prev_score = rows[i].score;
+          prev_rank = rank;
         }
         rows[i].rank = rank;
       }
