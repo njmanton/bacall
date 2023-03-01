@@ -72,10 +72,12 @@
   <div class="precursors">
     <p>Last Year: {{ cat.lastyear }}</p>
   </div>
+  {{#if cat.precursors }}
   <div class="precursors">
-    <h5>Awards season winners:</h5>
+    <h6>Awards season winners:</h6>
     <p>{{{ cat.precursors }}}</p>        
   </div>
+  {{/if }}
   <div style="padding-top: 2em" class="key precursors">
     <p>GG - Golden Globes, CC - Critics' Choice, BAFTA - British Academy of Film and Television Arts, PGA - Producers' Guild of America, DGA - Directors' Guild of America, SAG - Screen Actor's Guild, Annie - Animation, ISA - Independent Spirit Awards</p>
   </div>
