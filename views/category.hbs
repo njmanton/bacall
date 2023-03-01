@@ -26,13 +26,13 @@
         <div id="container"></div>
       </figure>
       <div id="chart-pred-count">
-        {{#if data.preds }}
+        {{#if data.winner }}
         {{#if data.singular }}
         <p>There was only 1 correct prediction, scoring <em>{{ data.points }}</em></p>
         {{ else }}
         <p>There were {{ data.correct }} correct predictions{{#if data.correct }}, each worth <em>{{ data.points }}</em>{{/if }}</p>
-        {{/if }}  
-        {{/if }}      
+        {{/if }}
+        {{/if }}
       </div>
     </div>
   </div>  
