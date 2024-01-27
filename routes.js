@@ -29,7 +29,7 @@ const routes = app => {
 
   app.get('/recap/:code', (req, res) => {
     if (fs.existsSync(`./views/recap/analysis_${ req.params.code }.hbs`)) {
-      res.render(`recap/analysis_${ req.params.code }`, { title: 'Recap' });
+      res.render(`recap/analysis_${ req.params.code }`, { title: `MY20OH Recap ${ req.params.code }` });
     } else {
       res.status(404).render('404', {});
     }
@@ -53,7 +53,6 @@ const routes = app => {
         } else {
           res.status(500).send(`Sorry, that operation couldn't be completed ( ${ data.err }).`);
         }
-
       })    
     }
   });
@@ -72,7 +71,7 @@ const routes = app => {
         res.render('main', { 
           message: true, 
           message_text: `Signup successful! Your code is &nbsp;<strong>${ check.code }</strong>. Use this to make your predictions at&nbsp; <a href="/player/${ check.code }">https://oscars.mxxyqh.com/player/${ check.code }</a> &nbsp; (You'll get an email too).`,
-          signups: config.placeholders() 
+          signups: config.placeholders()
         });
       }
     })
