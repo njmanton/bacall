@@ -1,4 +1,82 @@
 <section class="content">
-  <h4>Analysis and recap for 95th Ceremony</h4>
-  <p>Coming soon...</p>
+  <h4>10th Oscar Hell Recap (95th Ceremony)</h4>
+  <p>The 10th anniversary competition finished with a four-peat win for Karen, her first since 2017, which also took her one clear of Tav in the all-time stakes. In fact she was in first place from the first award given and never looked like being caught.</p>
+  <p>Tav came in second, keeping up his record of raching the podium in all but one contest. Ian slipped one place to third after coming second the previous two years. It was a close run thing for second place, needing me to do to 2dp on the scoreboard for the first time</p>
+  <p>This was the first year introducing bot players - a little bit of a risk, but I can't seem to stop myself tampering with the scoring and leaderboard. As it turns out, they worked pretty much exactly as planned. Nobody suffered the ignominy of doing worse than <span class="bot">RandomBot</span>, and the <span class="bot">BookieBot</span> (which selected all the bookies' favourites) came in second place, making it fitting that the winner was the only one to outperform the bookies. (In fact, Tav and the <span class="bot">BookieBot</span> ended with the exact same score, picking the same nominee in all 23 categories.)</p>
+
+  <figure class="highcharts-figure">
+    <div id="container"><p>Loading data <img src="/img/ajax-loader.gif" alt="waiting indicator" /></p></div>
+    <figcaption class="figure-caption">Hover over each legend item to highlight that line. Click to toggle visibility.</figcaption>
+  </figure>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <script>
+    $(document).ready(() => {
+      const loadLiveCSV = async url => {
+        const res = await fetch(url, {
+          method: 'get',
+          headers: { 'content-type': 'text/csv' }
+        });
+        if (res.status == 200) {
+          const data = await res.text();
+          if (data.length) {
+            drawLiveChart(data);
+          } else {
+            $('#container').html('No data to load');
+          }
+        } else {
+          $('#container').html('Failed to load data');
+        }      
+      }
+
+      const drawLiveChart = data => {
+        var chart = Highcharts.chart('container', {
+          chart: {
+            type: 'line',
+            height: 600
+          },
+          yAxis: {
+            title: {
+          text: 'Points'
+          }
+        },
+          title: null,
+          credits: { enabled: false },
+        });
+        const rows = data.split('\n');
+        let preUser = '',
+            cats = [],
+            pts = [];
+        for (let x = 1; x < rows.length; x++) {
+          const row = rows[x].split(',');
+          if (cats.indexOf(row[0]) == -1) cats.push(row[0].replaceAll('"',''));
+          if (row[1] != preUser && x > 1) {
+            // new user so add previous data to chart
+            chart.addSeries({
+              name: preUser.replaceAll('"',''),
+              data: pts
+            })
+            pts = (row[2] == 'NULL') ? [0] : [row[2] * 1];
+          } else {
+            let curr = (pts.slice(-1) * 1); 
+            pts.push((row[2] == 'NULL' ? curr : curr + (row[2] * 1)));
+          }
+          preUser = row[1];
+        }
+        chart.xAxis[0].setCategories(cats);
+        chart.xAxis[0].setTitle({ text: 'Categories' });
+        // end of loop so add the final series if more than one set of predictions
+        try {
+          chart.addSeries({
+            name: preUser.replaceAll('"',''),
+            data: pts
+          })
+        } catch { }
+      }
+      
+      loadLiveCSV('/js/live95_final.csv');
+    })
+  </script>
+
 </section>
