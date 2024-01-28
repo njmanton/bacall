@@ -159,6 +159,7 @@ const routes = app => {
                 debug: config.debug(data),
                 expired: expired,
                 user: data[1],
+                uname: data[2],
                 data: data[0],
                 cat: cats[req.params.cat - 1],
                 img: img,

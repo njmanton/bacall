@@ -23,16 +23,17 @@ const db            = require('../models/'),
 
   preds: async (code, cid, done) => {
     // get user id from code, then extract all pred for that player
-    const sqlGetUid = 'SELECT id FROM users WHERE code = ? LIMIT 1';
+    const sqlGetUid = 'SELECT id, username FROM users WHERE code = ? LIMIT 1';
     const sql = 'SELECT N.image, N.film, N.id AS nid, N.name AS nominee, N.tmdb_id AS tmdb, (I.nominee_id > 0) AS pred FROM nominees N JOIN categories C ON N.category_id = C.id LEFT JOIN (SELECT category_id, nominee_id FROM predictions P WHERE user_id = ?) I ON (I.category_id = C.id AND I.nominee_id = N.id) WHERE C.id = ? ORDER BY nid';
     try {
       const [row] = await db.use().promise().execute(sqlGetUid, [code]);
       if (!row.length) {
         throw new Error('No such user');
       }
-      const uid = row[0].id;
+      const uid = row[0].id,
+            uname = row[0].username;
       const [preds] = await db.use().promise().execute(sql, [uid, cid]);
-      done([preds, uid]);
+      done([preds, uid, uname]);
     } catch (error) {
       logger.error(`error in pred.preds (${ error.code })`)
       done({ err: error.message, code: error.code });
