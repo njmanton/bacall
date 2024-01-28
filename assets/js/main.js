@@ -1,5 +1,11 @@
 $(document).ready(function() {
 
+  if (localStorage.getItem('barbenheimer') == 'o') {
+    $('.barbenheimer img').prop('src', '/img/heel.svg');
+  } else {
+    $('.barbenheimer img').prop('src', '/img/mushroom.svg');
+  }
+
   if ($('.nominee').hasClass('selected')) $('div.image').addClass('selected');
 
   // auto clear message boxes after 8s
@@ -14,6 +20,19 @@ $(document).ready(function() {
   $('#nobots').on('click', function() {
     $('tr.bot td').toggle();
   });
+
+  $('.barbenheimer').on('click', function(e) {
+    console.log('barbenheimer clicked');
+    $('body').toggleClass('barbie');
+    $('body').toggleClass('oppen');
+    if (localStorage.getItem('barbenheimer') == 'o') {
+      $(this).prop('title', 'Switch to Oppenheimer').children().prop('src', '/img/mushroom.svg');
+      localStorage.setItem('barbenheimer','b');
+    } else {
+      $(this).prop('title', 'Switch to Barbie').children().prop('src', '/img/heel.svg');
+      localStorage.setItem('barbenheimer','o');
+    }
+  })
 
   // main page (signups) *******************************
   $('#signup-submit').attr('disabled', 'disabled');
