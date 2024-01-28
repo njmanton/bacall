@@ -103,7 +103,7 @@
   function save_user() {
     if (!(localStorage.getItem('user_code') && localStorage.getItem('user'))) {
       localStorage.setItem('user', '{{ uname }}');
-      localStorage.setItem('user_code', '{{ user }}');
+      localStorage.setItem('user_code', '{{ user_code }}');
     }
   }
   save_user();

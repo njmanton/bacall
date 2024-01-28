@@ -33,7 +33,7 @@ const db            = require('../models/'),
       const uid = row[0].id,
             uname = row[0].username;
       const [preds] = await db.use().promise().execute(sql, [uid, cid]);
-      done([preds, uid, uname]);
+      done([preds, uid, uname, code]);
     } catch (error) {
       logger.error(`error in pred.preds (${ error.code })`)
       done({ err: error.message, code: error.code });
