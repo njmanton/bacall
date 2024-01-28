@@ -2,7 +2,10 @@
   <div class="row">
     <div class="">
       <p>Welcome to the 11th annual My 20 Year Oscar Hell competition</p>
-      <p>The celebrate cinema's greatest accidental double-bill, you can toggle your prefered barbenheimer experience by clicking on the button in the footer below.</p>
+      <div id="salutation">
+        <p>Hi <span class="username"></span>, you can make or amend your predictions <a href="" id="pred_url">here</a>. <span class="small">(<a href="#" id="change_user">not you?</a>)</span>
+      </div>
+      <p>This year, to celebrate cinema's greatest accidental double-bill, you can toggle your prefered barbenheimer experience by clicking on the button in the footer below.</p>
       <h4>How it works</h4>
       <ol>
         <li>Complete the form below to receive a unique <code>code</code> by email</li> 
@@ -15,3 +18,26 @@
     </div>
   </div>
 </div>
+<script>
+  
+  check_ls();
+  function check_ls() {
+  if (localStorage.getItem('user_code') && localStorage.getItem('user')) {
+    $('#salutation').show();
+    var url = `/player/${ localStorage.getItem('user_code') }/1`;
+    $('.username').text(localStorage.getItem('user'));
+    $('#pred_url').prop('href', url);
+  } else {
+    $('#salutation').hide();
+  };    
+  }
+
+ document.getElementById('change_user').addEventListener('click', async (e) => {
+    e.preventDefault(); 
+    if (window.confirm('Are you sure?')) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('user_code');
+      check_ls();
+    }
+  });
+</script>
