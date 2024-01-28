@@ -3,8 +3,8 @@
     <div class="col">
       <a title="⬅️ Key" href="" class="badge bg-secondary rounded-circle" id="prev"><img src="/img/chevron-left.svg" style="height: 1.7em;" alt="<"></a>
     </div>
-    <div class="col">
-      &nbsp;
+    <div class="col-8">
+      <h3>Best {{ data.category }}</h3>
     </div>
     <div class="col">
       <a title="Key ➡️" href="" class="badge bg-secondary rounded-circle align-middle" id="next"><img src="/img/chevron-right.svg" style="height: 1.7em;" alt=">"></a>
@@ -13,9 +13,9 @@
 
   <div class="row">
     <div class="col-sm">
-      <h2>Best {{ data.category }}</h2>
+      
       {{#if data.winner }}
-        <h3>{{ data.winner }} {{#if data.film }}<span>({{ data.film }})</span>{{/if }}</h3>
+        <h3>{{ data.winner }} {{#if data.film }}<br><span>({{ data.film }})</span>{{/if }}</h3>
         <img id="cat_img" style="max-width: 50%;" src="{{ tmdb_base_url }}{{ tmdb_backdrop_size }}{{ data.poster }}" alt="Poster of {{ data.winner }}">
       {{ else }}
         <h3>tba</h3>
