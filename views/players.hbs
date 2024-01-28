@@ -1,6 +1,7 @@
 <div class="content container">
   <div id="popup"></div>
   <div class="row">
+    <h4>Predictions for {{ uname }}</h4>
     <table id="progress" class="" style="width: 100%;">
         <tbody>
           <tr style="height: 0.75em;">
@@ -98,4 +99,12 @@
       window.location.href = $("#next").attr('href');
     }
   }, true);
+
+  function save_user() {
+    if (!(localStorage.getItem('user_code') && localStorage.getItem('user'))) {
+      localStorage.setItem('user', '{{ uname }}');
+      localStorage.setItem('user_code', '{{ user }}');
+    }
+  }
+  save_user();
 </script>
