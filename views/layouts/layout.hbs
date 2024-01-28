@@ -21,15 +21,12 @@
     {{/if }}
   </body>
   <script>
-  console.log('on load, LS is:', localStorage.getItem('barbenheimer'));
   if (localStorage.getItem('barbenheimer') == 'o') {
     document.querySelector('body').classList.add('oppen');
     document.querySelector('body').classList.remove('barbie'); 
-    console.log('set to o');
   } else {
     document.querySelector('body').classList.add('barbie');
     document.querySelector('body').classList.remove('oppen');
-    console.log('set to b');
   }
   </script>
 </html>
