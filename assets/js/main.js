@@ -11,7 +11,7 @@ $(document).ready(function() {
   // auto clear message boxes after 8s
   window.setTimeout(function() {
     $('.btn-close').click();
-  }, 8000);
+  }, 15000);
   
   $('a').on('click', function(e) {
     e.stopPropagation();
