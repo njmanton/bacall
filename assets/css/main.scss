@@ -46,7 +46,8 @@ a {
 
 header {
   width: 100%;
-  background-color: $headers;
+  background-color: #fff; //$headers;
+  background-image: url('../img/oscar_hell_sign_v2.jpg'); 
   color: red;
   text-align: center;
   background-repeat: no-repeat;
