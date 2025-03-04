@@ -1,0 +1,82 @@
+<section class="content">
+  <h4>12th Oscar Hell Recap (97th Ceremony)</h4>
+  <p>Another year, and another first-time winner - the 4th in the last 4 years, and 5th in the last 6th. After a bronze and silver in the first two years, Caile has finally made it to the winners' enclosure, with Karen and another first-time podium for JamesP in second and third</p>
+  <p>The ceremony itself was one of the more wide open in a number of categories, with Caile taking full advantage by going big on Anora. Caile was trailing Karen and JamesP for much of the contest, only moving up into the top spot on the final two awards of the night (Picture and, unexpectedly, Actress) both going to Anora.</p>
+  <p>Despite the relative uncertainty in some of the categories, <span class="bot">BookieBot</span> moved up to 5th place from 8th last year. <span class="bot">RandomBot</span> retained its second-to-last place from last year, with Chris being the unlucky person propping up the table. He actually scored as well as anybody in the final nine categories, but missed out completely on the first fourteen.</p>
+
+  <figure class="highcharts-figure">
+    <div id="container"><p>Loading data <img src="/img/ajax-loader.gif" alt="waiting indicator" /></p></div>
+    <figcaption class="figure-caption">Hover over each legend item to highlight that line. Click to toggle visibility.</figcaption>
+  </figure>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <script>
+    $(document).ready(() => {
+      const loadLiveCSV = async url => {
+        const res = await fetch(url, {
+          method: 'get',
+          headers: { 'content-type': 'text/csv' }
+        });
+        if (res.status == 200) {
+          const data = await res.text();
+          if (data.length) {
+            drawLiveChart(data);
+          } else {
+            $('#container').html('No data to load');
+          }
+        } else {
+          $('#container').html('Failed to load data');
+        }      
+      }
+
+      const drawLiveChart = data => {
+        var chart = Highcharts.chart('container', {
+          chart: {
+            type: 'line',
+            height: 600
+          },
+          yAxis: {
+            title: {
+          text: 'Points'
+          }
+        },
+          title: null,
+          credits: { enabled: false },
+        });
+        const rows = data.split('\n');
+        let preUser = '',
+            cats = [],
+            pts = [];
+        for (let x = 1; x < rows.length; x++) {
+          const row = rows[x].split(',');
+          if (cats.indexOf(row[0]) == -1) cats.push(row[0].replaceAll('"',''));
+          if (row[1] != preUser && x > 1) {
+            // new user so add previous data to chart
+            chart.addSeries({
+              name: preUser.replaceAll('"',''),
+              data: pts
+            })
+            pts = (row[2] == 'NULL') ? [0] : [row[2] * 1];
+          } else {
+            let curr = (pts.slice(-1) * 1); 
+            pts.push((row[2] == 'NULL' ? curr : curr + (row[2] * 1)));
+          }
+          preUser = row[1];
+        }
+        chart.xAxis[0].setCategories(cats);
+        chart.xAxis[0].setTitle({ text: 'Categories' });
+        // end of loop so add the final series if more than one set of predictions
+        try {
+          chart.addSeries({
+            name: preUser.replaceAll('"',''),
+            data: pts
+          })
+        } catch { }
+      }
+      
+      loadLiveCSV('/js/live97_final.csv');
+    })
+  </script>
+
+</section>
