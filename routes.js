@@ -31,7 +31,7 @@ const routes = app => {
     if (fs.existsSync(`./views/recap/analysis_${ req.params.code }.hbs`)) {
       res.render(`recap/analysis_${ req.params.code }`, { title: `MY20OH Recap ${ req.params.code }` });
     } else {
-      res.status(404).render('404', {});
+      res.status(404).render('404', { ref: req.path });
     }
   });
 
