@@ -4,7 +4,7 @@
 const exp_test = (process.argv[2] === 'expired') || false;
 exports.exp_test = exp_test;
 
-const deadline_date = '2025-03-02T23:00Z';
+const deadline_date = '2026-03-15T23:00Z';
 exports.deadline = new Date(deadline_date);;
 
 exports.placeholders = () => {
