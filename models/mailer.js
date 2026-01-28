@@ -1,17 +1,16 @@
 // jshint node: true, esversion: 6
 'use strict';
 
-const fs      = require('fs'),
-      hbs     = require('handlebars'),
-      pkg     = require('../package.json'),
-      logger  = require('winston'),
-      sg      = require('@sendgrid/mail');
+const fs          = require('fs'),
+      hbs         = require('handlebars'),
+      pkg         = require('../package.json'),
+      logger      = require('winston'),
+      { Resend }  = require('resend');
 
 const mail = {
 
-  send: (recipient, context, done) => {
+  send: async (recipient, context, done) => {
 
-    
     // convert template and context into message
     let template = fs.readFileSync(__dirname + '/../views/mail/signup.hbs', 'utf8');
     let message = hbs.compile(template);
@@ -23,7 +22,7 @@ const mail = {
     }
 
     var msg = {
-      from: 'Oscar Preds <oscars+noreply@mxxyqh.com>',
+      from: 'Oscar Preds <oscars+noreply@oscars.mxxyqh.com>',
       to: recipient,
       bcc: 'njmanton@gmail.com',
       subject: 'Your signup code for My 20 Year Oscar Hell',
@@ -31,18 +30,17 @@ const mail = {
       html: message(context)
     };
 
-    sg.setApiKey(process.env.SENDGRID_KEY);
+    const resend = new Resend(process.env.RESEND_KEY);
+    const { data, error } = await resend.emails.send(msg);
 
-    sg.send(msg)
-      .then(() => {
-        logger.info(`new sign-up by ${ context.username } (${ recipient })`);
-        done(true);
-       })
-      .catch(error => {
-        logger.error(`sign-up not processed: ${ error }`);
-        done(false);
-       });
-
+    if (error) {
+      logger.error(`sign-up not processed ${ error }`);
+      console.error({ error });
+      done(false);
+    } else {
+      logger.info(`new sign-up by ${ context.username } (${ recipient })`);
+      done(true);
+    }
   },
 
 };
