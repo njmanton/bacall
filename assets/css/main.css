@@ -20,7 +20,7 @@ a {
 header {
   width: 100%;
   background-color: #fff;
-  background-image: url("../img/oscar_hell_sign_v2.jpg");
+  background-image: url("../img/ms_header_2.png");
   color: red;
   text-align: center;
   background-repeat: no-repeat;
@@ -486,14 +486,14 @@ label {
   font-size: 1.6em;
 }
 .barbie .cat-list {
-  background-color: #7f0361;
+  background-color: rgb(127.1982758621, 2.8017241379, 96.9396551724);
 }
 .barbie .cat-list a {
   color: #ddd;
   font-family: "Bartex", serif;
 }
 .barbie .cat-list a:hover {
-  color: #7f0361;
+  color: rgb(127.1982758621, 2.8017241379, 96.9396551724);
   background-color: #edd8d8;
 }
 
@@ -501,7 +501,7 @@ label {
   background-color: #fff5c2;
 }
 .oppen div.selected {
-  background-color: #c43602;
+  background-color: rgb(196.1142857143, 53.7428571429, 1.8857142857);
 }
 .oppen .success {
   background-color: #fff5c2;
