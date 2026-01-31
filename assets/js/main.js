@@ -132,7 +132,7 @@ $(document).ready(function() {
 
   // set up the navigation for each category
   function nav() {
-    var maxCats = 23; // changed in 2021
+    var maxCats = 24; // Best Casting added 2026
     $('.image img').prop('src', $('.image').data('default'));
     var prevurl = window.location.pathname.split('/'),
         cur = prevurl.pop(),
