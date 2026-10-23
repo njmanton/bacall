@@ -4,7 +4,7 @@
   "description": "oscar predictions",
   "main": "index.js",
   "engines": {
-    "node": "20.11.1"
+    "node": "24.22.1"
   },
   "repository": {
     "type": "git",
